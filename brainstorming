@@ -1,0 +1,35 @@
+-------------
+Classes:
+-------------
+
+  Card
+  Board
+  Deck
+  Game
+  Player
+
+
+-------------------
+Rules of the Game:
+-------------------
+
+  penalty for hints
+  
+  point(s) per round of play - who is faster?
+    could do this by providing a new deal with a newly shuffled deck for each player's turn
+
+  points for number of sets found?
+    this would require allowing both players to play at the same time
+    if we implement the GUI with clicking, the players would have to share the mouse
+    the players would need to click "I'm player 1" or "I'm player 2" before selecting their set
+    this would give the point(s) to the correct player
+    
+
+-------------
+GUI??
+-------------
+
+  look at last year's projects
+  read textbook
+  Google GUI platforms that work with Java/Eclipse
+  ask Vicky for her advice
