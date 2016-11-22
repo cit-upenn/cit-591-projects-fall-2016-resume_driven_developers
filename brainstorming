@@ -13,8 +13,22 @@ Classes:
 Rules of the Game:
 -------------------
 
-  penalty for hints
++++++++++++++++++
+1-Player Version
++++++++++++++++++
+
+  the 1-player version seems like a good place to correlate the score to the time taken
   
+  perhaps the ultimate goal is to clear the whole deck and the less time taken, the better the score
+
+  penalty for hints
+    
++++++++++++++++++
+2-Player Version
++++++++++++++++++
+
+  penalty for hints
+
   point(s) per round of play - who is faster?
     could do this by providing a new deal with a newly shuffled deck for each player's turn
 
@@ -23,13 +37,15 @@ Rules of the Game:
     if we implement the GUI with clicking, the players would have to share the mouse
     the players would need to click "I'm player 1" or "I'm player 2" before selecting their set
     this would give the point(s) to the correct player
-    
 
 -------------
 GUI??
 -------------
 
   look at last year's projects
+      one group created a class that extended JFrame - this involved importing javax.swing.JFrame
+      another group used ActionListener and MouseListener - my guess is this is how you get user input like a mouse click
+      after briefly looking through the Oracle Jave documentation for JFrames, this is less overwhelming!
   read textbook
   Google GUI platforms that work with Java/Eclipse
   ask Vicky for her advice
