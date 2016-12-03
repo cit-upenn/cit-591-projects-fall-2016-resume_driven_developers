@@ -14,8 +14,9 @@ import javax.swing.UIManager;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
+import javax.swing.JPanel;
 
-public class gameBoard extends JFrame {
+public class GameWindow extends JFrame {
 
 	/**
 	 * Launch the application.
@@ -24,7 +25,7 @@ public class gameBoard extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					gameBoard frame = new gameBoard();
+					GameWindow frame = new GameWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,50 +34,109 @@ public class gameBoard extends JFrame {
 		});
 	}
 
+	//instance variables for game setup buttons
+	JButton howToPlay;
+	JButton onePlayerGame;
+	JButton twoPlayerGame;
+	JButton addCards;
+	JButton getHint;
+	JButton skipTurn;
+	JButton quitGame;
+	
+	//instance variables for card buttons
+	JButton cardAButton;
+	JButton cardBButton;
+	JButton cardCButton;
+	JButton cardDButton;
+	JButton cardEButton;
+	JButton cardFButton;
+	JButton cardGButton;
+	JButton cardHButton;
+	JButton cardIButton;
+	JButton cardJButton;
+	JButton cardKButton;
+	JButton cardLButton;
+	JButton cardMButton;
+	JButton cardNButton;
+	JButton cardPButton;
+	
+	//instance variables for card images
+	ImageIcon cardA;
+	ImageIcon cardB;
+	ImageIcon cardC;
+	ImageIcon cardD;
+	ImageIcon cardE;
+	ImageIcon cardF;
+	ImageIcon cardG;
+	ImageIcon cardH;
+	ImageIcon cardI;
+	ImageIcon cardJ;
+	ImageIcon cardK;
+	ImageIcon cardL;
+	ImageIcon cardM;
+	ImageIcon cardN;
+	ImageIcon cardP;
+	ImageIcon deck;
+	
+	//instance variables for player stats
+	int numPlayers;
+	String player1Name;
+	String player2Name;
+	String player1Score;
+	String player2Score;
+	private JPanel panel;
+	
 	/**
 	 * Create the frame.
 	 */
-	public gameBoard() {
+	public GameWindow() {
+		
 		getContentPane().setBackground(UIManager.getColor("Desktop.background"));
 		setBounds(100, 100, 1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
+		getContentPane().setVisible(true);
 		
-		ImageIcon cardA = new ImageIcon(gameBoard.class.getResource("/cardimages/Card01clkd.jpg"));
-		ImageIcon cardB = new ImageIcon(gameBoard.class.getResource("/cardimages/Card02.jpg"));
-		ImageIcon cardC = new ImageIcon(gameBoard.class.getResource("/cardimages/Card43clkd.jpg"));
-		ImageIcon cardD = new ImageIcon(gameBoard.class.getResource("/cardimages/Card04.jpg"));
-		ImageIcon cardE = new ImageIcon(gameBoard.class.getResource("/cardimages/Card25.jpg"));
-		ImageIcon cardF = new ImageIcon(gameBoard.class.getResource("/cardimages/Card06.jpg"));
-		ImageIcon cardG = new ImageIcon(gameBoard.class.getResource("/cardimages/Card37.jpg"));
-		ImageIcon cardH = new ImageIcon(gameBoard.class.getResource("/cardimages/Card08clkd.jpg"));
-		ImageIcon cardI = new ImageIcon(gameBoard.class.getResource("/cardimages/Card49.jpg"));
-		ImageIcon cardJ = new ImageIcon(gameBoard.class.getResource("/cardimages/Card10clkd.jpg"));
-		ImageIcon cardK = new ImageIcon(gameBoard.class.getResource("/cardimages/Card51.jpg"));
-		ImageIcon cardL = new ImageIcon(gameBoard.class.getResource("/cardimages/Card12.jpg"));
-		ImageIcon cardM = new ImageIcon(gameBoard.class.getResource("/cardimages/empty_card.png"));
-		ImageIcon cardN = new ImageIcon(gameBoard.class.getResource("/cardimages/empty_card_clkd.png"));
-		ImageIcon cardP = new ImageIcon(gameBoard.class.getResource("/cardimages/Card81.jpg"));		
-		ImageIcon deck = new ImageIcon(gameBoard.class.getResource("/cardimages/deck.jpg"));
+		cardA = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardB = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardC = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardD = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardE = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardF = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardG = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardH = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardI = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardJ = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardK = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardL = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		cardM = null;
+		cardN = null;
+		cardP = null;		
+		deck = null;
 		
-		JLabel lblPlayer1 = new JLabel("Player 1: " + "score");
-		lblPlayer1.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		lblPlayer1.setBackground(Color.LIGHT_GRAY);
-		lblPlayer1.setOpaque(true);
-		lblPlayer1.setForeground(new Color(139, 0, 139));
-		lblPlayer1.setHorizontalAlignment(SwingConstants.CENTER);
+		player1Name = "Player 1";
+		player1Score = "0";
+		player2Name = "Player 2";
+		player2Score = "0";
+		
+		JLabel player1 = new JLabel(player1Name + ": " + player1Score);
+		player1.setFont(new Font("Tahoma", Font.PLAIN, 38));
+		player1.setBackground(Color.LIGHT_GRAY);
+		player1.setOpaque(true);
+		player1.setForeground(new Color(139, 0, 139));
+		player1.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblPlayer1 = new GridBagConstraints();
 		gbc_lblPlayer1.insets = new Insets(10, 10, 5, 5);
 		gbc_lblPlayer1.gridx = 2;
 		gbc_lblPlayer1.gridy = 1;
 		gbc_lblPlayer1.gridwidth = 3;
 		gbc_lblPlayer1.fill = GridBagConstraints.HORIZONTAL;
-		getContentPane().add(lblPlayer1, gbc_lblPlayer1);
+		getContentPane().add(player1, gbc_lblPlayer1);
 		
 		JLabel clock = new JLabel("00:00");
 		clock.setFont(new Font("Tahoma", Font.PLAIN, 42));
@@ -91,7 +151,7 @@ public class gameBoard extends JFrame {
 		gbc_clock.fill = GridBagConstraints.BOTH;
 		getContentPane().add(clock, gbc_clock);
 		
-		JLabel lblPlayer2 = new JLabel("Player 2: " + "score");
+		JLabel lblPlayer2 = new JLabel(player2Name + ": " + player2Score);
 		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 38));
 		lblPlayer2.setBackground(Color.LIGHT_GRAY);
 		lblPlayer2.setForeground(new Color(0, 100, 0));
@@ -105,7 +165,14 @@ public class gameBoard extends JFrame {
 		gbc_lblPlayer2.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(lblPlayer2, gbc_lblPlayer2);
 		
-		JButton cardAButton = new JButton("");
+		howToPlay = new JButton("How To Play");
+		GridBagConstraints gbc_btnHowToPlay = new GridBagConstraints();
+		gbc_btnHowToPlay.insets = new Insets(0, 0, 5, 5);
+		gbc_btnHowToPlay.gridx = 0;
+		gbc_btnHowToPlay.gridy = 3;
+		getContentPane().add(howToPlay, gbc_btnHowToPlay);
+		
+		cardAButton = new JButton("");
 		cardAButton.setIcon(cardA);
 		cardAButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardA = new GridBagConstraints();
@@ -114,7 +181,7 @@ public class gameBoard extends JFrame {
 		gbc_cardA.gridy = 3;
 		getContentPane().add(cardAButton, gbc_cardA);
 		
-		JButton cardBButton = new JButton("");
+		cardBButton = new JButton("");
 		cardBButton.setIcon(cardB);
 		cardBButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardB = new GridBagConstraints();
@@ -123,7 +190,7 @@ public class gameBoard extends JFrame {
 		gbc_cardB.gridy = 3;
 		getContentPane().add(cardBButton, gbc_cardB);
 		
-		JButton cardCButton = new JButton("");
+		cardCButton = new JButton("");
 		cardCButton.setIcon(cardC);
 		cardCButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardC = new GridBagConstraints();
@@ -132,14 +199,14 @@ public class gameBoard extends JFrame {
 		gbc_cardC.gridy = 3;
 		getContentPane().add(cardCButton, gbc_cardC);
 		
-		JButton btnHowToPlay = new JButton("How To Play");
-		GridBagConstraints gbc_btnHowToPlay = new GridBagConstraints();
-		gbc_btnHowToPlay.insets = new Insets(0, 0, 5, 5);
-		gbc_btnHowToPlay.gridx = 0;
-		gbc_btnHowToPlay.gridy = 4;
-		getContentPane().add(btnHowToPlay, gbc_btnHowToPlay);
+		onePlayerGame = new JButton("1 Player Game");
+		GridBagConstraints gbc_btnPlayerGame_1 = new GridBagConstraints();
+		gbc_btnPlayerGame_1.insets = new Insets(0, 0, 5, 5);
+		gbc_btnPlayerGame_1.gridx = 0;
+		gbc_btnPlayerGame_1.gridy = 4;
+		getContentPane().add(onePlayerGame, gbc_btnPlayerGame_1);
 		
-		JButton cardDButton = new JButton("");
+		cardDButton = new JButton("");
 		cardDButton.setIcon(cardD);
 		cardDButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardD = new GridBagConstraints();
@@ -148,7 +215,7 @@ public class gameBoard extends JFrame {
 		gbc_cardD.gridy = 4;
 		getContentPane().add(cardDButton, gbc_cardD);
 		
-		JButton cardEButton = new JButton("");
+		cardEButton = new JButton("");
 		cardEButton.setIcon(cardE);
 		cardEButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardE = new GridBagConstraints();
@@ -157,7 +224,7 @@ public class gameBoard extends JFrame {
 		gbc_cardE.gridy = 4;
 		getContentPane().add(cardEButton, gbc_cardE);
 		
-		JButton cardFButton = new JButton("");
+		cardFButton = new JButton("");
 		cardFButton.setIcon(cardF);
 		cardFButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardF = new GridBagConstraints();
@@ -166,21 +233,21 @@ public class gameBoard extends JFrame {
 		gbc_cardF.gridy = 4;
 		getContentPane().add(cardFButton, gbc_cardF);
 		
-		JButton btnAddCards = new JButton("Add 3 Cards");
+		addCards = new JButton("Add 3 Cards");
 		GridBagConstraints gbc_btnAddCards = new GridBagConstraints();
 		gbc_btnAddCards.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAddCards.gridx = 8;
 		gbc_btnAddCards.gridy = 4;
-		getContentPane().add(btnAddCards, gbc_btnAddCards);
+		getContentPane().add(addCards, gbc_btnAddCards);
 		
-		JButton btnPlayerGame_1 = new JButton("1 Player Game");
-		GridBagConstraints gbc_btnPlayerGame_1 = new GridBagConstraints();
-		gbc_btnPlayerGame_1.insets = new Insets(0, 0, 5, 5);
-		gbc_btnPlayerGame_1.gridx = 0;
-		gbc_btnPlayerGame_1.gridy = 5;
-		getContentPane().add(btnPlayerGame_1, gbc_btnPlayerGame_1);
+		twoPlayerGame = new JButton("2 Player Game");
+		GridBagConstraints gbc_btnPlayerGame = new GridBagConstraints();
+		gbc_btnPlayerGame.insets = new Insets(0, 0, 5, 5);
+		gbc_btnPlayerGame.gridx = 0;
+		gbc_btnPlayerGame.gridy = 5;
+		getContentPane().add(twoPlayerGame, gbc_btnPlayerGame);
 		
-		JButton cardGButton = new JButton("");
+		cardGButton = new JButton("");
 		cardGButton.setIcon(cardG);
 		cardGButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardG = new GridBagConstraints();
@@ -189,7 +256,7 @@ public class gameBoard extends JFrame {
 		gbc_cardG.gridy = 5;
 		getContentPane().add(cardGButton, gbc_cardG);
 		
-		JButton cardHButton = new JButton("");
+		cardHButton = new JButton("");
 		cardHButton.setIcon(cardH);
 		cardHButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardH = new GridBagConstraints();
@@ -198,7 +265,7 @@ public class gameBoard extends JFrame {
 		gbc_cardH.gridy = 5;
 		getContentPane().add(cardHButton, gbc_cardH);
 		
-		JButton cardIButton = new JButton("");
+		cardIButton = new JButton("");
 		cardIButton.setIcon(cardI);
 		cardIButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardI = new GridBagConstraints();
@@ -207,25 +274,21 @@ public class gameBoard extends JFrame {
 		gbc_cardI.gridy = 5;
 		getContentPane().add(cardIButton, gbc_cardI);
 		
-		JButton btnHint = new JButton("Get A Hint");
-		btnHint.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+		getHint = new JButton("Get A Hint");
 		GridBagConstraints gbc_btnHint = new GridBagConstraints();
 		gbc_btnHint.insets = new Insets(0, 0, 5, 0);
 		gbc_btnHint.gridx = 8;
 		gbc_btnHint.gridy = 5;
-		getContentPane().add(btnHint, gbc_btnHint);
+		getContentPane().add(getHint, gbc_btnHint);
 		
-		JButton btnPlayerGame = new JButton("2 Player Game");
-		GridBagConstraints gbc_btnPlayerGame = new GridBagConstraints();
-		gbc_btnPlayerGame.insets = new Insets(0, 0, 5, 5);
-		gbc_btnPlayerGame.gridx = 0;
-		gbc_btnPlayerGame.gridy = 6;
-		getContentPane().add(btnPlayerGame, gbc_btnPlayerGame);
+		quitGame = new JButton("Quit Game");
+		GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
+		gbc_btnQuitGame.insets = new Insets(0, 0, 5, 5);
+		gbc_btnQuitGame.gridx = 0;
+		gbc_btnQuitGame.gridy = 6;
+		getContentPane().add(quitGame, gbc_btnQuitGame);
 		
-		JButton cardJButton = new JButton("");
+		cardJButton = new JButton("");
 		cardJButton.setIcon(cardJ);
 		cardJButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_CardJ = new GridBagConstraints();
@@ -234,7 +297,7 @@ public class gameBoard extends JFrame {
 		gbc_CardJ.gridy = 6;
 		getContentPane().add(cardJButton, gbc_CardJ);
 		
-		JButton cardKButton = new JButton("");
+		cardKButton = new JButton("");
 		cardKButton.setIcon(cardK);
 		cardKButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardK = new GridBagConstraints();
@@ -243,7 +306,7 @@ public class gameBoard extends JFrame {
 		gbc_cardK.gridy = 6;
 		getContentPane().add(cardKButton, gbc_cardK);
 		
-		JButton cardLButton = new JButton("");
+		cardLButton = new JButton("");
 		cardLButton.setIcon(cardL);
 		cardLButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardL = new GridBagConstraints();
@@ -252,21 +315,14 @@ public class gameBoard extends JFrame {
 		gbc_cardL.gridy = 6;
 		getContentPane().add(cardLButton, gbc_cardL);
 		
-		JButton btnSkipTurn = new JButton("Skip Turn");
+		skipTurn = new JButton("Skip Turn");
 		GridBagConstraints gbc_btnSkipTurn = new GridBagConstraints();
 		gbc_btnSkipTurn.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSkipTurn.gridx = 8;
 		gbc_btnSkipTurn.gridy = 6;
-		getContentPane().add(btnSkipTurn, gbc_btnSkipTurn);
+		getContentPane().add(skipTurn, gbc_btnSkipTurn);
 		
-		JButton btnQuitGame = new JButton("Quit Game");
-		GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
-		gbc_btnQuitGame.insets = new Insets(0, 0, 5, 5);
-		gbc_btnQuitGame.gridx = 0;
-		gbc_btnQuitGame.gridy = 7;
-		getContentPane().add(btnQuitGame, gbc_btnQuitGame);
-		
-		JButton cardMButton = new JButton("");
+		cardMButton = new JButton("");
 		cardMButton.setIcon(cardM);
 		cardMButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_CardM = new GridBagConstraints();
@@ -275,7 +331,7 @@ public class gameBoard extends JFrame {
 		gbc_CardM.gridy = 7;
 		getContentPane().add(cardMButton, gbc_CardM);
 		
-		JButton cardNButton = new JButton("");
+		cardNButton = new JButton("");
 		cardNButton.setIcon(cardN);
 		cardNButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardN = new GridBagConstraints();
@@ -284,7 +340,7 @@ public class gameBoard extends JFrame {
 		gbc_cardN.gridy = 7;
 		getContentPane().add(cardNButton, gbc_cardN);
 		
-		JButton cardPButton = new JButton("");
+		cardPButton = new JButton("");
 		cardPButton.setIcon(cardP);
 		cardPButton.setContentAreaFilled(false);
 		GridBagConstraints gbc_cardP = new GridBagConstraints();
@@ -301,10 +357,106 @@ public class gameBoard extends JFrame {
 		gbc_lblDeckImages.gridy = 9;
 		getContentPane().add(lblDeck, gbc_lblDeckImages);
 		
+	}
 
-		
-		
+	public void setCardA(ImageIcon cardA) {
+		this.cardA = cardA;
+	}
 
+	public void setCardB(ImageIcon cardB) {
+		this.cardB = cardB;
+	}
+
+	public void setCardC(ImageIcon cardC) {
+		this.cardC = cardC;
+	}
+
+	public void setCardD(ImageIcon cardD) {
+		this.cardD = cardD;
+	}
+
+	public void setCardE(ImageIcon cardE) {
+		this.cardE = cardE;
+	}
+
+	public void setCardF(ImageIcon cardF) {
+		this.cardF = cardF;
+	}
+
+	public void setCardG(ImageIcon cardG) {
+		this.cardG = cardG;
+	}
+
+	public void setCardH(ImageIcon cardH) {
+		this.cardH = cardH;
+	}
+
+	public void setCardI(ImageIcon cardI) {
+		this.cardI = cardI;
+	}
+
+	public void setCardJ(ImageIcon cardJ) {
+		this.cardJ = cardJ;
+	}
+
+	public void setCardK(ImageIcon cardK) {
+		this.cardK = cardK;
+	}
+
+	public void setCardL(ImageIcon cardL) {
+		this.cardL = cardL;
+	}
+
+	public void setCardM(ImageIcon cardM) {
+		this.cardM = cardM;
+	}
+
+	public void setCardN(ImageIcon cardN) {
+		this.cardN = cardN;
+	}
+
+	public void setCardP(ImageIcon cardP) {
+		this.cardP = cardP;
+	}
+
+	public void setDeck(ImageIcon deck) {
+		this.deck = deck;
+	}
+
+	public String getPlayer1Name() {
+		return player1Name;
+	}
+
+	public void setPlayer1Name(String player1Name) {
+		this.player1Name = player1Name;
+	}
+
+	public String getPlayer2Name() {
+		return player2Name;
+	}
+
+	public void setPlayer2Name(String player2Name) {
+		this.player2Name = player2Name;
+	}
+
+	public String getPlayer1Score() {
+		return player1Score;
+	}
+
+	public void setPlayer1Score(int player1Score) {
+		this.player1Score = Integer.toString(player1Score);
+	}
+
+	public String getPlayer2Score() {
+		return player2Score;
+	}
+
+	public void setPlayer2Score(int player2Score) {
+		this.player2Score = Integer.toString(player2Score);
+	}
+	
+	public void setNumPlayers(int n){
+		numPlayers = n;
 	}
 
 }

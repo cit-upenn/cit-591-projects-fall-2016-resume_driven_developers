@@ -1,3 +1,7 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
 /**
  * a class for game rules
  * @author YPLin
@@ -6,9 +10,32 @@
 
 public class GameRuler {
 
+GameWindow gameWindow;
 	
-	//TODO: 
-	
+	public GameRuler() {
+		
+		gameWindow = new GameWindow();
+		gameWindow.setVisible(true);
+		
+		gameWindow.onePlayerGame.addActionListener(new generateAL());
+		gameWindow.twoPlayerGame.addActionListener(new generateAL());
+		gameWindow.howToPlay.addActionListener(new generateAL());
+		
+	}
+
+	public class generateAL implements ActionListener {
+		public void actionPerformed (ActionEvent e) {
+			
+			if(e.getSource().equals(gameWindow.onePlayerGame)) {
+				gameWindow.setNumPlayers(1);
+			} else if(e.getSource().equals(gameWindow.twoPlayerGame)) {
+				gameWindow.setNumPlayers(2);
+			} else if(e.getSource().equals(gameWindow.howToPlay)) {
+				
+			}	
+				
+		}
+	}
 	
 	public static int countSimilarity(Card card1, Card card2) {
 		int count = 0;
