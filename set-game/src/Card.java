@@ -17,6 +17,7 @@ public class Card {
 		this.color = color;
 		this.shading = shading;
 		this.shape = shape;
+		//Test comment
 	}
 
 	public String getQuantity() {
