@@ -16,13 +16,13 @@ public class GameRuler {
 	ArrayList<Card> deck;
 
 	public GameRuler() {
-
 	
 	}
 
 	
 
-	public void onePlayerGame(){		
+	public void onePlayerGame(){
+		playerOne = new Player();
 		
 		//get player's name
 		
@@ -40,6 +40,8 @@ public class GameRuler {
 	}
 
 	public void twoPlayerGame(){
+		playerOne = new Player();
+		playerTwo = new Player();
 //		initButtons(2);
 		
 		//get players' names

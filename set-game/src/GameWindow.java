@@ -410,17 +410,18 @@ public class GameWindow extends JFrame {
 	
 	public void getName(int i){
 		if (i == 1){
-		player1Name = null;
-		do{
-			player1Name = (String)JOptionPane.showInputDialog("Enter player one's name:\n");
-		} while (player1Name == null || player1Name.length() <= 0);
-		player1.setText(player1Name + ": " + player1Score);
+			player1Name = null;
+			do{
+				player1Name = (String)JOptionPane.showInputDialog("Enter player one's name:\n");
+			} while (player1Name == null || player1Name.length() <= 0);
+			player1.setText(player1Name + ": 0");
+			player2.setText("Player 2: 0");
 		} else if (i == 2){
 			player2Name = null;
 			do{
 				player2Name = (String)JOptionPane.showInputDialog("Enter player two's name:\n");
 			} while (player2Name == null || player2Name.length() <= 0);
-			player2.setText(player2Name + ": " + player2Score);
+			player2.setText(player2Name + ": 0");
 		}
 	}
 	
