@@ -6,11 +6,14 @@ import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.UIManager;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
@@ -34,6 +37,9 @@ public class GameWindow extends JFrame {
 		});
 	}
 
+	//instance variable for classes to run the game
+	GameRuler ruler;
+	
 	//instance variables for game setup buttons
 	JButton howToPlay;
 	JButton onePlayerGame;
@@ -79,17 +85,20 @@ public class GameWindow extends JFrame {
 	ImageIcon deck;
 	
 	//instance variables for player stats
+	JLabel player1;
+	JLabel player2;
 	int numPlayers;
 	String player1Name;
 	String player2Name;
 	String player1Score;
 	String player2Score;
-	private JPanel panel;
 	
 	/**
 	 * Create the frame.
 	 */
 	public GameWindow() {
+		
+		ruler = new GameRuler();
 		
 		getContentPane().setBackground(UIManager.getColor("Desktop.background"));
 		setBounds(100, 100, 1200, 860);
@@ -124,7 +133,7 @@ public class GameWindow extends JFrame {
 		player2Name = "Player 2";
 		player2Score = "0";
 		
-		JLabel player1 = new JLabel(player1Name + ": " + player1Score);
+		player1 = new JLabel(player1Name + ": " + player1Score);
 		player1.setFont(new Font("Tahoma", Font.PLAIN, 38));
 		player1.setBackground(Color.LIGHT_GRAY);
 		player1.setOpaque(true);
@@ -151,19 +160,19 @@ public class GameWindow extends JFrame {
 		gbc_clock.fill = GridBagConstraints.BOTH;
 		getContentPane().add(clock, gbc_clock);
 		
-		JLabel lblPlayer2 = new JLabel(player2Name + ": " + player2Score);
-		lblPlayer2.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		lblPlayer2.setBackground(Color.LIGHT_GRAY);
-		lblPlayer2.setForeground(new Color(0, 100, 0));
-		lblPlayer2.setOpaque(true);
-		lblPlayer2.setHorizontalAlignment(SwingConstants.CENTER);
+		player2 = new JLabel(player2Name + ": " + player2Score);
+		player2.setFont(new Font("Tahoma", Font.PLAIN, 38));
+		player2.setBackground(Color.LIGHT_GRAY);
+		player2.setForeground(new Color(0, 100, 0));
+		player2.setOpaque(true);
+		player2.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblPlayer2 = new GridBagConstraints();
 		gbc_lblPlayer2.insets = new Insets(10, 10, 5, 5);
 		gbc_lblPlayer2.gridx = 6;
 		gbc_lblPlayer2.gridy = 1;
 		gbc_lblPlayer2.gridwidth = 2;
 		gbc_lblPlayer2.fill = GridBagConstraints.HORIZONTAL;
-		getContentPane().add(lblPlayer2, gbc_lblPlayer2);
+		getContentPane().add(player2, gbc_lblPlayer2);
 		
 		howToPlay = new JButton("How To Play");
 		GridBagConstraints gbc_btnHowToPlay = new GridBagConstraints();
@@ -357,6 +366,44 @@ public class GameWindow extends JFrame {
 		gbc_lblDeckImages.gridy = 9;
 		getContentPane().add(lblDeck, gbc_lblDeckImages);
 		
+		howToPlay.addActionListener(new generateAL());
+		onePlayerGame.addActionListener(new generateAL());
+		twoPlayerGame.addActionListener(new generateAL());
+		addCards.addActionListener(new generateAL());
+		getHint.addActionListener(new generateAL());
+		skipTurn.addActionListener(new generateAL());
+		quitGame.addActionListener(new generateAL());
+		
+		
+		
+	}
+	
+	private class generateAL implements ActionListener {
+		public void actionPerformed (ActionEvent e) {
+
+			if(e.getSource().equals(onePlayerGame)) {
+				player1Name = null;
+				do{
+					player1Name = (String)JOptionPane.showInputDialog("Enter your name:\n");
+				} while (player1Name == null || player1Name.length() <= 0);
+				player1.setText(player1Name + ": " + player1Score);
+				ruler.onePlayerGame(player1Name);
+			} else if(e.getSource().equals(twoPlayerGame)) {
+				setNumPlayers(2);
+//				twoPlayerGame();
+			} else if(e.getSource().equals(howToPlay)) {
+				//show panel with rules and 
+			} else if (e.getSource().equals(addCards)) {
+				//add 3 cards to empty row at the bottom
+			} else if (e.getSource().equals(getHint)) {
+				//highlight one card that is part of a set on the board
+			} else if (e.getSource().equals(skipTurn)) {
+				//prompt if sure
+				//start other player's turn
+			} else if (e.getSource().equals(quitGame)) {
+				
+			}
+		}
 	}
 
 	public void setCardA(ImageIcon cardA) {

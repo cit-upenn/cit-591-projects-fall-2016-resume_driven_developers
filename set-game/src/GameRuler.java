@@ -1,5 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 /**
@@ -10,45 +11,22 @@ import java.awt.event.ActionListener;
 
 public class GameRuler {
 
-	GameWindow gameWindow;
+	Player playerOne;
+	Player playerTwo;
+	ArrayList<Card> deck;
 
 	public GameRuler() {
 
-		gameWindow = new GameWindow();
-		gameWindow.setVisible(true);
-
-		gameWindow.howToPlay.addActionListener(new generateAL());
-		gameWindow.onePlayerGame.addActionListener(new generateAL());
-		gameWindow.twoPlayerGame.addActionListener(new generateAL());
-
+	
 	}
 
-	public class generateAL implements ActionListener {
-		public void actionPerformed (ActionEvent e) {
+	
 
-			if(e.getSource().equals(gameWindow.onePlayerGame)) {
-				gameWindow.setNumPlayers(1);
-				onePlayerGame();
-			} else if(e.getSource().equals(gameWindow.twoPlayerGame)) {
-				gameWindow.setNumPlayers(2);
-				twoPlayerGame();
-			} else if(e.getSource().equals(gameWindow.howToPlay)) {
-				//show panel with rules and 
-			} else if (e.getSource().equals(gameWindow.addCards)) {
-				//add 3 cards to empty row at the bottom
-			} else if (e.getSource().equals(gameWindow.getHint)) {
-				//highlight one card that is part of a set on the board
-			} else if (e.getSource().equals(gameWindow.skipTurn)) {
-				//prompt if sure
-				//start other player's turn
-			} else if (e.getSource().equals(gameWindow.quitGame)) {
-				
-			}
-		}
-	}
-
-	public void onePlayerGame(){
-		initButtons(1);
+	public void onePlayerGame(String playerName){
+		playerOne = new Player();
+		playerOne.setName(playerName);
+		
+		
 		
 		//get player's name
 		
@@ -66,7 +44,7 @@ public class GameRuler {
 	}
 
 	public void twoPlayerGame(){
-		initButtons(2);
+//		initButtons(2);
 		
 		//get players' names
 		
@@ -85,15 +63,15 @@ public class GameRuler {
 		//if not set, tell player & resume timer
 	}
 
-	public void initButtons(int n){
-		gameWindow.quitGame.addActionListener(new generateAL());
-		gameWindow.addCards.addActionListener(new generateAL());
-		gameWindow.getHint.addActionListener(new generateAL());
-
-		if (n == 2){
-			gameWindow.skipTurn.addActionListener(new generateAL());
-		}
-	}
+//	public void initButtons(int n){
+//		gameWindow.enableButton(quitGame);
+//		gameWindow.addCards.addActionListener(new generateAL());
+//		gameWindow.getHint.addActionListener(new generateAL());
+//
+//		if (n == 2){
+//			gameWindow.skipTurn.addActionListener(new generateAL());
+//		}
+//	}
 
 	public static int countSimilarity(Card card1, Card card2) {
 		int count = 0;
