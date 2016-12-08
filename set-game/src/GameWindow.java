@@ -75,7 +75,7 @@ public class GameWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public GameWindow() {
-		
+
 
 		ruler = new GameRuler();
 
@@ -204,6 +204,7 @@ public class GameWindow extends JFrame {
 		gbc_btnAddCards.gridy = 4;
 		getContentPane().add(addCards, gbc_btnAddCards);
 		addCards.addActionListener(new generateAL());
+		addCards.setEnabled(false);
 
 		twoPlayerGame = new JButton("2 Player Game");
 		twoPlayerGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
@@ -222,6 +223,7 @@ public class GameWindow extends JFrame {
 		gbc_btnHint.gridy = 5;
 		getContentPane().add(getHint, gbc_btnHint);
 		getHint.addActionListener(new generateAL());
+		getHint.setEnabled(false);
 
 		quitGame = new JButton("Quit Game");
 		quitGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
@@ -240,6 +242,7 @@ public class GameWindow extends JFrame {
 		gbc_btnSkipTurn.gridy = 6;
 		getContentPane().add(skipTurn, gbc_btnSkipTurn);
 		skipTurn.addActionListener(new generateAL());
+		skipTurn.setEnabled(false);
 
 		JLabel lblDeck = new JLabel("");
 		lblDeck.setHorizontalAlignment(SwingConstants.CENTER);
@@ -249,28 +252,24 @@ public class GameWindow extends JFrame {
 		gbc_lblDeckImages.gridx = 2;
 		gbc_lblDeckImages.gridy = 8;
 		getContentPane().add(lblDeck, gbc_lblDeckImages);
-		
-		Random rand = new Random();
-		String[] filenames = new String[12];
-		
-		for (int j = 0; j < 12; j++){
-			int number = rand.nextInt(70) + 10;
-			filenames[j] = "/cardimages/Card" + number + ".jpg";
-//			cardButtons[j].setText(filenames[j]);
-			cardButtons[j].setIcon(new ImageIcon(GameWindow.class.getResource(filenames[j])));
-		}
+
 
 	}
 
 	private class generateAL implements ActionListener {
-		
+
 		public void actionPerformed (ActionEvent e) {
-			
+
 			if(e.getSource().equals(onePlayerGame)) {
 
 				getName(1);
+				player2.setText("");
 				skipTurn.setEnabled(false);
-//				board.get12Cards();
+				onePlayerGame.setEnabled(false);
+				twoPlayerGame.setEnabled(false);
+				getHint.setEnabled(true);
+				addCards.setEnabled(true);
+				//				board.get12Cards();
 				ruler.onePlayerGame();
 
 			} else if(e.getSource().equals(twoPlayerGame)) {
@@ -279,8 +278,17 @@ public class GameWindow extends JFrame {
 					getName(i);
 				}
 				skipTurn.setEnabled(true);
-				ruler.twoPlayerGame();
+				onePlayerGame.setEnabled(false);
+				twoPlayerGame.setEnabled(false);
+				getHint.setEnabled(true);
+				addCards.setEnabled(true);
 
+				ruler.twoPlayerGame(player1Name, player2Name);
+				if (ruler.currentPlayer == 1){
+					JOptionPane.showMessageDialog(frame, player1Name + " will go first!");
+				} else if (ruler.currentPlayer == 2){
+					JOptionPane.showMessageDialog(frame, player2Name + " will go first!");
+				}
 			} else if(e.getSource().equals(howToPlay)) {
 
 				showRules();
@@ -290,16 +298,12 @@ public class GameWindow extends JFrame {
 				addCards();
 
 			} else if (e.getSource().equals(getHint)) {
-				//ask GameRuler for the position of a card that is in a set on the board
-				//ask Card for the ClickedImage filename of that Card
-				//display the ClickedImage of that Card in the correct button position
-				//set the boolean "selected" to true for that card position
+
+				getHint();
 
 			} else if (e.getSource().equals(skipTurn)) {
 
-				//prompt if sure
-
-				//start other player's turn
+				skipTurn();
 
 			} else if (e.getSource().equals(quitGame)) {
 
@@ -312,14 +316,14 @@ public class GameWindow extends JFrame {
 		if (i == 1){
 			player1Name = null;
 			do{
-				player1Name = (String)JOptionPane.showInputDialog("Enter player one's name:\n");
+				player1Name = (String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n");
 			} while (player1Name == null || player1Name.length() <= 0);
 			player1.setText(player1Name + ": 0");
 			player2.setText("Player 2: 0");
 		} else if (i == 2){
 			player2Name = null;
 			do{
-				player2Name = (String)JOptionPane.showInputDialog("Enter player two's name:\n");
+				player2Name = (String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n");
 			} while (player2Name == null || player2Name.length() <= 0);
 			player2.setText(player2Name + ": 0");
 		}
@@ -340,12 +344,76 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+
+
+
+	private void addCards(){
+		//prompt if player is sure
+		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+
+		//add 3 cards to empty row at the bottom
+		if (reveal == JOptionPane.YES_OPTION){
+			//draw 3 new cards from deck
+
+			//place 3 new cards images on board
+			cardButtons[12].setIcon(back);
+			cardButtons[13].setIcon(back);
+			cardButtons[14].setIcon(back);
+
+			//penalize current player
+			if (ruler.currentPlayer == 1){
+				ruler.playerOne.takePoints(3);
+				player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+			} else if (ruler.currentPlayer == 2){
+				ruler.playerTwo.takePoints(3);
+				player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+			}
+		}
+		
+		addCards.setEnabled(false);
+		//this needs to stay disabled until there are only 12 cards on the board
+	}
+
+	private void skipTurn(){
+		//prompt if sure
+		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+
+		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
+			ruler.switchPlayer();
+		} else if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer ==2){
+			ruler.switchPlayer();
+		}
+		//start other player's turn
+		//reset clock
+	}
+
+	private void getHint(){
+		int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+
+		if (hint == JOptionPane.YES_OPTION){
+
+			//ask GameRuler for the position of a card that is in a set on the board
+			//ask Card for the ClickedImage filename of that Card
+			//display the ClickedImage of that Card in the correct button position
+			//set the boolean "selected" to true for that card position
+
+			//penalize current player
+			if (ruler.currentPlayer == 1){
+				ruler.playerOne.takePoints(2);
+				player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+			} else if (ruler.currentPlayer == 2){
+				ruler.playerTwo.takePoints(2);
+				player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+			}
+		}
+	}
+
 	private void quitGame(){
-		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?\n", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "Are you sure?", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
-			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?\n", "Close window?", JOptionPane.YES_NO_OPTION);
+			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "Close window?", JOptionPane.YES_NO_OPTION);
 
 			if (exitWindow == JOptionPane.YES_OPTION){
 				frame.setVisible(false);
@@ -361,6 +429,12 @@ public class GameWindow extends JFrame {
 						cardButtons[i].setIcon(blank);
 					}
 				}
+
+				onePlayerGame.setEnabled(true);
+				twoPlayerGame.setEnabled(true);
+				skipTurn.setEnabled(false);
+				getHint.setEnabled(false);
+				addCards.setEnabled(false);
 				//reset clock to 00:00
 				//end other game stuff
 			}
@@ -368,23 +442,4 @@ public class GameWindow extends JFrame {
 		}
 
 	}
-	
-	private void addCards(){
-		//prompt if player is sure
-		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\n This will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
-		
-		//add 3 cards to empty row at the bottom
-		if (reveal == JOptionPane.YES_OPTION){
-			//draw 3 new cards from deck
-
-			//place 3 new cards images on board
-			cardButtons[12].setIcon(back);
-			cardButtons[13].setIcon(back);
-			cardButtons[14].setIcon(back);
-			
-			//penalize current player
-			player1.setText("Player 1: -5");
-		}
-	}
-
 }

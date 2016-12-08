@@ -1,6 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -13,9 +14,14 @@ public class GameRuler {
 
 	Player playerOne;
 	Player playerTwo;
-	ArrayList<Card> deck;
+	int currentPlayer;
 
 	public GameRuler() {
+		
+		playerOne = null;
+		playerTwo = null;
+		
+		currentPlayer = 0;
 	
 	}
 
@@ -23,6 +29,7 @@ public class GameRuler {
 
 	public void onePlayerGame(){
 		playerOne = new Player();
+		currentPlayer = 1;
 		
 		//get player's name
 		
@@ -39,9 +46,18 @@ public class GameRuler {
 		
 	}
 
-	public void twoPlayerGame(){
+	public void twoPlayerGame(String player1Name, String player2Name){
 		playerOne = new Player();
+		playerOne.setName(player1Name);
 		playerTwo = new Player();
+		playerTwo.setName(player2Name);
+		
+		Random rand = new Random();
+		if (rand.nextBoolean()){
+			currentPlayer = 1;
+		} else {
+			currentPlayer = 2;
+		}
 		
 		//get players' names
 		
@@ -58,6 +74,14 @@ public class GameRuler {
 		//if set, add points to current player & switch players
 		
 		//if not set, tell player & resume timer
+	}
+	
+	public void switchPlayer(){
+		if (currentPlayer == 1){
+			currentPlayer = 2;
+		} else if (currentPlayer == 2){
+			currentPlayer = 1;
+		}
 	}
 
 	public static int countSimilarity(Card card1, Card card2) {
