@@ -22,11 +22,7 @@ public class GameRuler {
 
 	
 
-	public void onePlayerGame(String playerName){
-		playerOne = new Player();
-		playerOne.setName(playerName);
-		
-		
+	public void onePlayerGame(){		
 		
 		//get player's name
 		

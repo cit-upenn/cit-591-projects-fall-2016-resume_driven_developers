@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 
 public class GameWindow extends JFrame {
 
+	static GameWindow frame;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -28,7 +30,7 @@ public class GameWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GameWindow frame = new GameWindow();
+					frame = new GameWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -380,19 +382,19 @@ public class GameWindow extends JFrame {
 	
 	private class generateAL implements ActionListener {
 		public void actionPerformed (ActionEvent e) {
-
+			
 			if(e.getSource().equals(onePlayerGame)) {
-				player1Name = null;
-				do{
-					player1Name = (String)JOptionPane.showInputDialog("Enter your name:\n");
-				} while (player1Name == null || player1Name.length() <= 0);
-				player1.setText(player1Name + ": " + player1Score);
-				ruler.onePlayerGame(player1Name);
+				getName(1);
+				skipTurn.setEnabled(false);
+				ruler.onePlayerGame();
 			} else if(e.getSource().equals(twoPlayerGame)) {
-				setNumPlayers(2);
-//				twoPlayerGame();
+				for (int i = 1; i < 3; i++){
+					getName(i);
+				}
+				skipTurn.setEnabled(true);
+				ruler.twoPlayerGame();
 			} else if(e.getSource().equals(howToPlay)) {
-				//show panel with rules and 
+				showRules();
 			} else if (e.getSource().equals(addCards)) {
 				//add 3 cards to empty row at the bottom
 			} else if (e.getSource().equals(getHint)) {
@@ -405,105 +407,35 @@ public class GameWindow extends JFrame {
 			}
 		}
 	}
-
-	public void setCardA(ImageIcon cardA) {
-		this.cardA = cardA;
-	}
-
-	public void setCardB(ImageIcon cardB) {
-		this.cardB = cardB;
-	}
-
-	public void setCardC(ImageIcon cardC) {
-		this.cardC = cardC;
-	}
-
-	public void setCardD(ImageIcon cardD) {
-		this.cardD = cardD;
-	}
-
-	public void setCardE(ImageIcon cardE) {
-		this.cardE = cardE;
-	}
-
-	public void setCardF(ImageIcon cardF) {
-		this.cardF = cardF;
-	}
-
-	public void setCardG(ImageIcon cardG) {
-		this.cardG = cardG;
-	}
-
-	public void setCardH(ImageIcon cardH) {
-		this.cardH = cardH;
-	}
-
-	public void setCardI(ImageIcon cardI) {
-		this.cardI = cardI;
-	}
-
-	public void setCardJ(ImageIcon cardJ) {
-		this.cardJ = cardJ;
-	}
-
-	public void setCardK(ImageIcon cardK) {
-		this.cardK = cardK;
-	}
-
-	public void setCardL(ImageIcon cardL) {
-		this.cardL = cardL;
-	}
-
-	public void setCardM(ImageIcon cardM) {
-		this.cardM = cardM;
-	}
-
-	public void setCardN(ImageIcon cardN) {
-		this.cardN = cardN;
-	}
-
-	public void setCardP(ImageIcon cardP) {
-		this.cardP = cardP;
-	}
-
-	public void setDeck(ImageIcon deck) {
-		this.deck = deck;
-	}
-
-	public String getPlayer1Name() {
-		return player1Name;
-	}
-
-	public void setPlayer1Name(String player1Name) {
-		this.player1Name = player1Name;
-	}
-
-	public String getPlayer2Name() {
-		return player2Name;
-	}
-
-	public void setPlayer2Name(String player2Name) {
-		this.player2Name = player2Name;
-	}
-
-	public String getPlayer1Score() {
-		return player1Score;
-	}
-
-	public void setPlayer1Score(int player1Score) {
-		this.player1Score = Integer.toString(player1Score);
-	}
-
-	public String getPlayer2Score() {
-		return player2Score;
-	}
-
-	public void setPlayer2Score(int player2Score) {
-		this.player2Score = Integer.toString(player2Score);
+	
+	public void getName(int i){
+		if (i == 1){
+		player1Name = null;
+		do{
+			player1Name = (String)JOptionPane.showInputDialog("Enter player one's name:\n");
+		} while (player1Name == null || player1Name.length() <= 0);
+		player1.setText(player1Name + ": " + player1Score);
+		} else if (i == 2){
+			player2Name = null;
+			do{
+				player2Name = (String)JOptionPane.showInputDialog("Enter player two's name:\n");
+			} while (player2Name == null || player2Name.length() <= 0);
+			player2.setText(player2Name + ": " + player2Score);
+		}
 	}
 	
-	public void setNumPlayers(int n){
-		numPlayers = n;
+	private void showRules(){
+		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
+		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, choices[0]);
+		if (j == 0){
+			JOptionPane.showMessageDialog(frame, "A SET is three cards where each feature, when looked at individually, is either all the same OR all different.\n"
+					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).");
+			//add panel with example of set and not set
+		} else if (j == 1){
+			JOptionPane.showMessageDialog(frame,"1 player rules go here");
+		} else if (j == 2) {
+			JOptionPane.showMessageDialog(frame,"2 player rules go here");
+		}
 	}
 
 }
