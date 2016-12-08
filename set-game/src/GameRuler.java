@@ -42,7 +42,6 @@ public class GameRuler {
 	public void twoPlayerGame(){
 		playerOne = new Player();
 		playerTwo = new Player();
-//		initButtons(2);
 		
 		//get players' names
 		
@@ -60,16 +59,6 @@ public class GameRuler {
 		
 		//if not set, tell player & resume timer
 	}
-
-//	public void initButtons(int n){
-//		gameWindow.enableButton(quitGame);
-//		gameWindow.addCards.addActionListener(new generateAL());
-//		gameWindow.getHint.addActionListener(new generateAL());
-//
-//		if (n == 2){
-//			gameWindow.skipTurn.addActionListener(new generateAL());
-//		}
-//	}
 
 	public static int countSimilarity(Card card1, Card card2) {
 		int count = 0;

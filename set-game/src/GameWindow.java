@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.Color;
@@ -22,7 +23,8 @@ import javax.swing.JPanel;
 public class GameWindow extends JFrame {
 
 	static GameWindow frame;
-	
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -41,7 +43,7 @@ public class GameWindow extends JFrame {
 
 	//instance variable for classes to run the game
 	GameRuler ruler;
-	
+
 	//instance variables for game setup buttons
 	JButton howToPlay;
 	JButton onePlayerGame;
@@ -50,365 +52,263 @@ public class GameWindow extends JFrame {
 	JButton getHint;
 	JButton skipTurn;
 	JButton quitGame;
-	
+
 	//instance variables for card buttons
-	JButton cardAButton;
-	JButton cardBButton;
-	JButton cardCButton;
-	JButton cardDButton;
-	JButton cardEButton;
-	JButton cardFButton;
-	JButton cardGButton;
-	JButton cardHButton;
-	JButton cardIButton;
-	JButton cardJButton;
-	JButton cardKButton;
-	JButton cardLButton;
-	JButton cardMButton;
-	JButton cardNButton;
-	JButton cardPButton;
-	
+	JButton[] cardButtons;
+	GridBagConstraints[] gbc_cardButtons;
+
 	//instance variables for card images
-	ImageIcon cardA;
-	ImageIcon cardB;
-	ImageIcon cardC;
-	ImageIcon cardD;
-	ImageIcon cardE;
-	ImageIcon cardF;
-	ImageIcon cardG;
-	ImageIcon cardH;
-	ImageIcon cardI;
-	ImageIcon cardJ;
-	ImageIcon cardK;
-	ImageIcon cardL;
-	ImageIcon cardM;
-	ImageIcon cardN;
-	ImageIcon cardP;
-	ImageIcon deck;
-	
+	ImageIcon back;
+	ImageIcon empty;
+	ImageIcon emptyClicked;
+	ImageIcon blank;
+
 	//instance variables for player stats
 	JLabel player1;
 	JLabel player2;
-	int numPlayers;
 	String player1Name;
 	String player2Name;
 	String player1Score;
 	String player2Score;
-	
+
 	/**
 	 * Create the frame.
 	 */
 	public GameWindow() {
 		
+
 		ruler = new GameRuler();
-		
-		getContentPane().setBackground(UIManager.getColor("Desktop.background"));
+
+		getContentPane().setBackground(new Color(70, 130, 180));
 		setBounds(100, 100, 1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.5, 0.0, 0.0, 0.0, 0.5};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		getContentPane().setVisible(true);
-		
-		cardA = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardB = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardC = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardD = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardE = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardF = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardG = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardH = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardI = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardJ = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardK = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardL = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		cardM = null;
-		cardN = null;
-		cardP = null;		
-		deck = null;
-		
-		player1Name = "Player 1";
-		player1Score = "0";
-		player2Name = "Player 2";
-		player2Score = "0";
-		
-		player1 = new JLabel(player1Name + ": " + player1Score);
-		player1.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		player1.setBackground(Color.LIGHT_GRAY);
+
+		back = new ImageIcon(GameWindow.class.getResource("/cardimages/back.png"));
+		empty = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
+		emptyClicked = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card_clkd.png"));
+		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
+
+		player1 = new JLabel("Player 1: 0");
+		player1.setBackground(new Color(255, 255, 240));
+		player1.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player1.setOpaque(true);
-		player1.setForeground(new Color(139, 0, 139));
+		player1.setForeground(new Color(148, 0, 211));
 		player1.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblPlayer1 = new GridBagConstraints();
-		gbc_lblPlayer1.insets = new Insets(10, 10, 5, 5);
-		gbc_lblPlayer1.gridx = 2;
-		gbc_lblPlayer1.gridy = 1;
-		gbc_lblPlayer1.gridwidth = 3;
 		gbc_lblPlayer1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblPlayer1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblPlayer1.gridx = 0;
+		gbc_lblPlayer1.gridy = 1;
 		getContentPane().add(player1, gbc_lblPlayer1);
-		
+
 		JLabel clock = new JLabel("00:00");
-		clock.setFont(new Font("Tahoma", Font.PLAIN, 42));
-		clock.setBackground(Color.WHITE);
+		clock.setFont(new Font("Tahoma", Font.BOLD, 42));
+		clock.setBackground(new Color(255, 255, 240));
 		clock.setOpaque(true);
 		clock.setForeground(new Color(255, 0, 0));
 		clock.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_clock = new GridBagConstraints();
 		gbc_clock.insets = new Insets(10, 10, 5, 5);
-		gbc_clock.gridx = 5;
+		gbc_clock.gridx = 2;
 		gbc_clock.gridy = 1;
-		gbc_clock.fill = GridBagConstraints.BOTH;
+		gbc_clock.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(clock, gbc_clock);
-		
-		player2 = new JLabel(player2Name + ": " + player2Score);
-		player2.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		player2.setBackground(Color.LIGHT_GRAY);
+
+		cardButtons = new JButton[15];
+		gbc_cardButtons = new GridBagConstraints[15];
+
+		for (int i = 0; i < 15; i++){
+			cardButtons[i] = new JButton("");
+
+			if (i < 12){
+				cardButtons[i].setIcon(back);
+			} else {
+				cardButtons[i].setIcon(blank);
+			}
+
+			cardButtons[i].setContentAreaFilled(false);
+			cardButtons[i].setBorder(null);
+			cardButtons[i].setBorderPainted(false);
+			cardButtons[i].setHorizontalAlignment(SwingConstants.CENTER);
+			cardButtons[i].setVerticalAlignment(SwingConstants.CENTER);
+			gbc_cardButtons[i] = new GridBagConstraints();
+			gbc_cardButtons[i].insets = new Insets(10, 10, 5, 5);
+
+			if (i < 3){
+				gbc_cardButtons[i].gridy = 3;
+			} else if (i < 6){
+				gbc_cardButtons[i].gridy = 4;
+			} else if (i < 9){
+				gbc_cardButtons[i].gridy = 5;
+			} else if (i < 12){
+				gbc_cardButtons[i].gridy = 6;
+			} else {
+				gbc_cardButtons[i].gridy = 7;
+			}
+
+			if (i%3 == 0){
+				gbc_cardButtons[i].gridx = 1;
+			} else if (i%3 == 1){
+				gbc_cardButtons[i].gridx = 2;
+			} else if (i%3 == 2) {
+				gbc_cardButtons[i].gridx = 3;
+			}
+
+			getContentPane().add(cardButtons[i], gbc_cardButtons[i]);
+
+		}
+
+		player2 = new JLabel("Player 2: 0");
+		player2.setBackground(new Color(255, 255, 240));
+		player2.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player2.setForeground(new Color(0, 100, 0));
 		player2.setOpaque(true);
 		player2.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_lblPlayer2 = new GridBagConstraints();
-		gbc_lblPlayer2.insets = new Insets(10, 10, 5, 5);
-		gbc_lblPlayer2.gridx = 6;
+		gbc_lblPlayer2.insets = new Insets(0, 0, 5, 0);
+		gbc_lblPlayer2.gridx = 4;
 		gbc_lblPlayer2.gridy = 1;
-		gbc_lblPlayer2.gridwidth = 2;
 		gbc_lblPlayer2.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(player2, gbc_lblPlayer2);
-		
+
 		howToPlay = new JButton("How To Play");
+		howToPlay.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnHowToPlay = new GridBagConstraints();
 		gbc_btnHowToPlay.insets = new Insets(0, 0, 5, 5);
 		gbc_btnHowToPlay.gridx = 0;
 		gbc_btnHowToPlay.gridy = 3;
 		getContentPane().add(howToPlay, gbc_btnHowToPlay);
-		
-		cardAButton = new JButton("");
-		cardAButton.setIcon(cardA);
-		cardAButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardA = new GridBagConstraints();
-		gbc_cardA.insets = new Insets(0, 0, 5, 5);
-		gbc_cardA.gridx = 4;
-		gbc_cardA.gridy = 3;
-		getContentPane().add(cardAButton, gbc_cardA);
-		
-		cardBButton = new JButton("");
-		cardBButton.setIcon(cardB);
-		cardBButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardB = new GridBagConstraints();
-		gbc_cardB.insets = new Insets(0, 0, 5, 5);
-		gbc_cardB.gridx = 5;
-		gbc_cardB.gridy = 3;
-		getContentPane().add(cardBButton, gbc_cardB);
-		
-		cardCButton = new JButton("");
-		cardCButton.setIcon(cardC);
-		cardCButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardC = new GridBagConstraints();
-		gbc_cardC.insets = new Insets(0, 0, 5, 5);
-		gbc_cardC.gridx = 6;
-		gbc_cardC.gridy = 3;
-		getContentPane().add(cardCButton, gbc_cardC);
-		
+		howToPlay.addActionListener(new generateAL());
+
 		onePlayerGame = new JButton("1 Player Game");
+		onePlayerGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnPlayerGame_1 = new GridBagConstraints();
 		gbc_btnPlayerGame_1.insets = new Insets(0, 0, 5, 5);
 		gbc_btnPlayerGame_1.gridx = 0;
 		gbc_btnPlayerGame_1.gridy = 4;
 		getContentPane().add(onePlayerGame, gbc_btnPlayerGame_1);
-		
-		cardDButton = new JButton("");
-		cardDButton.setIcon(cardD);
-		cardDButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardD = new GridBagConstraints();
-		gbc_cardD.insets = new Insets(0, 0, 5, 5);
-		gbc_cardD.gridx = 4;
-		gbc_cardD.gridy = 4;
-		getContentPane().add(cardDButton, gbc_cardD);
-		
-		cardEButton = new JButton("");
-		cardEButton.setIcon(cardE);
-		cardEButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardE = new GridBagConstraints();
-		gbc_cardE.insets = new Insets(0, 0, 5, 5);
-		gbc_cardE.gridx = 5;
-		gbc_cardE.gridy = 4;
-		getContentPane().add(cardEButton, gbc_cardE);
-		
-		cardFButton = new JButton("");
-		cardFButton.setIcon(cardF);
-		cardFButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardF = new GridBagConstraints();
-		gbc_cardF.insets = new Insets(0, 0, 5, 5);
-		gbc_cardF.gridx = 6;
-		gbc_cardF.gridy = 4;
-		getContentPane().add(cardFButton, gbc_cardF);
-		
+		onePlayerGame.addActionListener(new generateAL());
+
 		addCards = new JButton("Add 3 Cards");
+		addCards.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnAddCards = new GridBagConstraints();
 		gbc_btnAddCards.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAddCards.gridx = 8;
+		gbc_btnAddCards.gridx = 4;
 		gbc_btnAddCards.gridy = 4;
 		getContentPane().add(addCards, gbc_btnAddCards);
-		
+		addCards.addActionListener(new generateAL());
+
 		twoPlayerGame = new JButton("2 Player Game");
+		twoPlayerGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnPlayerGame = new GridBagConstraints();
 		gbc_btnPlayerGame.insets = new Insets(0, 0, 5, 5);
 		gbc_btnPlayerGame.gridx = 0;
 		gbc_btnPlayerGame.gridy = 5;
 		getContentPane().add(twoPlayerGame, gbc_btnPlayerGame);
-		
-		cardGButton = new JButton("");
-		cardGButton.setIcon(cardG);
-		cardGButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardG = new GridBagConstraints();
-		gbc_cardG.insets = new Insets(0, 0, 5, 5);
-		gbc_cardG.gridx = 4;
-		gbc_cardG.gridy = 5;
-		getContentPane().add(cardGButton, gbc_cardG);
-		
-		cardHButton = new JButton("");
-		cardHButton.setIcon(cardH);
-		cardHButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardH = new GridBagConstraints();
-		gbc_cardH.insets = new Insets(0, 0, 5, 5);
-		gbc_cardH.gridx = 5;
-		gbc_cardH.gridy = 5;
-		getContentPane().add(cardHButton, gbc_cardH);
-		
-		cardIButton = new JButton("");
-		cardIButton.setIcon(cardI);
-		cardIButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardI = new GridBagConstraints();
-		gbc_cardI.insets = new Insets(0, 0, 5, 5);
-		gbc_cardI.gridx = 6;
-		gbc_cardI.gridy = 5;
-		getContentPane().add(cardIButton, gbc_cardI);
-		
+		twoPlayerGame.addActionListener(new generateAL());
+
 		getHint = new JButton("Get A Hint");
+		getHint.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnHint = new GridBagConstraints();
 		gbc_btnHint.insets = new Insets(0, 0, 5, 0);
-		gbc_btnHint.gridx = 8;
+		gbc_btnHint.gridx = 4;
 		gbc_btnHint.gridy = 5;
 		getContentPane().add(getHint, gbc_btnHint);
-		
+		getHint.addActionListener(new generateAL());
+
 		quitGame = new JButton("Quit Game");
+		quitGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
 		gbc_btnQuitGame.insets = new Insets(0, 0, 5, 5);
 		gbc_btnQuitGame.gridx = 0;
 		gbc_btnQuitGame.gridy = 6;
 		getContentPane().add(quitGame, gbc_btnQuitGame);
-		
-		cardJButton = new JButton("");
-		cardJButton.setIcon(cardJ);
-		cardJButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_CardJ = new GridBagConstraints();
-		gbc_CardJ.insets = new Insets(0, 0, 5, 5);
-		gbc_CardJ.gridx = 4;
-		gbc_CardJ.gridy = 6;
-		getContentPane().add(cardJButton, gbc_CardJ);
-		
-		cardKButton = new JButton("");
-		cardKButton.setIcon(cardK);
-		cardKButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardK = new GridBagConstraints();
-		gbc_cardK.insets = new Insets(0, 0, 5, 5);
-		gbc_cardK.gridx = 5;
-		gbc_cardK.gridy = 6;
-		getContentPane().add(cardKButton, gbc_cardK);
-		
-		cardLButton = new JButton("");
-		cardLButton.setIcon(cardL);
-		cardLButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardL = new GridBagConstraints();
-		gbc_cardL.insets = new Insets(0, 0, 5, 5);
-		gbc_cardL.gridx = 6;
-		gbc_cardL.gridy = 6;
-		getContentPane().add(cardLButton, gbc_cardL);
-		
+		quitGame.addActionListener(new generateAL());
+
 		skipTurn = new JButton("Skip Turn");
+		skipTurn.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnSkipTurn = new GridBagConstraints();
 		gbc_btnSkipTurn.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSkipTurn.gridx = 8;
+		gbc_btnSkipTurn.gridx = 4;
 		gbc_btnSkipTurn.gridy = 6;
 		getContentPane().add(skipTurn, gbc_btnSkipTurn);
-		
-		cardMButton = new JButton("");
-		cardMButton.setIcon(cardM);
-		cardMButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_CardM = new GridBagConstraints();
-		gbc_CardM.insets = new Insets(0, 0, 5, 5);
-		gbc_CardM.gridx = 4;
-		gbc_CardM.gridy = 7;
-		getContentPane().add(cardMButton, gbc_CardM);
-		
-		cardNButton = new JButton("");
-		cardNButton.setIcon(cardN);
-		cardNButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardN = new GridBagConstraints();
-		gbc_cardN.insets = new Insets(0, 0, 5, 5);
-		gbc_cardN.gridx = 5;
-		gbc_cardN.gridy = 7;
-		getContentPane().add(cardNButton, gbc_cardN);
-		
-		cardPButton = new JButton("");
-		cardPButton.setIcon(cardP);
-		cardPButton.setContentAreaFilled(false);
-		GridBagConstraints gbc_cardP = new GridBagConstraints();
-		gbc_cardP.insets = new Insets(0, 0, 5, 5);
-		gbc_cardP.gridx = 6;
-		gbc_cardP.gridy = 7;
-		getContentPane().add(cardPButton, gbc_cardP);
-		
+		skipTurn.addActionListener(new generateAL());
+
 		JLabel lblDeck = new JLabel("");
-		lblDeck.setIcon(deck);
+		lblDeck.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDeck.setIcon(back);
 		GridBagConstraints gbc_lblDeckImages = new GridBagConstraints();
-		gbc_lblDeckImages.insets = new Insets(0, 0, 0, 5);
-		gbc_lblDeckImages.gridx = 5;
-		gbc_lblDeckImages.gridy = 9;
+		gbc_lblDeckImages.insets = new Insets(10, 10, 5, 5);
+		gbc_lblDeckImages.gridx = 2;
+		gbc_lblDeckImages.gridy = 8;
 		getContentPane().add(lblDeck, gbc_lblDeckImages);
 		
-		howToPlay.addActionListener(new generateAL());
-		onePlayerGame.addActionListener(new generateAL());
-		twoPlayerGame.addActionListener(new generateAL());
-		addCards.addActionListener(new generateAL());
-		getHint.addActionListener(new generateAL());
-		skipTurn.addActionListener(new generateAL());
-		quitGame.addActionListener(new generateAL());
+		Random rand = new Random();
+		String[] filenames = new String[12];
 		
-		
-		
+		for (int j = 0; j < 12; j++){
+			int number = rand.nextInt(70) + 10;
+			filenames[j] = "/cardimages/Card" + number + ".jpg";
+//			cardButtons[j].setText(filenames[j]);
+			cardButtons[j].setIcon(new ImageIcon(GameWindow.class.getResource(filenames[j])));
+		}
+
 	}
-	
+
 	private class generateAL implements ActionListener {
+		
 		public void actionPerformed (ActionEvent e) {
 			
 			if(e.getSource().equals(onePlayerGame)) {
+
 				getName(1);
 				skipTurn.setEnabled(false);
+//				board.get12Cards();
 				ruler.onePlayerGame();
+
 			} else if(e.getSource().equals(twoPlayerGame)) {
+
 				for (int i = 1; i < 3; i++){
 					getName(i);
 				}
 				skipTurn.setEnabled(true);
 				ruler.twoPlayerGame();
+
 			} else if(e.getSource().equals(howToPlay)) {
+
 				showRules();
+
 			} else if (e.getSource().equals(addCards)) {
-				//add 3 cards to empty row at the bottom
+
+				addCards();
+
 			} else if (e.getSource().equals(getHint)) {
-				//highlight one card that is part of a set on the board
+				//ask GameRuler for the position of a card that is in a set on the board
+				//ask Card for the ClickedImage filename of that Card
+				//display the ClickedImage of that Card in the correct button position
+				//set the boolean "selected" to true for that card position
+
 			} else if (e.getSource().equals(skipTurn)) {
+
 				//prompt if sure
+
 				//start other player's turn
+
 			} else if (e.getSource().equals(quitGame)) {
-				
+
+				quitGame();
 			}
 		}
 	}
-	
-	public void getName(int i){
+
+	private void getName(int i){
 		if (i == 1){
 			player1Name = null;
 			do{
@@ -424,18 +324,66 @@ public class GameWindow extends JFrame {
 			player2.setText(player2Name + ": 0");
 		}
 	}
-	
+
 	private void showRules(){
 		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
 		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, choices[0]);
 		if (j == 0){
 			JOptionPane.showMessageDialog(frame, "A SET is three cards where each feature, when looked at individually, is either all the same OR all different.\n"
-					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).");
+					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).",
+					"How To Play", JOptionPane.DEFAULT_OPTION);
 			//add panel with example of set and not set
 		} else if (j == 1){
-			JOptionPane.showMessageDialog(frame,"1 player rules go here");
+			JOptionPane.showMessageDialog(frame,"1 player rules go here", "How To Play", JOptionPane.DEFAULT_OPTION);
 		} else if (j == 2) {
-			JOptionPane.showMessageDialog(frame,"2 player rules go here");
+			JOptionPane.showMessageDialog(frame,"2 player rules go here", "How To Play", JOptionPane.DEFAULT_OPTION);
+		}
+	}
+
+	private void quitGame(){
+		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?\n", "Are you sure?", JOptionPane.YES_NO_OPTION);
+
+		//add 3 cards to empty row at the bottom
+		if (endGame == JOptionPane.YES_OPTION){
+			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?\n", "Close window?", JOptionPane.YES_NO_OPTION);
+
+			if (exitWindow == JOptionPane.YES_OPTION){
+				frame.setVisible(false);
+				System.exit(0);
+			} else {
+				player1.setText("Player 1: 0");
+				player2.setText("Player 2: 0");
+
+				for (int i = 0; i < 15; i++){
+					if (i < 12){
+						cardButtons[i].setIcon(back);
+					} else {
+						cardButtons[i].setIcon(blank);
+					}
+				}
+				//reset clock to 00:00
+				//end other game stuff
+			}
+
+		}
+
+	}
+	
+	private void addCards(){
+		//prompt if player is sure
+		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\n This will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		
+		//add 3 cards to empty row at the bottom
+		if (reveal == JOptionPane.YES_OPTION){
+			//draw 3 new cards from deck
+
+			//place 3 new cards images on board
+			cardButtons[12].setIcon(back);
+			cardButtons[13].setIcon(back);
+			cardButtons[14].setIcon(back);
+			
+			//penalize current player
+			player1.setText("Player 1: -5");
 		}
 	}
 
