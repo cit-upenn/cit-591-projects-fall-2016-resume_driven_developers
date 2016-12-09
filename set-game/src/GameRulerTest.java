@@ -15,6 +15,7 @@ public class GameRulerTest {
 	public void testColor() {
 		Card card1 = new Card("a", "b", "c", "d", "e");
 		Card card2 = new Card("a", "b", "c", "d", "e");
+		Card card3 = new Card("a", "b", "c", "d", "e");
 
 		int actual = GameRuler.isSameColor(card1, card2);
 		int expected = 1;
@@ -71,5 +72,48 @@ public class GameRulerTest {
 		int expected = 3;
 		assertTrue(actual == expected);
 	}	
+
+	@Test
+	public void testContainsRule1() {
+		Card card1 = new Card("id", "2", "red", "empty", "oval");
+		Card card2 = new Card("id", "2", "red", "striped", "oval");
+		Card card3 = new Card("id", "2", "red", "solid", "oval");
+
+		boolean actual = GameRuler.containsRule(card1, card2, card3);
+		boolean expected = true;
+		assertTrue(actual == expected);
+	}	
+
+	@Test
+	public void testContainsRule2() {
+		Card card1 = new Card("id", "1", "green", "striped", "stri");
+		Card card2 = new Card("id", "2", "purple", "striped", "oval");
+		Card card3 = new Card("id", "3", "red", "striped", "diamond");
+
+		boolean actual = GameRuler.containsRule(card1, card2, card3);
+		boolean expected = true;
+		assertTrue(actual == expected);
+	}	
+
+	@Test
+	public void testContainsRule3() {
+		Card card1 = new Card("id", "1", "purple", "striped", "oval");
+		Card card2 = new Card("id", "2", "green", "solid", "diamond");
+		Card card3 = new Card("id", "3", "red", "empty", "stri");
+
+		boolean actual = GameRuler.containsRule(card1, card2, card3);
+		boolean expected = true;
+		assertTrue(actual == expected);
+	}	
 	
+	@Test
+	public void testContainsRule4() {
+		Card card1 = new Card("id", "1", "green", "striped", "oval");
+		Card card2 = new Card("id", "2", "green", "solid", "diamond");
+		Card card3 = new Card("id", "3", "red", "empty", "stri");
+
+		boolean actual = GameRuler.containsRule(card1, card2, card3);
+		boolean expected = false;
+		assertTrue(actual == expected);
+	}	
 }
