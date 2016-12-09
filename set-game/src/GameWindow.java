@@ -24,7 +24,6 @@ public class GameWindow extends JFrame {
 
 	static GameWindow frame;
 
-
 	/**
 	 * Launch the application.
 	 */
@@ -39,6 +38,7 @@ public class GameWindow extends JFrame {
 				}
 			}
 		});
+
 	}
 
 	//instance variable for classes to run the game
@@ -368,10 +368,12 @@ public class GameWindow extends JFrame {
 				ruler.playerTwo.takePoints(3);
 				player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
 			}
+
+			addCards.setEnabled(false);
+			//this needs to stay disabled until there are only 12 cards on the board
 		}
-		
-		addCards.setEnabled(false);
-		//this needs to stay disabled until there are only 12 cards on the board
+
+
 	}
 
 	private void skipTurn(){
