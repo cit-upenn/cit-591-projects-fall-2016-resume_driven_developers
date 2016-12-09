@@ -22,12 +22,17 @@ import javax.swing.JPanel;
 
 public class GameWindow extends JFrame {
 
-	static GameWindow frame;
+	private static GameWindow frame;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+
+		javax.swing.UIManager.put("OptionPane.messageFont", new Font("Tahoma", Font.PLAIN, 28));
+		javax.swing.UIManager.put("OptionPane.font", new Font("Tahoma", Font.PLAIN, 22));
+		javax.swing.UIManager.put("OptionPane.buttonFont", new Font("Tahoma", Font.PLAIN, 22));
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -263,31 +268,34 @@ public class GameWindow extends JFrame {
 			if(e.getSource().equals(onePlayerGame)) {
 
 				getName(1);
-				player2.setText("");
-				skipTurn.setEnabled(false);
-				onePlayerGame.setEnabled(false);
-				twoPlayerGame.setEnabled(false);
-				getHint.setEnabled(true);
-				addCards.setEnabled(true);
-				//				board.get12Cards();
-				ruler.onePlayerGame();
-
+				if (player1Name != null){
+					player2.setText("");
+					skipTurn.setEnabled(false);
+					onePlayerGame.setEnabled(false);
+					twoPlayerGame.setEnabled(false);
+					getHint.setEnabled(true);
+					addCards.setEnabled(true);
+					//				board.get12Cards();
+					ruler.onePlayerGame();
+				}
 			} else if(e.getSource().equals(twoPlayerGame)) {
 
 				for (int i = 1; i < 3; i++){
 					getName(i);
 				}
-				skipTurn.setEnabled(true);
-				onePlayerGame.setEnabled(false);
-				twoPlayerGame.setEnabled(false);
-				getHint.setEnabled(true);
-				addCards.setEnabled(true);
+				if (player1Name != null && player2Name != null){
+					skipTurn.setEnabled(true);
+					onePlayerGame.setEnabled(false);
+					twoPlayerGame.setEnabled(false);
+					getHint.setEnabled(true);
+					addCards.setEnabled(true);
 
-				ruler.twoPlayerGame(player1Name, player2Name);
-				if (ruler.currentPlayer == 1){
-					JOptionPane.showMessageDialog(frame, player1Name + " will go first!");
-				} else if (ruler.currentPlayer == 2){
-					JOptionPane.showMessageDialog(frame, player2Name + " will go first!");
+					ruler.twoPlayerGame(player1Name, player2Name);
+					if (ruler.currentPlayer == 1){
+						JOptionPane.showMessageDialog(frame, player1Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+					} else if (ruler.currentPlayer == 2){
+						JOptionPane.showMessageDialog(frame, player2Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+					}
 				}
 			} else if(e.getSource().equals(howToPlay)) {
 
@@ -314,33 +322,31 @@ public class GameWindow extends JFrame {
 
 	private void getName(int i){
 		if (i == 1){
-			player1Name = null;
-			do{
-				player1Name = (String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n");
-			} while (player1Name == null || player1Name.length() <= 0);
-			player1.setText(player1Name + ": 0");
-			player2.setText("Player 2: 0");
-		} else if (i == 2){
-			player2Name = null;
-			do{
-				player2Name = (String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n");
-			} while (player2Name == null || player2Name.length() <= 0);
-			player2.setText(player2Name + ": 0");
+			player1Name = (String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE);
+			if (player1Name != null){
+				player1.setText(player1Name + ": 0");
+				player2.setText("Player 2: 0");
+			}
+		} else if (i == 2 && player1Name != null){
+			player2Name = (String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE);
+			if (player2Name != null){
+				player2.setText(player2Name + ": 0");
+			}
 		}
 	}
 
 	private void showRules(){
 		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
-		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, choices, choices[0]);
+		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
 		if (j == 0){
 			JOptionPane.showMessageDialog(frame, "A SET is three cards where each feature, when looked at individually, is either all the same OR all different.\n"
 					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).",
 					"How To Play", JOptionPane.DEFAULT_OPTION);
 			//add panel with example of set and not set
 		} else if (j == 1){
-			JOptionPane.showMessageDialog(frame,"1 player rules go here", "How To Play", JOptionPane.DEFAULT_OPTION);
+			JOptionPane.showMessageDialog(frame,"1 player rules go here", "1-Player Game Rules", JOptionPane.DEFAULT_OPTION);
 		} else if (j == 2) {
-			JOptionPane.showMessageDialog(frame,"2 player rules go here", "How To Play", JOptionPane.DEFAULT_OPTION);
+			JOptionPane.showMessageDialog(frame,"2 player rules go here", "2-Player Game Rules", JOptionPane.DEFAULT_OPTION);
 		}
 	}
 
@@ -349,7 +355,7 @@ public class GameWindow extends JFrame {
 
 	private void addCards(){
 		//prompt if player is sure
-		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (reveal == JOptionPane.YES_OPTION){
@@ -378,7 +384,7 @@ public class GameWindow extends JFrame {
 
 	private void skipTurn(){
 		//prompt if sure
-		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			ruler.switchPlayer();
@@ -390,7 +396,7 @@ public class GameWindow extends JFrame {
 	}
 
 	private void getHint(){
-		int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		if (hint == JOptionPane.YES_OPTION){
 
@@ -411,11 +417,11 @@ public class GameWindow extends JFrame {
 	}
 
 	private void quitGame(){
-		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "Are you sure?", JOptionPane.YES_NO_OPTION);
+		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
-			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "Close window?", JOptionPane.YES_NO_OPTION);
+			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
 
 			if (exitWindow == JOptionPane.YES_OPTION){
 				frame.setVisible(false);
