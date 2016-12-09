@@ -1,4 +1,4 @@
-
+import java.util.Random;
 
 /**
  * a class for game rules
@@ -8,6 +8,77 @@
 
 public class GameRuler {
 
+	Player playerOne;
+	Player playerTwo;
+	int currentPlayer;
+
+	public GameRuler() {
+		
+		playerOne = null;
+		playerTwo = null;
+		
+		currentPlayer = 0;
+	
+	}
+
+	
+
+	public void onePlayerGame(){
+		playerOne = new Player();
+		currentPlayer = 1;
+		
+		//get player's name
+		
+		//initialize timer
+		
+		//listen for 3 clicked cards
+		
+		//pause timer & check if selected cards are a set
+		
+		//if set, add points
+		
+		//if not set, tell player & resume timer
+		
+		
+	}
+
+	public void twoPlayerGame(String player1Name, String player2Name){
+		playerOne = new Player();
+		playerOne.setName(player1Name);
+		playerTwo = new Player();
+		playerTwo.setName(player2Name);
+		
+		Random rand = new Random();
+		if (rand.nextBoolean()){
+			currentPlayer = 1;
+		} else {
+			currentPlayer = 2;
+		}
+		
+		//get players' names
+		
+		//randomly select which player goes first
+		
+		//deal 12 cards
+		
+		//initialize timer
+		
+		//listen for 3 clicked cards
+		
+		//pause timer & check if selected cards are a set
+		
+		//if set, add points to current player & switch players
+		
+		//if not set, tell player & resume timer
+	}
+	
+	public void switchPlayer(){
+		if (currentPlayer == 1){
+			currentPlayer = 2;
+		} else if (currentPlayer == 2){
+			currentPlayer = 1;
+		}
+	}
 	
 	/**
 	 * A method to validate whether the 3 cards contain a "rule" among them

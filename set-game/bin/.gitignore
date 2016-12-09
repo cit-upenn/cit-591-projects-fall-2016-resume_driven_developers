@@ -1,10 +1,11 @@
+/cardimages/
 /Board.class
 /Card.class
-/GameRuler$generateAL.class
+/Deck.class
 /GameRuler.class
 /GameRulerTest.class
 /GameTester.class
 /GameWindow$1.class
+/GameWindow$generateAL.class
 /GameWindow.class
 /Player.class
-/GameWindow$generateAL.class
