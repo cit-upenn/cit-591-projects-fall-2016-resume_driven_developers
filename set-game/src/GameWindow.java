@@ -30,7 +30,6 @@ public class GameWindow extends JFrame {
 	public static void main(String[] args) {
 
 		javax.swing.UIManager.put("OptionPane.messageFont", new Font("Tahoma", Font.PLAIN, 28));
-		javax.swing.UIManager.put("OptionPane.font", new Font("Tahoma", Font.PLAIN, 22));
 		javax.swing.UIManager.put("OptionPane.buttonFont", new Font("Tahoma", Font.PLAIN, 22));
 
 		EventQueue.invokeLater(new Runnable() {
@@ -81,9 +80,10 @@ public class GameWindow extends JFrame {
 	 */
 	public GameWindow() {
 
-
+		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
 
+		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
 		setBounds(100, 100, 1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,11 +95,19 @@ public class GameWindow extends JFrame {
 		getContentPane().setLayout(gridBagLayout);
 		getContentPane().setVisible(true);
 
+		/*
+		 * assigns images for the four non-card face images used
+		 * back - back face of cards
+		 * empty - for when a card in the main 12 area has been removed
+		 * emptyClicked - for when a user accidentally clicks an empty card cell
+		 * blank - for the bottom rom that isn't always in use
+		 */
 		back = new ImageIcon(GameWindow.class.getResource("/cardimages/back.png"));
 		empty = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
 		emptyClicked = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card_clkd.png"));
 		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
 
+		//creates the text area for player 1's name and score
 		player1 = new JLabel("Player 1: 0");
 		player1.setBackground(new Color(255, 255, 240));
 		player1.setFont(new Font("Tahoma", Font.PLAIN, 42));
@@ -113,6 +121,7 @@ public class GameWindow extends JFrame {
 		gbc_lblPlayer1.gridy = 1;
 		getContentPane().add(player1, gbc_lblPlayer1);
 
+		//creates the text area for the timer
 		JLabel clock = new JLabel("00:00");
 		clock.setFont(new Font("Tahoma", Font.BOLD, 42));
 		clock.setBackground(new Color(255, 255, 240));
@@ -126,18 +135,22 @@ public class GameWindow extends JFrame {
 		gbc_clock.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(clock, gbc_clock);
 
+		//creates buttons for the 15 clickable cards
 		cardButtons = new JButton[15];
 		gbc_cardButtons = new GridBagConstraints[15];
 
 		for (int i = 0; i < 15; i++){
 			cardButtons[i] = new JButton("");
 
+			//this sets the first 12 cards to show the back face
+			//and the last 3 to be empty
 			if (i < 12){
 				cardButtons[i].setIcon(back);
 			} else {
 				cardButtons[i].setIcon(blank);
 			}
 
+			//this makes sure nothing but the card image shows (no border, etc)
 			cardButtons[i].setContentAreaFilled(false);
 			cardButtons[i].setBorder(null);
 			cardButtons[i].setBorderPainted(false);
@@ -146,6 +159,9 @@ public class GameWindow extends JFrame {
 			gbc_cardButtons[i] = new GridBagConstraints();
 			gbc_cardButtons[i].insets = new Insets(10, 10, 5, 5);
 
+			//the cards are in locations (3, 1) through (7, 3)
+			//this makes 5 rows and 3 columns
+			//(0,0) is the upper left corner of the GridBagLayout
 			if (i < 3){
 				gbc_cardButtons[i].gridy = 3;
 			} else if (i < 6){
@@ -166,10 +182,12 @@ public class GameWindow extends JFrame {
 				gbc_cardButtons[i].gridx = 3;
 			}
 
+			//this add each card button to the window pane
 			getContentPane().add(cardButtons[i], gbc_cardButtons[i]);
 
 		}
 
+		//creates the player 2 text area for name and score
 		player2 = new JLabel("Player 2: 0");
 		player2.setBackground(new Color(255, 255, 240));
 		player2.setFont(new Font("Tahoma", Font.PLAIN, 42));
@@ -183,6 +201,7 @@ public class GameWindow extends JFrame {
 		gbc_lblPlayer2.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(player2, gbc_lblPlayer2);
 
+		//creates the how to play button
 		howToPlay = new JButton("How To Play");
 		howToPlay.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnHowToPlay = new GridBagConstraints();
@@ -192,6 +211,7 @@ public class GameWindow extends JFrame {
 		getContentPane().add(howToPlay, gbc_btnHowToPlay);
 		howToPlay.addActionListener(new generateAL());
 
+		//creates the 1 player game button
 		onePlayerGame = new JButton("1 Player Game");
 		onePlayerGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnPlayerGame_1 = new GridBagConstraints();
@@ -201,6 +221,7 @@ public class GameWindow extends JFrame {
 		getContentPane().add(onePlayerGame, gbc_btnPlayerGame_1);
 		onePlayerGame.addActionListener(new generateAL());
 
+		//creates the add 3 cards button
 		addCards = new JButton("Add 3 Cards");
 		addCards.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnAddCards = new GridBagConstraints();
@@ -211,6 +232,7 @@ public class GameWindow extends JFrame {
 		addCards.addActionListener(new generateAL());
 		addCards.setEnabled(false);
 
+		//creates the 2 player game button
 		twoPlayerGame = new JButton("2 Player Game");
 		twoPlayerGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnPlayerGame = new GridBagConstraints();
@@ -220,6 +242,7 @@ public class GameWindow extends JFrame {
 		getContentPane().add(twoPlayerGame, gbc_btnPlayerGame);
 		twoPlayerGame.addActionListener(new generateAL());
 
+		//creates the get a hint button
 		getHint = new JButton("Get A Hint");
 		getHint.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnHint = new GridBagConstraints();
@@ -230,6 +253,7 @@ public class GameWindow extends JFrame {
 		getHint.addActionListener(new generateAL());
 		getHint.setEnabled(false);
 
+		//creates the quit game button
 		quitGame = new JButton("Quit Game");
 		quitGame.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnQuitGame = new GridBagConstraints();
@@ -239,6 +263,7 @@ public class GameWindow extends JFrame {
 		getContentPane().add(quitGame, gbc_btnQuitGame);
 		quitGame.addActionListener(new generateAL());
 
+		//creates the skip turn button
 		skipTurn = new JButton("Skip Turn");
 		skipTurn.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GridBagConstraints gbc_btnSkipTurn = new GridBagConstraints();
@@ -249,6 +274,9 @@ public class GameWindow extends JFrame {
 		skipTurn.addActionListener(new generateAL());
 		skipTurn.setEnabled(false);
 
+		//creates a location to display an image of the deck
+		//we originally wanted to show the deck decreasing through the game
+		//we may need to scrap this idea - it's harder than i expected to find image files of a stacked deck
 		JLabel lblDeck = new JLabel("");
 		lblDeck.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDeck.setIcon(back);
@@ -261,13 +289,23 @@ public class GameWindow extends JFrame {
 
 	}
 
+	/**
+	 * This is what makes the magic happen!
+	 * In particular, this makes the gray buttons on the left and right
+	 * of the game board actually do things.
+	 * @author eherzog
+	 *
+	 */
 	private class generateAL implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
 
 			if(e.getSource().equals(onePlayerGame)) {
-
+				
+				//asks for and displays player 1's name
 				getName(1);
+				
+				//sets the correct buttons to enabled or disabled
 				if (player1Name != null){
 					player2.setText("");
 					skipTurn.setEnabled(false);
@@ -275,14 +313,21 @@ public class GameWindow extends JFrame {
 					twoPlayerGame.setEnabled(false);
 					getHint.setEnabled(true);
 					addCards.setEnabled(true);
-					//				board.get12Cards();
+					
+					//then, we need to show 12 new random cards from a freshdeck
+					//board.get12Cards();
+					
+					//next, play the game!
 					ruler.onePlayerGame();
 				}
 			} else if(e.getSource().equals(twoPlayerGame)) {
-
+				
+				//ask for and display both player's names
 				for (int i = 1; i < 3; i++){
 					getName(i);
 				}
+				
+				//sets the correct buttons to enabled and disabled
 				if (player1Name != null && player2Name != null){
 					skipTurn.setEnabled(true);
 					onePlayerGame.setEnabled(false);
@@ -290,7 +335,10 @@ public class GameWindow extends JFrame {
 					getHint.setEnabled(true);
 					addCards.setEnabled(true);
 
+					//play a 2 player game
 					ruler.twoPlayerGame(player1Name, player2Name);
+					
+					//tell the players who will go first
 					if (ruler.currentPlayer == 1){
 						JOptionPane.showMessageDialog(frame, player1Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
 					} else if (ruler.currentPlayer == 2){
@@ -427,6 +475,8 @@ public class GameWindow extends JFrame {
 				frame.setVisible(false);
 				System.exit(0);
 			} else {
+
+				//if the window isn't closed, reset everything to initial conditions
 				player1.setText("Player 1: 0");
 				player2.setText("Player 2: 0");
 
