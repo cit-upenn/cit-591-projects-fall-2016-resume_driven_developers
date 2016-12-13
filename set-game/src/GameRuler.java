@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * a class for game rules
@@ -78,6 +82,41 @@ public class GameRuler {
 		} else if (currentPlayer == 2){
 			currentPlayer = 1;
 		}
+	}
+	
+	/**
+	 * check whether there is any solution in the cards
+	 * @param cardsOnBoard
+	 * @return
+	 */
+	public static boolean containsSolution(Card[] cardsOnBoard) {
+		if(getSolutions(cardsOnBoard).size() == 0) return false;
+		else return true;
+	}
+	
+	/**
+	 * Generator of set solutions from the input cards
+	 * @param cardsOnBoard
+	 * @return
+	 */
+	public  static List<Set<Card>> getSolutions(Card[] cardsOnBoard) {
+		List<Set<Card>> solutions = new ArrayList<Set<Card>>();
+		int number = cardsOnBoard.length;
+		for(int i=0; i<number-2; i++) {
+			for(int j=i+1; j<number-1; j++) {
+				for(int k=j+1; k<number; k++) {
+					if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
+						Set<Card> sol = new HashSet<Card>();
+						sol.add(cardsOnBoard[i]);
+						sol.add(cardsOnBoard[j]);
+						sol.add(cardsOnBoard[k]);
+						solutions.add(sol);
+					}
+				}
+			}			
+		}
+		
+		return solutions;
 	}
 	
 	/**
