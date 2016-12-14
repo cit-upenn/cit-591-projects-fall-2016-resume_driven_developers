@@ -65,6 +65,7 @@ public class GameWindow extends JFrame {
 	//instance variables for card buttons
 	JButton[] cardButtons;
 	GridBagConstraints[] gbc_cardButtons;
+	Card[] cards;
 
 	//instance variables for card images
 	ImageIcon back;
@@ -107,6 +108,9 @@ public class GameWindow extends JFrame {
 		
 		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
+		
+		//initialize array of 15 cards
+		cards = new Card[15];
 
 		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
@@ -126,9 +130,9 @@ public class GameWindow extends JFrame {
 		 * back - back face of cards
 		 * empty - for when a card in the main 12 area has been removed
 		 * emptyClicked - for when a user accidentally clicks an empty card cell
-		 * blank - for the bottom rom that isn't always in use
+		 * blank - for the bottom row that isn't always in use
 		 */
-		back = new ImageIcon(GameWindow.class.getResource("/cardimages/back.png"));
+		back = new ImageIcon(GameWindow.class.getResource("/cardimages/back.jpg"));
 		empty = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
 		emptyClicked = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card_clkd.png"));
 		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
@@ -344,8 +348,8 @@ public class GameWindow extends JFrame {
 					getHint.setEnabled(true);
 					addCards.setEnabled(true);
 					
-					//then, we need to show 12 new random cards from a freshdeck
-					//board.get12Cards();
+					
+					dealBoard();
 					
 					//next, play the game!
 					ruler.onePlayerGame();
@@ -365,6 +369,9 @@ public class GameWindow extends JFrame {
 					getHint.setEnabled(true);
 					addCards.setEnabled(true);
 
+					//deal 12 cards
+					dealBoard();
+					
 					//play a 2 player game
 					ruler.twoPlayerGame(player1Name, player2Name);
 					
@@ -536,5 +543,16 @@ public class GameWindow extends JFrame {
 
 		}
 
+	}
+	
+	private void dealBoard(){
+
+		cards = ruler.playBoard.getPlayedCards();
+		
+		for (int i = 0; i < 12; i++){
+			String filename = cards[i].getImageFile();
+			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+		}
+		
 	}
 }

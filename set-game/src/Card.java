@@ -10,7 +10,7 @@ public class Card {
 	private String shading;
 	private String shape;
 	private String idNumber;
-	
+
 	public Card(String idNumber, String quantity, String color, String shading, String shape) {
 		this.idNumber = idNumber;
 		this.quantity = quantity;
@@ -59,21 +59,23 @@ public class Card {
 	public void setIdNumber(String idNumber) {
 		this.idNumber = idNumber;
 	}
-	
+
 	public String getImageFile() {
 		String image = null;
-		
-		image = "Card" + idNumber + ".jpg";
-		
+		if (Integer.parseInt(idNumber) < 10){
+			image = "/cardimages/Card0" + idNumber + ".jpg";
+		} else {
+			image = "/cardimages/Card" + idNumber + ".jpg";
+		}
 		return image;
 	}
-	
+
 	public String getClickedImage() {
 		String clicked = null;
-		
+
 		clicked = "Card" + idNumber + "clkd.jpg";
-		
+
 		return clicked;
 	}
-	
+
 }

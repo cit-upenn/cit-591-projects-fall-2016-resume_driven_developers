@@ -20,7 +20,7 @@ public class Deck {
 	 */
 	public Deck() {
 		cards = new ArrayList<Card>();
-		int count = 0;
+		int count = 1;
 		for(String color:colors) {
 			for(String shape:shapes) {
 				for(String shading:shadings) {

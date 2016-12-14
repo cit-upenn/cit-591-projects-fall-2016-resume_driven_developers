@@ -44,8 +44,6 @@ public class GameRuler {
 		playerOne = new Player();
 		currentPlayer = 1;
 		
-		//get player's name
-		
 		//initialize timer
 		
 		//listen for 3 clicked cards
