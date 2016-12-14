@@ -15,13 +15,26 @@ public class GameRuler {
 	Player playerOne;
 	Player playerTwo;
 	int currentPlayer;
+	//Created instance variables so that GameRuler holds a Board and Deck object
+	Board playBoard;
+	Deck playDeck;
 
 	public GameRuler() {
 		
 		playerOne = null;
 		playerTwo = null;
-		
 		currentPlayer = 0;
+		
+		//Create the deck
+		playDeck = new Deck();
+		
+		//Create a board object.  We only deal 12 cards at first, since the final 3 are only added
+		//if a hint is needed
+		Card[] initialCards = new Card[15];
+		for(int i = 0; i < 12; i++) {
+			initialCards[i] = playDeck.dealCard();
+		}
+		playBoard = new Board(initialCards);
 	
 	}
 
@@ -254,6 +267,42 @@ public class GameRuler {
 		else {
 			return 2;
 		}
+	}
+
+
+
+	/**
+	 * @return the playBoard
+	 */
+	public Board getPlayBoard() {
+		return playBoard;
+	}
+
+
+
+	/**
+	 * @param playBoard the playBoard to set
+	 */
+	public void setPlayBoard(Board playBoard) {
+		this.playBoard = playBoard;
+	}
+
+
+
+	/**
+	 * @return the playDeck
+	 */
+	public Deck getPlayDeck() {
+		return playDeck;
+	}
+
+
+
+	/**
+	 * @param playDeck the playDeck to set
+	 */
+	public void setPlayDeck(Deck playDeck) {
+		this.playDeck = playDeck;
 	}
 	
 }
