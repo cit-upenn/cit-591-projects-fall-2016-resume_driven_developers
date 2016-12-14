@@ -371,8 +371,10 @@ public class GameWindow extends JFrame {
 					//tell the players who will go first
 					if (ruler.currentPlayer == 1){
 						JOptionPane.showMessageDialog(frame, player1Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+						player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 					} else if (ruler.currentPlayer == 2){
 						JOptionPane.showMessageDialog(frame, player2Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+						player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
 					}
 				}
 			} else if(e.getSource().equals(howToPlay)) {
@@ -448,10 +450,10 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(3);
-				player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+				player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(3);
-				player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+				player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
 			}
 
 			addCards.setEnabled(false);
@@ -467,8 +469,12 @@ public class GameWindow extends JFrame {
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			ruler.switchPlayer();
+			player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
+			player1.setText(player1Name + ": " + ruler.playerOne.getScore());
 		} else if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer ==2){
 			ruler.switchPlayer();
+			player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+			player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 		}
 		//start other player's turn
 		//reset clock
@@ -487,10 +493,10 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(2);
-				player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+				player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(2);
-				player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+				player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
 			}
 		}
 	}
