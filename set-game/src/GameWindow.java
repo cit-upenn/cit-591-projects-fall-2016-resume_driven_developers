@@ -9,9 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.Random;
+
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
+
 import java.awt.Color;
 import javax.swing.UIManager;
 
@@ -44,6 +48,7 @@ public class GameWindow extends JFrame {
 		});
 
 	}
+	
 
 	//instance variable for classes to run the game
 	GameRuler ruler;
@@ -75,11 +80,31 @@ public class GameWindow extends JFrame {
 	String player1Score;
 	String player2Score;
 
+	// timer fields
+	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
+	JLabel clock= new JLabel();
+	public long seconds = 20000; // default as 20 seconds
+	
+	
 	/**
 	 * Create the frame.
 	 */
 	public GameWindow() {
-
+		
+		// start the clock
+		Timer SimpleTimer = new Timer(1000, new ActionListener(){
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        if(seconds<=0) {
+		        	return;
+		        }
+		    	seconds -= 1000; 
+		    	clock.setText(sdf.format(seconds));
+		    }
+		});
+		SimpleTimer.start();
+		
+		
 		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
 
@@ -95,6 +120,7 @@ public class GameWindow extends JFrame {
 		getContentPane().setLayout(gridBagLayout);
 		getContentPane().setVisible(true);
 
+		
 		/*
 		 * assigns images for the four non-card face images used
 		 * back - back face of cards
@@ -122,7 +148,9 @@ public class GameWindow extends JFrame {
 		getContentPane().add(player1, gbc_lblPlayer1);
 
 		//creates the text area for the timer
-		JLabel clock = new JLabel("00:00");
+		//JLabel clock = new JLabel("00:00");
+		
+		
 		clock.setFont(new Font("Tahoma", Font.BOLD, 42));
 		clock.setBackground(new Color(255, 255, 240));
 		clock.setOpaque(true);
@@ -289,6 +317,7 @@ public class GameWindow extends JFrame {
 
 	}
 
+	
 	/**
 	 * This is what makes the magic happen!
 	 * In particular, this makes the gray buttons on the left and right
@@ -300,6 +329,7 @@ public class GameWindow extends JFrame {
 
 		public void actionPerformed (ActionEvent e) {
 
+			
 			if(e.getSource().equals(onePlayerGame)) {
 				
 				//asks for and displays player 1's name
@@ -365,6 +395,7 @@ public class GameWindow extends JFrame {
 
 				quitGame();
 			}
+
 		}
 	}
 
