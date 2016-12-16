@@ -25,12 +25,23 @@ public class Deck {
 			for(String shape:shapes) {
 				for(String shading:shadings) {
 					for(String quan:quantities) {
-						cards.add(new Card(""+count, quan, color, shading, shape));
+						Card card = new Card(""+count, quan, color, shading, shape);
+						cards.add(card);
 						count++;
+						System.out.print(card);
 					}
 				}
 			}
 		}
+	}
+	
+	public Card[] deal12Cards(){
+		Card[] cards = new Card[12];
+		for(int i=0; i<12; i++) {
+			cards[i] = dealCard();
+		}
+		System.out.println("12 cards are dealed");
+		return cards;
 	}
 	
 	/**

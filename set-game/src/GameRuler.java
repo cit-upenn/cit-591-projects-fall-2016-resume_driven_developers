@@ -44,7 +44,7 @@ public class GameRuler {
 		playerOne = new Player();
 		currentPlayer = 1;
 		
-		//initialize timer
+		//TODO: initialize timer
 		
 		//listen for 3 clicked cards
 		
@@ -113,9 +113,13 @@ public class GameRuler {
 	public  static List<Set<Card>> getSolutions(Card[] cardsOnBoard) {
 		List<Set<Card>> solutions = new ArrayList<Set<Card>>();
 		int number = cardsOnBoard.length;
+
+		if(cardsOnBoard[14] == null) number = 12;
+		System.out.println(number);	
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
 				for(int k=j+1; k<number; k++) {
+					//System.out.println(i +" "+j+" "+k);
 					if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
 						Set<Card> sol = new HashSet<Card>();
 						sol.add(cardsOnBoard[i]);
@@ -138,6 +142,7 @@ public class GameRuler {
 	 * @return
 	 */
 	public static boolean containsRule(Card card1, Card card2, Card card3) {
+		System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
 		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
 		
 		featureCounts[getQuantityCount(card1, card2, card3)]++;

@@ -78,4 +78,7 @@ public class Card {
 		return clicked;
 	}
 
+	public String toString(){
+		return quantity+"/" +color +"/"+shape+"/"+shading; 
+	}
 }

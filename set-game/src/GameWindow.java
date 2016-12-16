@@ -545,13 +545,35 @@ public class GameWindow extends JFrame {
 
 	}
 	
+	/**
+	 * initiate cards for the board
+	 */
 	private void dealBoard(){
 
+		System.out.println("\nNew Board:");		
 		cards = ruler.playBoard.getPlayedCards();
-		
 		for (int i = 0; i < 12; i++){
+			if(i%3 == 0) System.out.print("\n");
 			String filename = cards[i].getImageFile();
 			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+			System.out.print(cards[i].toString() + ",  ");
+		}
+		
+		
+		// check the solutions
+		System.out.println("\nStart to check the board");	
+		boolean validBoard = ruler.containsSolution(cards);
+		if(validBoard) {
+			System.out.println("Solutions on the board: " + ruler.getSolutions(cards));
+		}
+		else {
+			System.out.println("No solutions! Add 3 more cards");
+			for(int i=0; i<3; i++) {
+				if(i%3 == 0) System.out.print("\n");
+				String filename = cards[12+i].getImageFile();
+				cardButtons[12+i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+				System.out.print(cards[12+i].toString() + ",  ");
+			}
 		}
 		
 	}
