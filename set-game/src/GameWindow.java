@@ -593,22 +593,16 @@ public class GameWindow extends JFrame {
 		//initialize timer
 		seconds = 20000;
 
-		while(seconds >= 0) {
 			
-			//TODO: listen for 3 clicked cards
+		//TODO: listen for 3 clicked cards
 
-	
-			// check the selection
-			if(selectedCards[2] != null && ruler.containsRule(selectedCards[0], selectedCards[1], selectedCards[2])){
-				player1Score += 10;
-			}
-			else {
-				System.out.println("Invalid selection!");
-			}
-
+		// check the selection
+		if(selectedCards[2] != null && ruler.containsRule(selectedCards[0], selectedCards[1], selectedCards[2])){
+			player1Score += 10;
 		}
-		System.out.println("Time out!");
-
+		else {
+			System.out.println("Invalid selection!");
+		}
 		
 	}
 
