@@ -78,22 +78,30 @@ public class GameWindow extends JFrame {
 	JLabel player2;
 	String player1Name;
 	String player2Name;
-	String player1Score;
-	String player2Score;
-
+	Player playerOne;
+	Player playerTwo;
+	int currentPlayer;
+	int player1Score;
+	int player2Score;
+//	String player1Score;
+//	String player2Score;
+	
+	// user selected cards
+	Card[] selectedCards = new Card[3];
+	
 	// timer fields
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
 	JLabel clock= new JLabel();
 	public long seconds = 20000; // default as 20 seconds
-	
+	Timer SimpleTimer;
 	
 	/**
 	 * Create the frame.
 	 */
 	public GameWindow() {
 		
-		// start the clock
-		Timer SimpleTimer = new Timer(1000, new ActionListener(){
+		// initiate and start the clock
+		SimpleTimer = new Timer(1000, new ActionListener(){
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        if(seconds<=0) {
@@ -352,7 +360,7 @@ public class GameWindow extends JFrame {
 					dealBoard();
 					
 					//next, play the game!
-					ruler.onePlayerGame();
+					onePlayerGame();
 				}
 			} else if(e.getSource().equals(twoPlayerGame)) {
 				
@@ -373,7 +381,7 @@ public class GameWindow extends JFrame {
 					dealBoard();
 					
 					//play a 2 player game
-					ruler.twoPlayerGame(player1Name, player2Name);
+					twoPlayerGame(player1Name, player2Name);
 					
 					//tell the players who will go first
 					if (ruler.currentPlayer == 1){
@@ -475,11 +483,11 @@ public class GameWindow extends JFrame {
 		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
-			ruler.switchPlayer();
+			switchPlayer();
 			player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
 			player1.setText(player1Name + ": " + ruler.playerOne.getScore());
 		} else if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer ==2){
-			ruler.switchPlayer();
+			switchPlayer();
 			player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
 			player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 		}
@@ -576,5 +584,71 @@ public class GameWindow extends JFrame {
 			}
 		}
 		
+	}
+	
+	public void onePlayerGame(){
+		playerOne = new Player();
+		currentPlayer = 1;
+		
+		//initialize timer
+		seconds = 20000;
+
+		while(seconds >= 0) {
+			
+			//TODO: listen for 3 clicked cards
+
+	
+			// check the selection
+			if(selectedCards[2] != null && ruler.containsRule(selectedCards[0], selectedCards[1], selectedCards[2])){
+				player1Score += 10;
+			}
+			else {
+				System.out.println("Invalid selection!");
+			}
+
+		}
+		System.out.println("Time out!");
+
+		
+	}
+
+	public void twoPlayerGame(String player1Name, String player2Name){
+		playerOne = new Player();
+		playerOne.setName(player1Name);
+		playerTwo = new Player();
+		playerTwo.setName(player2Name);
+		
+		Random rand = new Random();
+		if (rand.nextBoolean()){
+			currentPlayer = 1;
+		} else {
+			currentPlayer = 2;
+		}
+		
+		//get players' names
+		
+		//randomly select which player goes first
+		
+		//deal 12 cards
+		
+		//initialize timer
+		seconds = 20000;
+		
+		//listen for 3 clicked cards
+		
+		//pause timer & check if selected cards are a set
+		SimpleTimer.stop();
+		
+		//if set, add points to current player & switch players
+		
+		//if not set, tell player & resume timer
+	}
+	
+	public void switchPlayer(){
+		if (currentPlayer == 1){
+			currentPlayer = 2;
+		} else if (currentPlayer == 2){
+			currentPlayer = 1;
+		}
 	}
 }
