@@ -9,7 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import java.awt.event.ActionEvent;
@@ -85,9 +87,10 @@ public class GameWindow extends JFrame {
 	int player2Score;
 //	String player1Score;
 //	String player2Score;
+	boolean isSinglePlayerGame;
 	
 	// user selected cards
-	Card[] selectedCards = new Card[3];
+	List<Card> selectedCards = new ArrayList<Card>();
 	
 	// timer fields
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
@@ -412,6 +415,68 @@ public class GameWindow extends JFrame {
 
 				quitGame();
 			}
+			
+			// TODO: pressing the buttons of cards to add
+			else if(e.getSource().equals(cardButtons[0])) {
+				selectedCards.add(cards[0]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[1])) {
+				selectedCards.add(cards[1]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[2])) {
+				selectedCards.add(cards[2]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[3])) {
+				selectedCards.add(cards[3]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[4])) {
+				selectedCards.add(cards[4]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[5])) {
+				selectedCards.add(cards[5]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[6])) {
+				selectedCards.add(cards[6]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[7])) {
+				selectedCards.add(cards[7]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[8])) {
+				selectedCards.add(cards[8]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[9])) {
+				selectedCards.add(cards[9]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[10])) {
+				selectedCards.add(cards[10]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
+			else if(e.getSource().equals(cardButtons[11])) {
+				selectedCards.add(cards[11]);
+				System.out.println("We have selected: " + selectedCards);
+				checkSeletion();
+			}
 
 		}
 	}
@@ -586,24 +651,30 @@ public class GameWindow extends JFrame {
 		
 	}
 	
-	public void onePlayerGame(){
-		playerOne = new Player();
-		currentPlayer = 1;
-		
-		//initialize timer
-		seconds = 20000;
-
-			
-		//TODO: listen for 3 clicked cards
+	public void checkSeletion() {
 
 		// check the selection
-		if(selectedCards[2] != null && ruler.containsRule(selectedCards[0], selectedCards[1], selectedCards[2])){
-			player1Score += 10;
+		if(selectedCards.size() == 3 && ruler.containsRule(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))){
+			if(currentPlayer == 1) {
+				player1Score += 10;
+			}
+			else {
+				player2Score += 10;
+			}
+			System.out.println("great selection!");
 		}
 		else {
 			System.out.println("Invalid selection!");
 		}
+	}
+	
+	public void onePlayerGame(){
+		playerOne = new Player();
+		currentPlayer = 1;
+		isSinglePlayerGame = true;
 		
+		//initialize timer
+		seconds = 20000;		
 	}
 
 	public void twoPlayerGame(String player1Name, String player2Name){
