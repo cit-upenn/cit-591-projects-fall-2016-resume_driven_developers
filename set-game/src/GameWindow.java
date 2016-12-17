@@ -21,6 +21,8 @@ import javax.swing.Timer;
 import java.awt.Color;
 import javax.swing.UIManager;
 
+//import GameWindow.generateAL;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
@@ -83,14 +85,17 @@ public class GameWindow extends JFrame {
 	Player playerOne;
 	Player playerTwo;
 	int currentPlayer;
-	int player1Score;
-	int player2Score;
+	//ATM: try to avoid creating these variables
+	int player1Score = 0;
+	int player2Score = 0;
 //	String player1Score;
 //	String player2Score;
 	boolean isSinglePlayerGame;
 	
 	// user selected cards
 	List<Card> selectedCards = new ArrayList<Card>();
+	//Stores the indices of the selected cards
+	ArrayList<Integer> selectedIndices = new ArrayList<Integer>();
 	
 	// timer fields
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
@@ -120,8 +125,10 @@ public class GameWindow extends JFrame {
 		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
 		
+		//ATM: I think we should always access the cards on the game board through game ruler....if we have the card board in an instance
+		//variable in GameWindow, we risk accessing a card board that isn't updated.
 		//initialize array of 15 cards
-		cards = new Card[15];
+//		cards = new Card[15];
 
 		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
@@ -149,7 +156,7 @@ public class GameWindow extends JFrame {
 		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
 
 		//creates the text area for player 1's name and score
-		player1 = new JLabel("Player 1: 0");
+		player1 = new JLabel("Player 1: " + player1Score);
 		player1.setBackground(new Color(255, 255, 240));
 		player1.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player1.setOpaque(true);
@@ -184,6 +191,8 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < 15; i++){
 			cardButtons[i] = new JButton("");
+			//Create the separate action listener for the card buttons
+			cardButtons[i].addActionListener(new buttonAL());
 
 			//this sets the first 12 cards to show the back face
 			//and the last 3 to be empty
@@ -231,7 +240,7 @@ public class GameWindow extends JFrame {
 		}
 
 		//creates the player 2 text area for name and score
-		player2 = new JLabel("Player 2: 0");
+		player2 = new JLabel("Player 2: " + player2Score);
 		player2.setBackground(new Color(255, 255, 240));
 		player2.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player2.setForeground(new Color(0, 100, 0));
@@ -416,6 +425,7 @@ public class GameWindow extends JFrame {
 				quitGame();
 			}
 			
+			/**
 			// TODO: pressing the buttons of cards to add
 			else if(e.getSource().equals(cardButtons[0])) {
 				selectedCards.add(cards[0]);
@@ -477,6 +487,100 @@ public class GameWindow extends JFrame {
 				System.out.println("We have selected: " + selectedCards);
 				checkSeletion();
 			}
+			*/
+
+		}
+	}
+	
+	
+	//Takes in the action listener, and return the index of the clicked button
+	private int findClickedButton(ActionEvent eInFun) {
+		for(int i = 0; i <15; i++) {		
+			if (eInFun.getSource().equals(this.cardButtons[i])) {
+				return i;
+			} 
+		}
+		
+		//Nothing was found, return an error
+		return -1;
+	}
+	
+	/**
+	 * This method updates all of the JButton cards with the appropriate pictures from the cards array, which is stored in the board object,
+	 * which is stored in the game ruler object.  It is called when a player picks three wrong cards, or when new cards are added to the board
+	 * and the visual display needs to be updated appropriately.
+	 * @author ATM
+	 */
+	private void refreshBoard() {
+		//Consider changing this for when we have 15 cards on the board
+		for (int i = 0; i < ruler.playBoard.getPlayedCards().length; i++){			
+			String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
+			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+		}
+	}
+	
+	/**
+	 * Updates the players' scores on the game board.  Input true if you want that player's score updated (if the one player game is running, then we
+	 * don't want to show player two's score)
+	 * @param updateP1 "True" if you want player one's score updated
+	 * @param updateP2 "True" if you want player two's score updated
+	 * @author ATM
+	 */
+	private void updatePlayerScoreLabels(boolean updateP1, boolean updateP2) {
+		if (updateP1) player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+		if (updateP2) player2.setText(player1Name + ": " + ruler.playerTwo.getScore()); 
+	}
+	
+	/**
+	 * This method is called when a player successfully finds a match, and increments their score appropriately.
+	 * ATM
+	 */
+	private void incrementScore() {
+		if(currentPlayer == 1) {
+			ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);			
+		}
+		else {
+			ruler.playerTwo.setScore(ruler.playerTwo.getScore() + 10);
+		}
+	}
+	
+	
+	//Action listener for the buttons: ATM
+	private class buttonAL implements ActionListener {
+
+		public void actionPerformed (ActionEvent e) {
+			// TODO: pressing the buttons of cards to add
+			//Cards is an instance variable of GameWindow and is an array of Card objects
+			//List<Card> selectedCards = new ArrayList<Card>();
+			//List<Integer> selectedIndices = new ArrayList<Integer>();
+			
+			//Highlight the button that's been clicked
+			int clickedButtonIndex = findClickedButton(e);
+			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
+			selectedIndices.add(clickedButtonIndex);
+			String picFilePathOfClicked = clickedCard.getClickedImage();
+			
+			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+			
+			//The button we clicked is the third button
+			if (selectedCards.size() > 2 ) {
+				
+				if (ruler.containsRuleArrayInput(selectedCards)) {
+					//We found a match
+					incrementScore();
+					updatePlayerScoreLabels(true, false);
+					ruler.replacedMatchedBoardCards(selectedIndices);
+					refreshBoard();
+					System.out.println("You found a match!!!!!!");
+				} else {
+					System.out.println("Nope, try again");
+					refreshBoard();
+				}
+				
+				selectedCards.clear();
+			} 
+			
 
 		}
 	}
@@ -604,6 +708,9 @@ public class GameWindow extends JFrame {
 						cardButtons[i].setIcon(blank);
 					}
 				}
+				
+				//Create a new game ruler object
+				ruler = new GameRuler();
 
 				onePlayerGame.setEnabled(true);
 				twoPlayerGame.setEnabled(true);
@@ -651,6 +758,8 @@ public class GameWindow extends JFrame {
 		
 	}
 	
+	//ATM: incorporated this functionality in my other methods
+	/**
 	public void checkSeletion() {
 
 		// check the selection
@@ -667,6 +776,7 @@ public class GameWindow extends JFrame {
 			System.out.println("Invalid selection!");
 		}
 	}
+	*/
 	
 	public void onePlayerGame(){
 		playerOne = new Player();
