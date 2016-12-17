@@ -369,7 +369,7 @@ public class GameWindow extends JFrame {
 					addCards.setEnabled(true);
 					
 					
-					dealBoard();
+					flipCards();
 					
 					//next, play the game!
 					onePlayerGame();
@@ -390,7 +390,7 @@ public class GameWindow extends JFrame {
 					addCards.setEnabled(true);
 
 					//deal 12 cards
-					dealBoard();
+					flipCards();
 					
 					//play a 2 player game
 					twoPlayerGame(player1Name, player2Name);
@@ -727,9 +727,29 @@ public class GameWindow extends JFrame {
 
 	}
 	
+	
 	/**
-	 * initiate cards for the board
+	 * At the start of the game, changes the button images from the back to the front of the cards.
 	 */
+	private void flipCards() {
+		System.out.println("\nNew Board:");		
+		//Check to see if 12 or 15 cards are on the card board, just in case
+		int loopLength = 0;
+		if(ruler.playBoard.getPlayedCards()[13] == null) {
+			loopLength = 12;
+		} else{
+			loopLength = 15;
+		}
+		
+		for (int i = 0; i < loopLength; i++){
+			if(i%3 == 0) System.out.print("\n");
+			String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
+			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+			System.out.print(ruler.playBoard.getPlayedCards()[i].toString() + ",  ");
+		}
+	}
+	
+	/**
 	private void dealBoard(){
 		
 		//This doesn't change the board cards, so it's okay to leave as a local variable
@@ -742,7 +762,6 @@ public class GameWindow extends JFrame {
 			System.out.print(cards[i].toString() + ",  ");
 		}
 		
-		
 		// check the solutions
 		System.out.println("\nStart to check the board");	
 		boolean validBoard = ruler.containsSolution(cards);
@@ -753,31 +772,13 @@ public class GameWindow extends JFrame {
 			System.out.println("No solutions! Add 3 more cards");
 			for(int i=0; i<3; i++) {
 				if(i%3 == 0) System.out.print("\n");
+				//Need a method here to add three cards to Game Ruler's card board instance variable
 				String filename = cards[12+i].getImageFile();
 				cardButtons[12+i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
 				System.out.print(cards[12+i].toString() + ",  ");
 			}
 		}
 		
-	}
-	
-	//ATM: incorporated this functionality in my other methods
-	/**
-	public void checkSeletion() {
-
-		// check the selection
-		if(selectedCards.size() == 3 && ruler.containsRule(selectedCards.get(0), selectedCards.get(1), selectedCards.get(2))){
-			if(currentPlayer == 1) {
-				player1Score += 10;
-			}
-			else {
-				player2Score += 10;
-			}
-			System.out.println("great selection!");
-		}
-		else {
-			System.out.println("Invalid selection!");
-		}
 	}
 	*/
 	
