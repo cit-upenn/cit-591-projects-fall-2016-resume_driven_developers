@@ -86,8 +86,8 @@ public class GameWindow extends JFrame {
 	Player playerTwo;
 	int currentPlayer;
 	//ATM: try to avoid creating these variables
-	int player1Score = 0;
-	int player2Score = 0;
+//	int player1Score = 0;
+//	int player2Score = 0;
 //	String player1Score;
 //	String player2Score;
 	boolean isSinglePlayerGame;
@@ -156,7 +156,7 @@ public class GameWindow extends JFrame {
 		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
 
 		//creates the text area for player 1's name and score
-		player1 = new JLabel("Player 1: " + player1Score);
+		player1 = new JLabel("Player 1: " + ruler.playerOne.getScore());
 		player1.setBackground(new Color(255, 255, 240));
 		player1.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player1.setOpaque(true);
@@ -240,7 +240,7 @@ public class GameWindow extends JFrame {
 		}
 
 		//creates the player 2 text area for name and score
-		player2 = new JLabel("Player 2: " + player2Score);
+		player2 = new JLabel("Player 2: " + ruler.playerTwo.getScore());
 		player2.setBackground(new Color(255, 255, 240));
 		player2.setFont(new Font("Tahoma", Font.PLAIN, 42));
 		player2.setForeground(new Color(0, 100, 0));
@@ -514,8 +514,10 @@ public class GameWindow extends JFrame {
 	private void refreshBoard() {
 		//Consider changing this for when we have 15 cards on the board
 		for (int i = 0; i < ruler.playBoard.getPlayedCards().length; i++){			
-			String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
-			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+			if(!(ruler.playBoard.getPlayedCards()[i] == null)) {
+				String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
+				cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+			}
 		}
 	}
 	
@@ -545,7 +547,7 @@ public class GameWindow extends JFrame {
 	}
 	
 	
-	//Action listener for the buttons: ATM
+	//Action listener for the card buttons: ATM
 	private class buttonAL implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
@@ -729,7 +731,8 @@ public class GameWindow extends JFrame {
 	 * initiate cards for the board
 	 */
 	private void dealBoard(){
-
+		
+		//This doesn't change the board cards, so it's okay to leave as a local variable
 		System.out.println("\nNew Board:");		
 		cards = ruler.playBoard.getPlayedCards();
 		for (int i = 0; i < 12; i++){
