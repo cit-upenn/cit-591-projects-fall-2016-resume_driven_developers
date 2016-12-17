@@ -370,6 +370,8 @@ public class GameWindow extends JFrame {
 					
 					
 					flipCards();
+					//Use this to test the end game, throws away a bunch of cards from the deck
+					ruler.throwAwayCards();
 					
 					//next, play the game!
 					onePlayerGame();
@@ -512,11 +514,24 @@ public class GameWindow extends JFrame {
 	 * @author ATM
 	 */
 	private void refreshBoard() {
-		//Consider changing this for when we have 15 cards on the board
-		for (int i = 0; i < ruler.playBoard.getPlayedCards().length; i++){			
+		//Check to see if 12 or 15 cards are on the card board.
+		int loopLength = 0;
+		if(ruler.playBoard.getPlayedCards()[13] == null) {
+			loopLength = 12;
+		} else{
+			loopLength = 15;
+		}
+		
+		for (int i = 0; i < loopLength; i++){			
 			if(!(ruler.playBoard.getPlayedCards()[i] == null)) {
 				String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
 				cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
+			} else {
+				/**
+				 * We run into this scenario in the end game, when there are still matches on the board but there are no more cards left
+				 * in the deck to draw.  In this case, set the matched cards to the back.
+				 */
+				cardButtons[i].setIcon(blank);
 			}
 		}
 	}
@@ -570,17 +585,22 @@ public class GameWindow extends JFrame {
 				
 				if (ruler.containsRuleArrayInput(selectedCards)) {
 					//We found a match
-					incrementScore();
-					updatePlayerScoreLabels(true, false);
-					ruler.replacedMatchedBoardCards(selectedIndices);
-					refreshBoard();
-					System.out.println("You found a match!!!!!!");
+					if(ruler.replacedMatchedBoardCards(selectedIndices)) {
+						//No more cards or matches, so end the game
+						quitGame();
+					} else {
+						incrementScore();
+						updatePlayerScoreLabels(true, false);
+						refreshBoard();
+						System.out.println("You found a match!!!!!!");
+					}					
 				} else {
 					System.out.println("Nope, try again");
 					refreshBoard();
 				}
 				
 				selectedCards.clear();
+				selectedIndices.clear();
 			} 
 			
 
@@ -730,6 +750,7 @@ public class GameWindow extends JFrame {
 	
 	/**
 	 * At the start of the game, changes the button images from the back to the front of the cards.
+	 * @author Andrew
 	 */
 	private void flipCards() {
 		System.out.println("\nNew Board:");		
