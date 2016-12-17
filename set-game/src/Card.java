@@ -71,11 +71,13 @@ public class Card {
 	}
 
 	public String getClickedImage() {
-		String clicked = null;
-
-		clicked = "Card" + idNumber + "clkd.jpg";
-
-		return clicked;
+		String image = null;
+		if (Integer.parseInt(idNumber) < 10){
+			image = "/cardimages/Card0" + idNumber + "clkd.jpg";
+		} else {
+			image = "/cardimages/Card" + idNumber + "clkd.jpg";
+		}
+		return image;
 	}
 
 	public String toString(){
