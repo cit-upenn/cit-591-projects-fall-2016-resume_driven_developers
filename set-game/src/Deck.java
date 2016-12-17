@@ -12,7 +12,7 @@ public class Deck {
 	List<Card> cards;
 	final String[] colors = {"green", "red", "purple"};
 	final String[] shapes = {"oval", "squiggle", "diamond"};
-	final String[] shadings = {"empty", "striped", "solid"};
+	final String[] shadings = {"solid", "striped", "empty"};
 	final String[] quantities = {"1", "2", "3"};
 	
 	/**
