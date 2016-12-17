@@ -31,6 +31,7 @@ public class GameRuler {
 		//Create a board object.  We only deal 12 cards at first, since the final 3 are only added
 		//if a hint is needed
 		playBoard = new Board(playDeck.deal12Cards());
+		ensureBoardHasSolution();
 	
 	}
 
@@ -45,6 +46,22 @@ public class GameRuler {
 		
 		//If the 3 cards result in a board with no solutions, deal three more cards
 		if (!containsSolution(this.playBoard.getPlayedCards())) replacedMatchedBoardCards(matchedCards);
+		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
+	}
+	
+	/**
+	 * Create a method that checks if there's a solution on the board.  If there's not, then randomly pick three cards to replace them.  We'll
+	 * need to call this every time we update the board, with maybe the exception of adding three cards.
+	 * @author Andrew
+	 */
+	public void ensureBoardHasSolution() {
+		//Keep randomly replacing one card until we get a solution
+		while(getSolutions(this.playBoard.getPlayedCards()).size() == 0) {
+			int rnd = new Random().nextInt(this.playBoard.getPlayedCards().length);
+			this.playBoard.getPlayedCards()[rnd] = playDeck.dealCard();
+		}
+		//Prints solutions to console
+		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 	}
 	
 	
