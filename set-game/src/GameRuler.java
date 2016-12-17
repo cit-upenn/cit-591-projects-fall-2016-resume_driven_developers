@@ -67,8 +67,8 @@ public class GameRuler {
 		List<Set<Card>> solutions = new ArrayList<Set<Card>>();
 		int number = cardsOnBoard.length;
 
-//		if(cardsOnBoard[14] == null) number = 12;
-		if(cardsOnBoard.length < 13 ) number = 12;
+		if(cardsOnBoard[14] == null) number = 12;
+//		if(cardsOnBoard.length < 13 ) number = 12;
 		System.out.println(number);	
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
@@ -95,12 +95,12 @@ public class GameRuler {
 	 * @param ArrayList containing the three selected card variables
 	 * @return true if they are a set, false if they aren't
 	 */
-	public static boolean containsRuleArrayInput(List<Card> selectedCardsFun) {
+	public boolean containsRuleArrayInput(List<Card> selectedCardsFun) {
 		Card card1 = selectedCardsFun.get(0);
 		Card card2 = selectedCardsFun.get(1);
 		Card card3 = selectedCardsFun.get(2);
 		
-		System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
+		//System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
 		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
 		
 		featureCounts[getQuantityCount(card1, card2, card3)]++;
@@ -125,7 +125,7 @@ public class GameRuler {
 	 * @return
 	 */
 	public static boolean containsRule(Card card1, Card card2, Card card3) {
-		System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
+		//System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
 		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
 		
 		featureCounts[getQuantityCount(card1, card2, card3)]++;
