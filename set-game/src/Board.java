@@ -26,7 +26,10 @@ public class Board {
 	 * which is what we want, so we don't worry about initializing it with a parameter.
 	 */
 	public Board(Card[] inputCardArray) {
-		playedCards = inputCardArray;
+		playedCards = new Card[15];
+		for(int i = 0; i < inputCardArray.length; i++) {
+			playedCards[i] = inputCardArray[i];
+		}
 		clickedCards = new boolean[15];
 	}
 
