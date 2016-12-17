@@ -21,8 +21,8 @@ public class GameRuler {
 
 	public GameRuler() {
 		
-		playerOne = null;
-		playerTwo = null;
+		playerOne = new Player();
+		playerTwo = new Player();
 		currentPlayer = 0;
 		
 		//Create the deck
@@ -30,17 +30,23 @@ public class GameRuler {
 		
 		//Create a board object.  We only deal 12 cards at first, since the final 3 are only added
 		//if a hint is needed
-		Card[] initialCards = new Card[15];
-		for(int i = 0; i < 12; i++) {
-			initialCards[i] = playDeck.dealCard();
-		}
-		playBoard = new Board(initialCards);
+		playBoard = new Board(playDeck.deal12Cards());
 	
 	}
 
+	/**
+	 * This method is called by GameWindow when a player finds a match.  It replaces the cards that are matched with 3 new cards from the deck.
+	 * @param matchedCards An array list of integers containing the indices of the matched cards
+	 */
+	public void replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
+		for(int i = 0; i < matchedCards.size(); i++) {
+			this.playBoard.getPlayedCards()[matchedCards.get(i)] = playDeck.dealCard();
+		}
+		
+		//If the 3 cards result in a board with no solutions, deal three more cards
+		if (!containsSolution(this.playBoard.getPlayedCards())) replacedMatchedBoardCards(matchedCards);
+	}
 	
-
-
 	
 	/**
 	 * check whether there is any solution in the cards
@@ -61,7 +67,8 @@ public class GameRuler {
 		List<Set<Card>> solutions = new ArrayList<Set<Card>>();
 		int number = cardsOnBoard.length;
 
-		if(cardsOnBoard[14] == null) number = 12;
+//		if(cardsOnBoard[14] == null) number = 12;
+		if(cardsOnBoard.length < 13 ) number = 12;
 		System.out.println(number);	
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
@@ -80,6 +87,35 @@ public class GameRuler {
 		
 		return solutions;
 	}
+	
+	
+	/**
+	 * This method is the exact same as below, except it takes in an ArrayList instead of 3 separate card objects
+	 * Added by ATM
+	 * @param ArrayList containing the three selected card variables
+	 * @return true if they are a set, false if they aren't
+	 */
+	public static boolean containsRuleArrayInput(List<Card> selectedCardsFun) {
+		Card card1 = selectedCardsFun.get(0);
+		Card card2 = selectedCardsFun.get(1);
+		Card card3 = selectedCardsFun.get(2);
+		
+		System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
+		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
+		
+		featureCounts[getQuantityCount(card1, card2, card3)]++;
+		featureCounts[getColorCount(card1, card2, card3)]++;
+		featureCounts[getShapeCount(card1, card2, card3)]++;
+		featureCounts[getShadingCount(card1, card2, card3)]++;
+
+		if(featureCounts[3] == 1 && featureCounts[1] == 3) return true;
+		if(featureCounts[3] == 2 && featureCounts[1] == 2) return true; // additional rule
+		if(featureCounts[3] == 3 && featureCounts[1] == 1) return true;
+		if(featureCounts[3] == 4) return true;
+
+		return false;
+	}
+	
 	
 	/**
 	 * A method to validate whether the 3 cards contain a "rule" among them
