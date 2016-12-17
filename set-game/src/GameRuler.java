@@ -34,19 +34,48 @@ public class GameRuler {
 		ensureBoardHasSolution();
 	
 	}
+	
+	/**
+	 * Throw away 60 cards to help test the end game
+	 */
+	public void throwAwayCards() {
+		for(int i = 0; i < 60; i++){
+			this.playDeck.dealCard();
+		}
+	}
 
 	/**
 	 * This method is called by GameWindow when a player finds a match.  It replaces the cards that are matched with 3 new cards from the deck.
 	 * @param matchedCards An array list of integers containing the indices of the matched cards
 	 */
-	public void replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
-		for(int i = 0; i < matchedCards.size(); i++) {
-			this.playBoard.getPlayedCards()[matchedCards.get(i)] = playDeck.dealCard();
-		}
+	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
+		boolean endGameFlag = false;
 		
-		//If the 3 cards result in a board with no solutions, deal three more cards
-		if (!containsSolution(this.playBoard.getPlayedCards())) replacedMatchedBoardCards(matchedCards);
+		if(this.playDeck.cards.size()>0) {
+			//There are still cards left in the deck to draw
+			for(int i = 0; i < matchedCards.size(); i++) {
+				this.playBoard.getPlayedCards()[matchedCards.get(i)] = playDeck.dealCard();
+			}
+			
+			//If the 3 cards result in a board with no solutions, deal three more cards
+			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) replacedMatchedBoardCards(matchedCards);
+		} else {
+			//No more cards left to draw			
+			for(int i = 0; i < matchedCards.size(); i++) {
+				this.playBoard.getPlayedCards()[matchedCards.get(i)] = null;
+			}
+			
+			//We've reached the point where there are no more cards and no more solutions, so end the game
+			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) {
+				endGameFlag = true;
+				return endGameFlag;
+			}
+		}
+				
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
+		//Start keeping track of the deck size
+		System.out.println("Deck size: " + this.playDeck.cards.size() + ";   Matched array: " + matchedCards.size());
+		return endGameFlag;
 	}
 	
 	/**
@@ -91,12 +120,15 @@ public class GameRuler {
 			for(int j=i+1; j<number-1; j++) {
 				for(int k=j+1; k<number; k++) {
 					//System.out.println(i +" "+j+" "+k);
-					if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
-						Set<Card> sol = new HashSet<Card>();
-						sol.add(cardsOnBoard[i]);
-						sol.add(cardsOnBoard[j]);
-						sol.add(cardsOnBoard[k]);
-						solutions.add(sol);
+					//Added this outside if statement
+					if(cardsOnBoard[i] != null && cardsOnBoard[j] != null && cardsOnBoard[k] != null){
+						if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
+							Set<Card> sol = new HashSet<Card>();
+							sol.add(cardsOnBoard[i]);
+							sol.add(cardsOnBoard[j]);
+							sol.add(cardsOnBoard[k]);
+							solutions.add(sol);
+						}
 					}
 				}
 			}			
