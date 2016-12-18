@@ -79,11 +79,12 @@ public class GameWindow extends JFrame {
 	//instance variables for player stats
 	JLabel player1;
 	JLabel player2;
-	String player1Name;
-	String player2Name;
-	Player playerOne;
-	Player playerTwo;
-	int currentPlayer;
+//	String ruler.playerOne.getName();
+//	String ruler.playerTwo.getName();
+//	Player playerOne;
+//	Player playerTwo;
+//	int currentPlayer;
+	
 	//ATM: try to avoid creating these variables
 //	int player1Score = 0;
 //	int player2Score = 0;
@@ -95,12 +96,12 @@ public class GameWindow extends JFrame {
 	List<Card> selectedCards = new ArrayList<Card>();
 	ArrayList<Integer> selectedIndices = new ArrayList<Integer>();
 	
-	// timer fields
+	//   fields
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
 	JLabel clock= new JLabel();
 	//Have to start the time, otherwise it won't show up, so put in a value that
 	//display as 59:59, which I assume is the max	
-	public long seconds = 60000; // default as 60 seconds
+	public long seconds = 90000; // default as 60 seconds
 	Timer SimpleTimer = new Timer(1000, new ActionListener(){
 		int gameOver = 1;
 	    @Override
@@ -121,9 +122,6 @@ public class GameWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public GameWindow() {
-		
-		// initiate and start the clock
-		SimpleTimer.start();
 				
 		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
@@ -355,7 +353,7 @@ public class GameWindow extends JFrame {
 				getName(1);
 				
 				//sets the correct buttons to enabled or disabled
-				if (player1Name != null){
+				if (ruler.playerOne.getName() != null){
 					player2.setText("");
 					skipTurn.setEnabled(false);
 					onePlayerGame.setEnabled(false);
@@ -379,7 +377,7 @@ public class GameWindow extends JFrame {
 				}
 				
 				//sets the correct buttons to enabled and disabled
-				if (player1Name != null && player2Name != null){
+				if (ruler.playerOne.getName() != null && ruler.playerTwo.getName() != null){
 					skipTurn.setEnabled(true);
 					onePlayerGame.setEnabled(false);
 					twoPlayerGame.setEnabled(false);
@@ -393,15 +391,15 @@ public class GameWindow extends JFrame {
 					ruler.throwAwayCards();
 					
 					//play a 2 player game
-					twoPlayerGame(player1Name, player2Name);
+					twoPlayerGame();
 					
 					//tell the players who will go first
 					if (ruler.currentPlayer == 1){
-						JOptionPane.showMessageDialog(frame, player1Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
+						JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+						player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 					} else if (ruler.currentPlayer == 2){
-						JOptionPane.showMessageDialog(frame, player2Name + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
+						JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+						player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 					}
 				}
 			} else if(e.getSource().equals(howToPlay)) {
@@ -476,15 +474,15 @@ public class GameWindow extends JFrame {
 	 * ATM
 	 */
 	private void incrementScore() {
-		if(currentPlayer == 1) {
+		if(ruler.currentPlayer == 1) {
 			ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);			
 		}
 		else {
 			ruler.playerTwo.setScore(ruler.playerTwo.getScore() + 10);
 		}
 		
-		player1.setText(player1Name + ": " + ruler.playerOne.getScore());
-		if(!isSinglePlayerGame) player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
+		player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+		if(!isSinglePlayerGame) player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 	}
 	
 	
@@ -522,7 +520,9 @@ public class GameWindow extends JFrame {
 						refreshBoard();						
 					}					
 				} else {
-					System.out.println("Nope, try again");
+					SimpleTimer.stop();
+					JOptionPane.showMessageDialog(frame,"Nope! That is not a set.", "", JOptionPane.DEFAULT_OPTION);
+					SimpleTimer.restart();
 					refreshBoard();
 				}
 				
@@ -537,15 +537,15 @@ public class GameWindow extends JFrame {
 
 	private void getName(int i){
 		if (i == 1){
-			player1Name = (String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE);
-			if (player1Name != null){
-				player1.setText(player1Name + ": 0");
+			ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+			if (ruler.playerOne.getName() != null){
+				player1.setText(ruler.playerOne.getName() + ": 0");
 				player2.setText("Player 2: 0");
 			}
-		} else if (i == 2 && player1Name != null){
-			player2Name = (String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE);
-			if (player2Name != null){
-				player2.setText(player2Name + ": 0");
+		} else if (i == 2 && ruler.playerOne.getName() != null){
+			ruler.playerTwo.setName((String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+			if (ruler.playerTwo.getName() != null){
+				player2.setText(ruler.playerTwo.getName() + ": 0");
 			}
 		}
 	}
@@ -583,10 +583,10 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(3);
-				player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
+				player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(3);
-				player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
+				player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			}
 
 			// only able when 12 cards on the board
@@ -595,26 +595,31 @@ public class GameWindow extends JFrame {
 	}
 
 	private void skipTurn(){
+		SimpleTimer.stop();
 		//prompt if sure
 		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			switchPlayer();
-			player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
-			player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+			player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		} else if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer ==2){
 			switchPlayer();
-			player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
-			player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
+			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+			player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		}
 		//TODO: start other player's turn
 		
 		
 		//reset clock
-		seconds = 10000;
+		seconds = 90000;
+		SimpleTimer.start();
 	}
 
 	private void getHint(){
+		
+		SimpleTimer.stop();
+		
 		int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		if (hint == JOptionPane.YES_OPTION){
@@ -650,12 +655,13 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(2);
-				player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
+				player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(2);
-				player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
+				player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			}
 		}
+		SimpleTimer.restart();
 	}
 
 	
@@ -773,29 +779,29 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void onePlayerGame(){
-		playerOne = new Player();
-		currentPlayer = 1;
+		ruler.currentPlayer = 1;
 		isSinglePlayerGame = true;
 		
 		//initialize timer
-		seconds = 10000;		
+		seconds = 300000;		
 		for(JButton jb:cardButtons){
 			jb.setEnabled(true);
 		}
+		
+		//start the clock
+		SimpleTimer.start();
 	}
 
-	public void twoPlayerGame(String player1Name, String player2Name){
-		playerOne = new Player();
-		playerOne.setName(player1Name);
-		playerTwo = new Player();
-		playerTwo.setName(player2Name);
+	public void twoPlayerGame(){
+		ruler.playerOne.setName(ruler.playerOne.getName());
+		ruler.playerTwo.setName(ruler.playerTwo.getName());
 		
 		Random rand = new Random();
 		if (rand.nextBoolean()){
-			currentPlayer = 1;
+			ruler.setCurrentPlayer(1);
 			player1.setBackground(new Color(222,30,30));
 		} else {
-			currentPlayer = 2;
+			ruler.setCurrentPlayer(2);
 			player2.setBackground(new Color(222,30,30));
 		}
 		
@@ -806,7 +812,7 @@ public class GameWindow extends JFrame {
 		//deal 12 cards
 		
 		//initialize timer
-		seconds = 20000;
+		seconds = 90000;
 		
 		//listen for 3 clicked cards
 		
@@ -819,13 +825,15 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void switchPlayer(){
-		if (currentPlayer == 1){
-			currentPlayer = 2;
+		if (ruler.currentPlayer == 1){
+			ruler.setCurrentPlayer(2);
+			
 			//Change the background colors to reflect the player
 			player2.setBackground(new Color(222,30,30));
 			player1.setBackground(new Color(255, 255, 240));
-		} else if (currentPlayer == 2){
-			currentPlayer = 1;
+			
+		} else if (ruler.currentPlayer == 2){
+			ruler.setCurrentPlayer(1);
 			player1.setBackground(new Color(222,30,30));
 			player2.setBackground(new Color(255, 255, 240));
 		}
