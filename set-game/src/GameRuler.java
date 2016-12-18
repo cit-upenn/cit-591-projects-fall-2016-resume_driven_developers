@@ -57,7 +57,11 @@ public class GameRuler {
 
 	/**
 	 * This method is called by GameWindow when a player finds a match.  It replaces the cards that are matched with 3 new cards from the deck.
+	 * In addition, it will be the method that knows when the game ends, so it returns a value of "true" if there are no more cards in
+	 * the deck and no more matches on the board
 	 * @param matchedCards An array list of integers containing the indices of the matched cards
+	 * @return "true" if there are no more cards in the deck and no more matches on the board; false otherwise
+	 * @author Andrew
 	 */
 	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
 		boolean endGameFlag = false;
