@@ -471,10 +471,23 @@ public class GameWindow extends JFrame {
 	 */
 	private void incrementScore() {
 		if(ruler.currentPlayer == 1) {
-			ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);			
+			if (seconds > 60000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);	
+			} else if (seconds <= 60000 && seconds > 30000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 8);	
+			} else if (seconds < 30000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 6);	
+			}
+		
 		}
 		else {
-			ruler.playerTwo.setScore(ruler.playerTwo.getScore() + 10);
+			if (seconds > 60000){
+				ruler.playerTwo.addPoints(10);
+			} else if (seconds <= 60000 && seconds > 30000){
+				ruler.playerTwo.addPoints(8);	
+			} else if (seconds < 30000){
+				ruler.playerTwo.addPoints(6);	
+			}
 		}
 		
 		player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
@@ -723,12 +736,12 @@ public class GameWindow extends JFrame {
 			endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 		} else {
 			if(ruler.getPlayerOne().getScore()>ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + "wins\nby a score of " +
+				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + " wins\nby a score of " +
 						ruler.getPlayerOne().getScore() + " to " + ruler.getPlayerTwo().getScore() + ".\n"
 								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 			} else if (ruler.getPlayerOne().getScore() < ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + "wins\nby a score of " +
+				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + " wins\nby a score of " +
 						ruler.getPlayerTwo().getScore() + " to " + ruler.getPlayerOne().getScore() + ".\n"
 								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
