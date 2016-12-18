@@ -387,4 +387,8 @@ public class GameRuler {
 		this.playerTwo = playerTwo;
 	}
 	
+	public void setCurrentPlayer(int i){
+		currentPlayer = i;
+	}
+	
 }
