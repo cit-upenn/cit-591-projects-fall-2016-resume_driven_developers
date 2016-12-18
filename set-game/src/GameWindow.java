@@ -131,6 +131,8 @@ public class GameWindow extends JFrame {
 		
 		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
+//	    setContentPane(new JLabel(new ImageIcon("/cardimages/back.png")));
+
 		setBounds(100, 100, 1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -363,7 +365,7 @@ public class GameWindow extends JFrame {
 					twoPlayerGame.setEnabled(false);
 					getHint.setEnabled(true);
 					addCards.setEnabled(true);
-					
+					System.out.println(ruler.playerOne.getName());
 					
 					flipCards();
 					//Use this to test the end game, throws away a bunch of cards from the deck
@@ -539,24 +541,41 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	// for JUnit
+	void setNameHelper() {
+		ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+	}
+
+	void setNameHelper2() {
+		ruler.playerTwo.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+	}
+	
 	private void getName(int i){
 		if (i == 1){
-			ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+			setNameHelper();
+//			ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
 			if (ruler.playerOne.getName() != null){
 				player1.setText(ruler.playerOne.getName() + ": 0");
 				player2.setText("Player 2: 0");
 			}
 		} else if (i == 2 && ruler.playerOne.getName() != null){
-			ruler.playerTwo.setName((String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE));
+			setNameHelper2();
+			//			ruler.playerTwo.setName((String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE));
 			if (ruler.playerTwo.getName() != null){
 				player2.setText(ruler.playerTwo.getName() + ": 0");
 			}
 		}
 	}
 
+	int showRuleOptionDialog() {
+		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
+		return JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
+	}
+	
 	private void showRules(){
 		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
-		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
+		int j = showRuleOptionDialog();
+		//		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
 		if (j == 0){
 			JOptionPane.showMessageDialog(frame, "A SET is three cards where each feature, when looked at individually, is either all the same OR all different.\n"
 					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).",
@@ -570,7 +589,9 @@ public class GameWindow extends JFrame {
 	}
 
 
-
+	int showConfirmAddCardDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
+	}
 
 	private void addCards(){
 		
@@ -579,7 +600,8 @@ public class GameWindow extends JFrame {
 		}	
 		
 		//prompt if player is sure
-		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
+		int reveal = showConfirmAddCardDialog();
+		//		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (reveal == JOptionPane.YES_OPTION){
@@ -622,7 +644,11 @@ public class GameWindow extends JFrame {
 		SimpleTimer.start();
 	}
 
-	private void getHint(){
+	int showConfirmHintDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
+	}
+	
+	private Card getHint(){
 		
 		if (isSinglePlayerGame){
 			player2.setVisible(false);
@@ -630,15 +656,15 @@ public class GameWindow extends JFrame {
 		
 		SimpleTimer.stop();
 		
-		int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
-
-		if (hint == JOptionPane.YES_OPTION){
+		//int hint = JOptionPane.showConfirmDialog(frame, "Are you sure you want to get a hint?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
+		Card matched = null;
+		if (showConfirmHintDialog() == JOptionPane.YES_OPTION){
 
 			// getHint.setEnabled(false);
 			List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
 			if(solutions==null) {
 				JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
-				return;
+				return null;
 			}
 
 			System.out.println("Solutions on the board: " + solutions);
@@ -647,7 +673,7 @@ public class GameWindow extends JFrame {
 
 			// find the position of a card of a solution set			
 			for (int i=0; i< ruler.playBoard.getPlayedCards().length; i++){
-				Card matched = ruler.playBoard.getPlayedCards()[i];
+				matched = ruler.playBoard.getPlayedCards()[i];
 				if(hintCard.equal(matched)) {
 					System.out.println("Found the hinted card on the board:  " + matched);
 					selectedIndices.add(i);
@@ -674,7 +700,8 @@ public class GameWindow extends JFrame {
 			}
 		}
 		SimpleTimer.restart();
-		getHint.setEnabled(true); // enable reuse the hint
+//		getHint.setEnabled(true); // enable reuse the hint
+		return matched;
 	}
 
 	
@@ -749,18 +776,28 @@ public class GameWindow extends JFrame {
 		}
 	}
 	
+	int showConfirmQuitDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
+	}
+	int showConfirmExitDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
+	}
+	
 	private void quitGame(){
-		
-		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
+
+		int endGame = showConfirmQuitDialog();
+//		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
 	
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
-			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
+			int exitWindow = showConfirmExitDialog();
+//			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
 
 			if (exitWindow == JOptionPane.YES_OPTION){
 				frame.setVisible(false);
 				System.exit(0);
-			} else {
+			} 
+			else {
 				resetGame();				
 			}
 
