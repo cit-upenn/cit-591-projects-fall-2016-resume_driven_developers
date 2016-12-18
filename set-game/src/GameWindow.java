@@ -473,10 +473,23 @@ public class GameWindow extends JFrame {
 	 */
 	private void incrementScore() {
 		if(ruler.currentPlayer == 1) {
-			ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);			
+			if (seconds > 60000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);	
+			} else if (seconds <= 60000 && seconds > 30000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 8);	
+			} else if (seconds < 30000){
+				ruler.playerOne.setScore(ruler.playerOne.getScore() + 6);	
+			}
+		
 		}
 		else {
-			ruler.playerTwo.setScore(ruler.playerTwo.getScore() + 10);
+			if (seconds > 60000){
+				ruler.playerTwo.addPoints(10);
+			} else if (seconds <= 60000 && seconds > 30000){
+				ruler.playerTwo.addPoints(8);	
+			} else if (seconds < 30000){
+				ruler.playerTwo.addPoints(6);	
+			}
 		}
 		
 		player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
@@ -496,12 +509,23 @@ public class GameWindow extends JFrame {
 			
 			// Highlight the button that's been clicked
 			int clickedButtonIndex = findClickedButton(e);
-			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
-			selectedIndices.add(clickedButtonIndex);
+			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];			
 			String picFilePathOfClicked = clickedCard.getClickedImage();
+			System.out.println(selectedCards.size());
 			
-			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
-			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+			if(selectedIndices.size()>0 && clickedButtonIndex == selectedIndices.get(selectedIndices.size()-1) && selectedCards.size() < 3  ) {
+				//They clicked the button they just clicked, so deselect it.  This can't happen on the third selection, and can't happen if
+				//no buttons have already been clicked.
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(clickedCard.getImageFile())));
+				selectedCards.remove(selectedCards.size()-1);
+				selectedIndices.remove(selectedIndices.size()-1);	
+				
+			} else {
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+				selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+				selectedIndices.add(clickedButtonIndex);
+			}
+			
 			
 			if (selectedCards.size() == 1 && isSinglePlayerGame){
 				player2.setVisible(false);
@@ -524,20 +548,22 @@ public class GameWindow extends JFrame {
 						incrementScore();
 //						updatePlayerScoreLabels(true, false);
 						refreshBoard();	
+						
+						if(!isSinglePlayerGame) switchPlayer();
+						selectedCards.clear();
+						selectedIndices.clear();
 					}					
 				} else {
 					SimpleTimer.stop();
 					JOptionPane.showMessageDialog(frame,"Nope! That is not a set.", "", JOptionPane.DEFAULT_OPTION);
 					SimpleTimer.restart();
+					selectedCards.clear();
+					selectedIndices.clear();
 					refreshBoard();
 				}
 				
-				if(!isSinglePlayerGame) switchPlayer();
-				selectedCards.clear();
-				selectedIndices.clear();
-			} 
-			
 
+			} 
 		}
 	}
 
@@ -640,8 +666,9 @@ public class GameWindow extends JFrame {
 		}
 		//TODO: start other player's turn
 		//reset clock
-		seconds = 90000;
-		SimpleTimer.start();
+		if (skip == JOptionPane.NO_OPTION){
+			SimpleTimer.restart();
+		}
 	}
 
 	int showConfirmHintDialog() {
@@ -734,6 +761,8 @@ public class GameWindow extends JFrame {
 		addCards.setEnabled(false);
 		player1.setBackground(new Color(255, 255, 240));
 		player2.setBackground(new Color(255, 255, 240));
+		SimpleTimer.stop();
+		clock.setText("00:00");
 		//reset clock to 00:00
 		//end other game stuff
 	}
@@ -750,12 +779,12 @@ public class GameWindow extends JFrame {
 			endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 		} else {
 			if(ruler.getPlayerOne().getScore()>ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + "wins\nby a score of " +
+				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + " wins\nby a score of " +
 						ruler.getPlayerOne().getScore() + " to " + ruler.getPlayerTwo().getScore() + ".\n"
 								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 			} else if (ruler.getPlayerOne().getScore() < ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + "wins\nby a score of " +
+				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + " wins\nby a score of " +
 						ruler.getPlayerTwo().getScore() + " to " + ruler.getPlayerOne().getScore() + ".\n"
 								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
@@ -787,6 +816,9 @@ public class GameWindow extends JFrame {
 
 		int endGame = showConfirmQuitDialog();
 //		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
+		
+		SimpleTimer.stop();
+		
 	
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
@@ -801,6 +833,8 @@ public class GameWindow extends JFrame {
 				resetGame();				
 			}
 
+		} else if (endGame == JOptionPane.NO_OPTION){
+			SimpleTimer.restart();
 		}
 	}
 	
