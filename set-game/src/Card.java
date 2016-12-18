@@ -62,7 +62,7 @@ public class Card {
 
 	public boolean equal(Card c) {
 		if(c== null) return false;
-		System.out.println(this + " vs " + c);
+		//System.out.println(this + " vs " + c);
 		if(this.getColor().equals(c.getColor()) 
 				&& this.getShading().equals(c.getShading()) 
 				&& this.getQuantity().equals(c.getQuantity()) 

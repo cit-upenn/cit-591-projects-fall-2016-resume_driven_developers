@@ -35,6 +35,10 @@ public class Deck {
 		}
 	}
 	
+	/**
+	 * a method deal 12 cards 
+	 * @return
+	 */
 	public Card[] deal12Cards(){
 		Card[] cards = new Card[12];
 		for(int i=0; i<12; i++) {

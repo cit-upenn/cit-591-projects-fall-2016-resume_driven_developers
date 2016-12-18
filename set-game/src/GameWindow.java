@@ -634,10 +634,10 @@ public class GameWindow extends JFrame {
 
 		if (hint == JOptionPane.YES_OPTION){
 
-			getHint.setEnabled(false);
-			
+			// getHint.setEnabled(false);
 			List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
 			if(solutions==null) {
+				JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
 				return;
 			}
 
@@ -664,7 +664,7 @@ public class GameWindow extends JFrame {
 				}
 			}
 
-			//penalize current player
+			// penalize current player for 2 pts
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(2);
 				player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
@@ -674,6 +674,7 @@ public class GameWindow extends JFrame {
 			}
 		}
 		SimpleTimer.restart();
+		getHint.setEnabled(true); // enable reuse the hint
 	}
 
 	
