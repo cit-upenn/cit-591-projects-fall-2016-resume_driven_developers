@@ -371,7 +371,7 @@ public class GameWindow extends JFrame {
 					
 					flipCards();
 					//Use this to test the end game, throws away a bunch of cards from the deck
-					//ruler.throwAwayCards();
+					ruler.throwAwayCards();
 					
 					//next, play the game!
 					onePlayerGame();
@@ -523,12 +523,11 @@ public class GameWindow extends JFrame {
 					//We found a match
 					if(ruler.replacedMatchedBoardCards(selectedIndices)) {
 						//No more cards or matches, so end the game
-						quitGame();
-					} else {
+						finishGameDialog();
+					} else {				
 						incrementScore();
 						updatePlayerScoreLabels(true, false);
-						refreshBoard();
-						System.out.println("You found a match!!!!!!");
+						refreshBoard();						
 					}					
 				} else {
 					System.out.println("Nope, try again");
@@ -643,9 +642,63 @@ public class GameWindow extends JFrame {
 		}
 	}
 
-	private void quitGame(){
-		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
+	
+	
+	/**
+	 * Once a user ends a game, either by quitting or by finishing their current game, this method is called
+	 * to reset the game to its initial state.
+	 * @author Andrew
+	 */
+	private void resetGame() {
+		//if the window isn't closed, reset everything to initial conditions
+		player1.setText("Player 1: 0");
+		player2.setText("Player 2: 0");
 
+		for (int i = 0; i < 15; i++){
+			if (i < 12){
+				cardButtons[i].setIcon(back);
+			} else {
+				cardButtons[i].setIcon(blank);
+			}
+		}
+		
+		//Create a new game ruler object
+		ruler = new GameRuler();
+
+		onePlayerGame.setEnabled(true);
+		twoPlayerGame.setEnabled(true);
+		skipTurn.setEnabled(false);
+		getHint.setEnabled(false);
+		addCards.setEnabled(false);
+		//reset clock to 00:00
+		//end other game stuff
+	}
+	
+	/**
+	 * This method presents a dialog box to the user when they finish a game, and asks them if they
+	 * want to play again or continue
+	 */
+	private void finishGameDialog(){
+		int endGame = -1;
+		if(isSinglePlayerGame) {
+			String endGameMessageString = "You finished the game!  Your final score is: " + ruler.getPlayerOne().getScore() +
+					".\n  Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
+			endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
+		}
+		
+		//add 3 cards to empty row at the bottom
+		if (endGame == JOptionPane.YES_OPTION){
+			resetGame();			
+		} else {
+			frame.setVisible(false);
+			System.exit(0);
+		}
+	}
+	
+	private void quitGame(){
+		
+		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
+	
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
 			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
@@ -654,33 +707,10 @@ public class GameWindow extends JFrame {
 				frame.setVisible(false);
 				System.exit(0);
 			} else {
-
-				//if the window isn't closed, reset everything to initial conditions
-				player1.setText("Player 1: 0");
-				player2.setText("Player 2: 0");
-
-				for (int i = 0; i < 15; i++){
-					if (i < 12){
-						cardButtons[i].setIcon(back);
-					} else {
-						cardButtons[i].setIcon(blank);
-					}
-				}
-				
-				//Create a new game ruler object
-				ruler = new GameRuler();
-
-				onePlayerGame.setEnabled(true);
-				twoPlayerGame.setEnabled(true);
-				skipTurn.setEnabled(false);
-				getHint.setEnabled(false);
-				addCards.setEnabled(false);
-				//reset clock to 00:00
-				//end other game stuff
+				resetGame();				
 			}
 
 		}
-
 	}
 	
 	
@@ -704,6 +734,7 @@ public class GameWindow extends JFrame {
 			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
 			System.out.print(ruler.playBoard.getPlayedCards()[i].toString() + ",  ");
 		}
+		System.out.println("");
 	}
 	
 	/**
