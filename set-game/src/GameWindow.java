@@ -380,7 +380,6 @@ public class GameWindow extends JFrame {
 				}
 				
 				//sets the correct buttons to enabled and disabled
-				if (ruler.playerOne.getName() != null && ruler.playerTwo.getName() != null){
 					skipTurn.setEnabled(true);
 					onePlayerGame.setEnabled(false);
 					twoPlayerGame.setEnabled(false);
@@ -391,20 +390,14 @@ public class GameWindow extends JFrame {
 					flipCards();
 					
 					//Throw away cards to test the endgame
-					ruler.throwAwayCards();
+//					ruler.throwAwayCards();
 					
 					//play a 2 player game
 					twoPlayerGame();
 					
 					//tell the players who will go first
-					if (ruler.currentPlayer == 1){
-						JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
-					} else if (ruler.currentPlayer == 2){
-						JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
-					}
-				}
+
+				
 			} else if(e.getSource().equals(howToPlay)) {
 
 				showRules();
@@ -624,8 +617,6 @@ public class GameWindow extends JFrame {
 			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		}
 		//TODO: start other player's turn
-		
-		
 		//reset clock
 		seconds = 90000;
 		SimpleTimer.start();
@@ -643,6 +634,8 @@ public class GameWindow extends JFrame {
 
 		if (hint == JOptionPane.YES_OPTION){
 
+			getHint.setEnabled(false);
+			
 			List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
 			if(solutions==null) {
 				return;
@@ -812,19 +805,23 @@ public class GameWindow extends JFrame {
 	}
 
 	public void twoPlayerGame(){
-		ruler.playerOne.setName(ruler.playerOne.getName());
-		ruler.playerTwo.setName(ruler.playerTwo.getName());
 		
 		Random rand = new Random();
 		if (rand.nextBoolean()){
 			ruler.setCurrentPlayer(1);
-			player1.setBackground(new Color(222,30,30));
+			player1.setBackground(new Color(255, 255, 0));
 		} else {
 			ruler.setCurrentPlayer(2);
-			player2.setBackground(new Color(222,30,30));
+			player2.setBackground(new Color(255, 255, 0));
 		}
 		
-		
+		if (ruler.currentPlayer == 1){
+			JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+		} else if (ruler.currentPlayer == 2){
+			JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
+			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+		}
 		
 		//get players' names
 		
@@ -846,17 +843,24 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void switchPlayer(){
+		
+		getHint.setEnabled(true);
+		
 		if (ruler.currentPlayer == 1){
 			ruler.setCurrentPlayer(2);
 			
 			//Change the background colors to reflect the player
-			player2.setBackground(new Color(222,30,30));
+			player2.setBackground(new Color(255, 255, 0));
 			player1.setBackground(new Color(255, 255, 240));
+			seconds = 90000;
+			SimpleTimer.start();
 			
 		} else if (ruler.currentPlayer == 2){
 			ruler.setCurrentPlayer(1);
-			player1.setBackground(new Color(222,30,30));
+			player1.setBackground(new Color(255, 255, 0));
 			player2.setBackground(new Color(255, 255, 240));
+			seconds = 90000;
+			SimpleTimer.start();
 		}
 	}
 }
