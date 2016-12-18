@@ -107,9 +107,12 @@ public class GameWindow extends JFrame {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 	        if(seconds<=0) {
-	        	if(gameOver == 1) {
-		        	gameOver = JOptionPane.showConfirmDialog(frame, "Time out.", "", JOptionPane.CLOSED_OPTION);
+	        	if(gameOver == 1 && isSinglePlayerGame) {
+		        	gameOver = JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
 		        	//TODO: disable all the cards
+	        	} else if (!isSinglePlayerGame){
+	        		JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
+	        		switchPlayer();
 	        	}
 	        	return;
 	        }
@@ -396,10 +399,10 @@ public class GameWindow extends JFrame {
 					//tell the players who will go first
 					if (ruler.currentPlayer == 1){
 						JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+						player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 					} else if (ruler.currentPlayer == 2){
 						JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
-						player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+						player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 					}
 				}
 			} else if(e.getSource().equals(howToPlay)) {
@@ -505,6 +508,10 @@ public class GameWindow extends JFrame {
 			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
 			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
 			
+			if (selectedCards.size() == 1 && isSinglePlayerGame){
+				player2.setVisible(false);
+			}
+			
 			//The button we clicked is the third button
 			if (selectedCards.size() > 2 ) {
 				
@@ -514,10 +521,14 @@ public class GameWindow extends JFrame {
 						//No more cards or matches, so end the game.  Make sure to increment score!
 						incrementScore();
 						finishGameDialog();
-					} else {				
+					} else {
+						if (isSinglePlayerGame){
+							player2.setVisible(true);
+							player2.setText("Awesome!!");
+						}
 						incrementScore();
 //						updatePlayerScoreLabels(true, false);
-						refreshBoard();						
+						refreshBoard();	
 					}					
 				} else {
 					SimpleTimer.stop();
@@ -570,6 +581,10 @@ public class GameWindow extends JFrame {
 
 	private void addCards(){
 		
+		if (isSinglePlayerGame){
+			player2.setVisible(false);
+		}	
+		
 		//prompt if player is sure
 		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
@@ -583,10 +598,10 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(3);
-				player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+				player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(3);
-				player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+				player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			}
 
 			// only able when 12 cards on the board
@@ -601,12 +616,12 @@ public class GameWindow extends JFrame {
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			switchPlayer();
-			player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		} else if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer ==2){
 			switchPlayer();
 			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
-			player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		}
 		//TODO: start other player's turn
 		
@@ -617,6 +632,10 @@ public class GameWindow extends JFrame {
 	}
 
 	private void getHint(){
+		
+		if (isSinglePlayerGame){
+			player2.setVisible(false);
+		}
 		
 		SimpleTimer.stop();
 		
@@ -655,10 +674,10 @@ public class GameWindow extends JFrame {
 			//penalize current player
 			if (ruler.currentPlayer == 1){
 				ruler.playerOne.takePoints(2);
-				player1.setText(">" + ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+				player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 			} else if (ruler.currentPlayer == 2){
 				ruler.playerTwo.takePoints(2);
-				player2.setText(">" + ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+				player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			}
 		}
 		SimpleTimer.restart();
@@ -805,6 +824,8 @@ public class GameWindow extends JFrame {
 			player2.setBackground(new Color(222,30,30));
 		}
 		
+		
+		
 		//get players' names
 		
 		//randomly select which player goes first
@@ -813,11 +834,11 @@ public class GameWindow extends JFrame {
 		
 		//initialize timer
 		seconds = 90000;
+		SimpleTimer.start();
 		
 		//listen for 3 clicked cards
 		
 		//pause timer & check if selected cards are a set
-		SimpleTimer.stop();
 		
 		//if set, add points to current player & switch players
 		
