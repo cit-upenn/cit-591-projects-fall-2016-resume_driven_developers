@@ -535,17 +535,21 @@ public class GameWindow extends JFrame {
 						incrementScore();
 //						updatePlayerScoreLabels(true, false);
 						refreshBoard();	
+						
+						if(!isSinglePlayerGame) switchPlayer();
+						selectedCards.clear();
+						selectedIndices.clear();
 					}					
 				} else {
 					SimpleTimer.stop();
 					JOptionPane.showMessageDialog(frame,"Nope! That is not a set.", "", JOptionPane.DEFAULT_OPTION);
 					SimpleTimer.restart();
+					selectedCards.clear();
+					selectedIndices.clear();
 					refreshBoard();
 				}
 				
-				if(!isSinglePlayerGame) switchPlayer();
-				selectedCards.clear();
-				selectedIndices.clear();
+
 			} 
 			
 
@@ -631,8 +635,9 @@ public class GameWindow extends JFrame {
 		}
 		//TODO: start other player's turn
 		//reset clock
-		seconds = 90000;
-		SimpleTimer.start();
+		if (skip == JOptionPane.NO_OPTION){
+			SimpleTimer.restart();
+		}
 	}
 
 	private void getHint(){
@@ -720,6 +725,8 @@ public class GameWindow extends JFrame {
 		addCards.setEnabled(false);
 		player1.setBackground(new Color(255, 255, 240));
 		player2.setBackground(new Color(255, 255, 240));
+		SimpleTimer.stop();
+		clock.setText("00:00");
 		//reset clock to 00:00
 		//end other game stuff
 	}
@@ -764,6 +771,8 @@ public class GameWindow extends JFrame {
 	
 	private void quitGame(){
 		
+		SimpleTimer.stop();
+		
 		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
 	
 		//add 3 cards to empty row at the bottom
@@ -777,6 +786,8 @@ public class GameWindow extends JFrame {
 				resetGame();				
 			}
 
+		} else if (endGame == JOptionPane.NO_OPTION){
+			SimpleTimer.restart();
 		}
 	}
 	
