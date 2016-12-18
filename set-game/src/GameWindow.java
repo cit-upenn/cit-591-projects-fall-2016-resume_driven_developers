@@ -112,9 +112,13 @@ public class GameWindow extends JFrame {
 		
 		// initiate and start the clock
 		SimpleTimer = new Timer(1000, new ActionListener(){
+			int gameOver = 1;
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        if(seconds<=0) {		        	
+		        if(seconds<=0) {
+		        	if(gameOver == 1) {
+			        	gameOver = JOptionPane.showConfirmDialog(frame, "Time out.", "", JOptionPane.CLOSED_OPTION);
+		        	}
 		        	return;
 		        }
 		    	seconds -= 1000; 
