@@ -100,7 +100,9 @@ public class GameWindow extends JFrame {
 	// timer fields
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
 	JLabel clock= new JLabel();
-	public long seconds = 20000; // default as 20 seconds
+	//Have to start the time, otherwise it won't show up, so put in a value that
+	//display as 59:59, which I assume is the max	
+	public long seconds = 60000; // default as 60 seconds
 	Timer SimpleTimer;
 	
 	/**
@@ -112,13 +114,14 @@ public class GameWindow extends JFrame {
 		SimpleTimer = new Timer(1000, new ActionListener(){
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        if(seconds<=0) {
+		        if(seconds<=0) {		        	
 		        	return;
 		        }
 		    	seconds -= 1000; 
 		    	clock.setText(sdf.format(seconds));
 		    }
 		});
+		//Have to start the time, otherwise it won't show up, so start the time at 0
 		SimpleTimer.start();
 		
 		
@@ -371,7 +374,7 @@ public class GameWindow extends JFrame {
 					
 					flipCards();
 					//Use this to test the end game, throws away a bunch of cards from the deck
-					ruler.throwAwayCards();
+//					ruler.throwAwayCards();
 					
 					//next, play the game!
 					onePlayerGame();
@@ -393,6 +396,9 @@ public class GameWindow extends JFrame {
 
 					//deal 12 cards
 					flipCards();
+					
+					//Throw away cards to test the endgame
+					ruler.throwAwayCards();
 					
 					//play a 2 player game
 					twoPlayerGame(player1Name, player2Name);
@@ -472,17 +478,6 @@ public class GameWindow extends JFrame {
 		}
 	}
 	
-	/**
-	 * Updates the players' scores on the game board.  Input true if you want that player's score updated (if the one player game is running, then we
-	 * don't want to show player two's score)
-	 * @param updateP1 "True" if you want player one's score updated
-	 * @param updateP2 "True" if you want player two's score updated
-	 * @author ATM
-	 */
-	private void updatePlayerScoreLabels(boolean updateP1, boolean updateP2) {
-		if (updateP1) player1.setText(player1Name + ": " + ruler.playerOne.getScore());
-		if (updateP2) player2.setText(player1Name + ": " + ruler.playerTwo.getScore()); 
-	}
 	
 	/**
 	 * This method is called when a player successfully finds a match, and increments their score appropriately.
@@ -495,6 +490,9 @@ public class GameWindow extends JFrame {
 		else {
 			ruler.playerTwo.setScore(ruler.playerTwo.getScore() + 10);
 		}
+		
+		player1.setText(player1Name + ": " + ruler.playerOne.getScore());
+		if(!isSinglePlayerGame) player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
 	}
 	
 	
@@ -522,11 +520,12 @@ public class GameWindow extends JFrame {
 				if (ruler.containsRuleArrayInput(selectedCards)) {
 					//We found a match
 					if(ruler.replacedMatchedBoardCards(selectedIndices)) {
-						//No more cards or matches, so end the game
+						//No more cards or matches, so end the game.  Make sure to increment score!
+						incrementScore();
 						finishGameDialog();
 					} else {				
 						incrementScore();
-						updatePlayerScoreLabels(true, false);
+//						updatePlayerScoreLabels(true, false);
 						refreshBoard();						
 					}					
 				} else {
@@ -534,6 +533,7 @@ public class GameWindow extends JFrame {
 					refreshBoard();
 				}
 				
+				if(!isSinglePlayerGame) switchPlayer();
 				selectedCards.clear();
 				selectedIndices.clear();
 			} 
@@ -584,11 +584,6 @@ public class GameWindow extends JFrame {
 			//add 3 cards to the board permanently 
 			ruler.addThreeCardsToBoard();
 			refreshBoard();
-
-			//place 3 new cards images on board
-//			cardButtons[12].setIcon(back);
-//			cardButtons[13].setIcon(back);
-//			cardButtons[14].setIcon(back);
 
 			//penalize current player
 			if (ruler.currentPlayer == 1){
@@ -670,6 +665,8 @@ public class GameWindow extends JFrame {
 		skipTurn.setEnabled(false);
 		getHint.setEnabled(false);
 		addCards.setEnabled(false);
+		player1.setBackground(new Color(255, 255, 240));
+		player2.setBackground(new Color(255, 255, 240));
 		//reset clock to 00:00
 		//end other game stuff
 	}
@@ -684,6 +681,23 @@ public class GameWindow extends JFrame {
 			String endGameMessageString = "You finished the game!  Your final score is: " + ruler.getPlayerOne().getScore() +
 					".\n  Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 			endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
+		} else {
+			if(ruler.getPlayerOne().getScore()>ruler.getPlayerTwo().getScore()) {
+				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + "wins\nby a score of " +
+						ruler.getPlayerOne().getScore() + " to " + ruler.getPlayerTwo().getScore() + ".\n"
+								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
+				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
+			} else if (ruler.getPlayerOne().getScore() < ruler.getPlayerTwo().getScore()) {
+				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + "wins\nby a score of " +
+						ruler.getPlayerTwo().getScore() + " to " + ruler.getPlayerOne().getScore() + ".\n"
+								+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
+				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
+			} else {
+				String endGameMessageString = "Nice Game! The result is a tie: " + ruler.getPlayerOne().getScore() + " to " +
+						ruler.getPlayerTwo().getScore() + ".\n" + 
+						"Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
+				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
+			}
 		}
 		
 		//add 3 cards to empty row at the bottom
@@ -737,46 +751,14 @@ public class GameWindow extends JFrame {
 		System.out.println("");
 	}
 	
-	/**
-	private void dealBoard(){
-		
-		//This doesn't change the board cards, so it's okay to leave as a local variable
-		System.out.println("\nNew Board:");		
-		cards = ruler.playBoard.getPlayedCards();
-		for (int i = 0; i < 12; i++){
-			if(i%3 == 0) System.out.print("\n");
-			String filename = cards[i].getImageFile();
-			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
-			System.out.print(cards[i].toString() + ",  ");
-		}
-		
-		// check the solutions
-		System.out.println("\nStart to check the board");	
-		boolean validBoard = ruler.containsSolution(cards);
-		if(validBoard) {
-			System.out.println("Solutions on the board: " + ruler.getSolutions(cards));
-		}
-		else {
-			System.out.println("No solutions! Add 3 more cards");
-			for(int i=0; i<3; i++) {
-				if(i%3 == 0) System.out.print("\n");
-				//Need a method here to add three cards to Game Ruler's card board instance variable
-				String filename = cards[12+i].getImageFile();
-				cardButtons[12+i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
-				System.out.print(cards[12+i].toString() + ",  ");
-			}
-		}
-		
-	}
-	*/
-	
 	public void onePlayerGame(){
 		playerOne = new Player();
 		currentPlayer = 1;
 		isSinglePlayerGame = true;
 		
 		//initialize timer
-		seconds = 20000;		
+//		SimpleTimer.start();
+		seconds = 10000;		
 	}
 
 	public void twoPlayerGame(String player1Name, String player2Name){
@@ -788,8 +770,10 @@ public class GameWindow extends JFrame {
 		Random rand = new Random();
 		if (rand.nextBoolean()){
 			currentPlayer = 1;
+			player1.setBackground(new Color(222,30,30));
 		} else {
 			currentPlayer = 2;
+			player2.setBackground(new Color(222,30,30));
 		}
 		
 		//get players' names
@@ -814,8 +798,13 @@ public class GameWindow extends JFrame {
 	public void switchPlayer(){
 		if (currentPlayer == 1){
 			currentPlayer = 2;
+			//Change the background colors to reflect the player
+			player2.setBackground(new Color(222,30,30));
+			player1.setBackground(new Color(255, 255, 240));
 		} else if (currentPlayer == 2){
 			currentPlayer = 1;
+			player1.setBackground(new Color(222,30,30));
+			player2.setBackground(new Color(255, 255, 240));
 		}
 	}
 }
