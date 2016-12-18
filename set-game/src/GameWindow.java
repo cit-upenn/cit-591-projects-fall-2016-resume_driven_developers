@@ -507,12 +507,23 @@ public class GameWindow extends JFrame {
 			
 			// Highlight the button that's been clicked
 			int clickedButtonIndex = findClickedButton(e);
-			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
-			selectedIndices.add(clickedButtonIndex);
+			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];			
 			String picFilePathOfClicked = clickedCard.getClickedImage();
+			System.out.println(selectedCards.size());
 			
-			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
-			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+			if(selectedIndices.size()>0 && clickedButtonIndex == selectedIndices.get(selectedIndices.size()-1) && selectedCards.size() < 3  ) {
+				//They clicked the button they just clicked, so deselect it.  This can't happen on the third selection, and can't happen if
+				//no buttons have already been clicked.
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(clickedCard.getImageFile())));
+				selectedCards.remove(selectedCards.size()-1);
+				selectedIndices.remove(selectedIndices.size()-1);	
+				
+			} else {
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+				selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+				selectedIndices.add(clickedButtonIndex);
+			}
+			
 			
 			if (selectedCards.size() == 1 && isSinglePlayerGame){
 				player2.setVisible(false);
@@ -551,8 +562,6 @@ public class GameWindow extends JFrame {
 				
 
 			} 
-			
-
 		}
 	}
 
