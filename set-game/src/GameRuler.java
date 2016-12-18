@@ -15,21 +15,23 @@ public class GameRuler {
 	Player playerOne;
 	Player playerTwo;
 	int currentPlayer;
-	//Created instance variables so that GameRuler holds a Board and Deck object
+	
+	// GameRuler holds a Board & a Deck object
 	Board playBoard;
 	Deck playDeck;
 
+	/**
+	 * constructor which initiates the Deck and the Board
+	 */
 	public GameRuler() {
-		
 		playerOne = new Player();
 		playerTwo = new Player();
 		currentPlayer = 0;
 		
-		//Create the deck
+		// create the deck
 		playDeck = new Deck();
 		
-		//Create a board object.  We only deal 12 cards at first, since the final 3 are only added
-		//if a hint is needed
+		// create a board object: only deal 12 cards at first
 		playBoard = new Board(playDeck.deal12Cards());
 		ensureBoardHasSolution();
 	
@@ -69,20 +71,22 @@ public class GameRuler {
 		System.out.println("You found a match!!!!!!");
 		System.out.println("Deck Size Start: " + this.playDeck.cards.size());
 		if(this.playDeck.cards.size()>0) {
-			//There are still cards left in the deck to draw
+			
+			// cards left in the deck to draw
 			for(int i = 0; i < matchedCards.size(); i++) {
 				this.playBoard.getPlayedCards()[matchedCards.get(i)] = playDeck.dealCard();
 			}
 			
-			//If the 3 cards result in a board with no solutions, deal three more cards
+			// if the 3 cards result in a board with no solutions, deal three more cards
 			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) replacedMatchedBoardCards(matchedCards);
-		} else {
-			//No more cards left to draw			
+		} 
+		else {
+			// no more cards left to draw			
 			for(int i = 0; i < matchedCards.size(); i++) {
 				this.playBoard.getPlayedCards()[matchedCards.get(i)] = null;
 			}
 			
-			//We've reached the point where there are no more cards and no more solutions, so end the game
+			// no more cards && no more solutions -> end the game!
 			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) {
 				endGameFlag = true;
 				return endGameFlag;
@@ -90,10 +94,12 @@ public class GameRuler {
 		}
 				
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
+		
 		//Start keeping track of the deck size
 		System.out.println("Deck Size End: " + this.playDeck.cards.size());
 		return endGameFlag;
 	}
+	
 	
 	/**
 	 * Create a method that checks if there's a solution on the board.  If there's not, then randomly pick three cards to replace them.  We'll
@@ -106,7 +112,7 @@ public class GameRuler {
 			int rnd = new Random().nextInt(this.playBoard.getPlayedCards().length);
 			this.playBoard.getPlayedCards()[rnd] = playDeck.dealCard();
 		}
-		//Prints solutions to console
+		
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 	}
 	
@@ -131,12 +137,11 @@ public class GameRuler {
 		int number = cardsOnBoard.length;
 
 		if(cardsOnBoard[14] == null) number = 12;
-//		if(cardsOnBoard.length < 13 ) number = 12;
-//		System.out.println(number);	
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
 				for(int k=j+1; k<number; k++) {
-					//System.out.println(i +" "+j+" "+k);
+					//System.out.println(i +" "+j+" "+k); // for testing the boundary
+
 					//Added this outside if statement
 					if(cardsOnBoard[i] != null && cardsOnBoard[j] != null && cardsOnBoard[k] != null){
 						if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
@@ -207,7 +212,12 @@ public class GameRuler {
 		return false;
 	}
 	
-	
+	/**
+	 * methods for comparing 2 cards
+	 * @param card1
+	 * @param card2
+	 * @return
+	 */
 	public static int countSimilarity(Card card1, Card card2) {
 		int count = 0;
 		count += isSameShape(card1, card2);
@@ -321,16 +331,12 @@ public class GameRuler {
 		}
 	}
 
-
-
 	/**
 	 * @return the playBoard
 	 */
 	public Board getPlayBoard() {
 		return playBoard;
 	}
-
-
 
 	/**
 	 * @param playBoard the playBoard to set
@@ -339,16 +345,12 @@ public class GameRuler {
 		this.playBoard = playBoard;
 	}
 
-
-
 	/**
 	 * @return the playDeck
 	 */
 	public Deck getPlayDeck() {
 		return playDeck;
 	}
-
-
 
 	/**
 	 * @param playDeck the playDeck to set

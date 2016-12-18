@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -92,9 +91,8 @@ public class GameWindow extends JFrame {
 //	String player2Score;
 	boolean isSinglePlayerGame;
 	
-	// user selected cards
+	// user selected cards & their indices on the board
 	List<Card> selectedCards = new ArrayList<Card>();
-	//Stores the indices of the selected cards
 	ArrayList<Integer> selectedIndices = new ArrayList<Integer>();
 	
 	// timer fields
@@ -103,7 +101,21 @@ public class GameWindow extends JFrame {
 	//Have to start the time, otherwise it won't show up, so put in a value that
 	//display as 59:59, which I assume is the max	
 	public long seconds = 60000; // default as 60 seconds
-	Timer SimpleTimer;
+	Timer SimpleTimer = new Timer(1000, new ActionListener(){
+		int gameOver = 1;
+	    @Override
+	    public void actionPerformed(ActionEvent e) {
+	        if(seconds<=0) {
+	        	if(gameOver == 1) {
+		        	gameOver = JOptionPane.showConfirmDialog(frame, "Time out.", "", JOptionPane.CLOSED_OPTION);
+		        	//TODO: disable all the cards
+	        	}
+	        	return;
+	        }
+	    	seconds -= 1000; 
+	    	clock.setText(sdf.format(seconds));
+	    }
+	});
 	
 	/**
 	 * Create the frame.
@@ -111,32 +123,11 @@ public class GameWindow extends JFrame {
 	public GameWindow() {
 		
 		// initiate and start the clock
-		SimpleTimer = new Timer(1000, new ActionListener(){
-			int gameOver = 1;
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		        if(seconds<=0) {
-		        	if(gameOver == 1) {
-			        	gameOver = JOptionPane.showConfirmDialog(frame, "Time out.", "", JOptionPane.CLOSED_OPTION);
-		        	}
-		        	return;
-		        }
-		    	seconds -= 1000; 
-		    	clock.setText(sdf.format(seconds));
-		    }
-		});
-		//Have to start the time, otherwise it won't show up, so start the time at 0
 		SimpleTimer.start();
-		
-		
+				
 		//calls an instance of the GameRuler to run the game
 		ruler = new GameRuler();
 		
-		//ATM: I think we should always access the cards on the game board through game ruler....if we have the card board in an instance
-		//variable in GameWindow, we risk accessing a card board that isn't updated.
-		//initialize array of 15 cards
-//		cards = new Card[15];
-
 		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
 		setBounds(100, 100, 1200, 860);
@@ -177,9 +168,6 @@ public class GameWindow extends JFrame {
 		getContentPane().add(player1, gbc_lblPlayer1);
 
 		//creates the text area for the timer
-		//JLabel clock = new JLabel("00:00");
-		
-		
 		clock.setFont(new Font("Tahoma", Font.BOLD, 42));
 		clock.setBackground(new Color(255, 255, 240));
 		clock.setOpaque(true);
@@ -201,7 +189,7 @@ public class GameWindow extends JFrame {
 			//Create the separate action listener for the card buttons
 			cardButtons[i].addActionListener(new buttonAL());
 
-			//this sets the first 12 cards to show the back face
+			//set the first 12 cards to show the back face
 			//and the last 3 to be empty
 			if (i < 12){
 				cardButtons[i].setIcon(back);
@@ -500,16 +488,17 @@ public class GameWindow extends JFrame {
 	}
 	
 	
-	//Action listener for the card buttons: ATM
+	/**
+	 * Action listener for the card buttons: ATM 
+	 * 
+	 *
+	 */
 	private class buttonAL implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
-			// TODO: pressing the buttons of cards to add
 			//Cards is an instance variable of GameWindow and is an array of Card objects
-			//List<Card> selectedCards = new ArrayList<Card>();
-			//List<Integer> selectedIndices = new ArrayList<Integer>();
 			
-			//Highlight the button that's been clicked
+			// Highlight the button that's been clicked
 			int clickedButtonIndex = findClickedButton(e);
 			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
 			selectedIndices.add(clickedButtonIndex);
@@ -580,11 +569,13 @@ public class GameWindow extends JFrame {
 
 
 	private void addCards(){
+		
 		//prompt if player is sure
 		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (reveal == JOptionPane.YES_OPTION){
+
 			//add 3 cards to the board permanently 
 			ruler.addThreeCardsToBoard();
 			refreshBoard();
@@ -598,8 +589,8 @@ public class GameWindow extends JFrame {
 				player2.setText(">" + player2Name + ": " + ruler.playerTwo.getScore());
 			}
 
+			// only able when 12 cards on the board
 			addCards.setEnabled(false);
-			//this needs to stay disabled until there are only 12 cards on the board
 		}
 	}
 
@@ -616,8 +607,11 @@ public class GameWindow extends JFrame {
 			player2.setText(player2Name + ": " + ruler.playerTwo.getScore());
 			player1.setText(">" + player1Name + ": " + ruler.playerOne.getScore());
 		}
-		//start other player's turn
+		//TODO: start other player's turn
+		
+		
 		//reset clock
+		seconds = 10000;
 	}
 
 	private void getHint(){
@@ -630,11 +624,11 @@ public class GameWindow extends JFrame {
 				return;
 			}
 
-			System.out.println("Solutions on the board: " + solutions); // should comment it
+			System.out.println("Solutions on the board: " + solutions);
 			Card hintCard =  solutions.get(0).iterator().next();
 			System.out.println(hintCard);
 
-			//ask GameRuler for the position of a card that is in a set on the board			
+			// find the position of a card of a solution set			
 			for (int i=0; i< ruler.playBoard.getPlayedCards().length; i++){
 				Card matched = ruler.playBoard.getPlayedCards()[i];
 				if(hintCard.equal(matched)) {
@@ -784,7 +778,6 @@ public class GameWindow extends JFrame {
 		isSinglePlayerGame = true;
 		
 		//initialize timer
-//		SimpleTimer.start();
 		seconds = 10000;		
 		for(JButton jb:cardButtons){
 			jb.setEnabled(true);
