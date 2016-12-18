@@ -62,6 +62,8 @@ public class GameRuler {
 	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
 		boolean endGameFlag = false;
 		
+		System.out.println("You found a match!!!!!!");
+		System.out.println("Deck Size Start: " + this.playDeck.cards.size());
 		if(this.playDeck.cards.size()>0) {
 			//There are still cards left in the deck to draw
 			for(int i = 0; i < matchedCards.size(); i++) {
@@ -85,7 +87,7 @@ public class GameRuler {
 				
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 		//Start keeping track of the deck size
-		System.out.println("Deck size: " + this.playDeck.cards.size());
+		System.out.println("Deck Size End: " + this.playDeck.cards.size());
 		return endGameFlag;
 	}
 	
@@ -126,7 +128,7 @@ public class GameRuler {
 
 		if(cardsOnBoard[14] == null) number = 12;
 //		if(cardsOnBoard.length < 13 ) number = 12;
-		System.out.println(number);	
+//		System.out.println(number);	
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
 				for(int k=j+1; k<number; k++) {
@@ -349,6 +351,34 @@ public class GameRuler {
 	 */
 	public void setPlayDeck(Deck playDeck) {
 		this.playDeck = playDeck;
+	}
+
+	/**
+	 * @return the playerOne
+	 */
+	public Player getPlayerOne() {
+		return playerOne;
+	}
+
+	/**
+	 * @param playerOne the playerOne to set
+	 */
+	public void setPlayerOne(Player playerOne) {
+		this.playerOne = playerOne;
+	}
+
+	/**
+	 * @return the playerTwo
+	 */
+	public Player getPlayerTwo() {
+		return playerTwo;
+	}
+
+	/**
+	 * @param playerTwo the playerTwo to set
+	 */
+	public void setPlayerTwo(Player playerTwo) {
+		this.playerTwo = playerTwo;
 	}
 	
 }
