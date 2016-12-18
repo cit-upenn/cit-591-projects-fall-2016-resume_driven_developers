@@ -371,7 +371,7 @@ public class GameWindow extends JFrame {
 					
 					flipCards();
 					//Use this to test the end game, throws away a bunch of cards from the deck
-					ruler.throwAwayCards();
+					//ruler.throwAwayCards();
 					
 					//next, play the game!
 					onePlayerGame();
@@ -426,70 +426,6 @@ public class GameWindow extends JFrame {
 
 				quitGame();
 			}
-			
-			/**
-			// TODO: pressing the buttons of cards to add
-			else if(e.getSource().equals(cardButtons[0])) {
-				selectedCards.add(cards[0]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[1])) {
-				selectedCards.add(cards[1]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[2])) {
-				selectedCards.add(cards[2]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[3])) {
-				selectedCards.add(cards[3]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[4])) {
-				selectedCards.add(cards[4]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[5])) {
-				selectedCards.add(cards[5]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[6])) {
-				selectedCards.add(cards[6]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[7])) {
-				selectedCards.add(cards[7]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[8])) {
-				selectedCards.add(cards[8]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[9])) {
-				selectedCards.add(cards[9]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[10])) {
-				selectedCards.add(cards[10]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			else if(e.getSource().equals(cardButtons[11])) {
-				selectedCards.add(cards[11]);
-				System.out.println("We have selected: " + selectedCards);
-				checkSeletion();
-			}
-			*/
 
 		}
 	}
@@ -646,12 +582,14 @@ public class GameWindow extends JFrame {
 
 		//add 3 cards to empty row at the bottom
 		if (reveal == JOptionPane.YES_OPTION){
-			//draw 3 new cards from deck
+			//add 3 cards to the board permanently 
+			ruler.addThreeCardsToBoard();
+			refreshBoard();
 
 			//place 3 new cards images on board
-			cardButtons[12].setIcon(back);
-			cardButtons[13].setIcon(back);
-			cardButtons[14].setIcon(back);
+//			cardButtons[12].setIcon(back);
+//			cardButtons[13].setIcon(back);
+//			cardButtons[14].setIcon(back);
 
 			//penalize current player
 			if (ruler.currentPlayer == 1){
@@ -665,8 +603,6 @@ public class GameWindow extends JFrame {
 			addCards.setEnabled(false);
 			//this needs to stay disabled until there are only 12 cards on the board
 		}
-
-
 	}
 
 	private void skipTurn(){
