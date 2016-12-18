@@ -36,10 +36,21 @@ public class GameRuler {
 	}
 	
 	/**
+	 * This method will add 3 additional cards to the board, so that the total will now be 15 cards for the
+	 * remainder of the game
+	 */
+	public void addThreeCardsToBoard() {
+		for(int i = 12; i < 15; i++) {
+			this.playBoard.getPlayedCards()[i] = playDeck.dealCard();
+		}
+	}
+	
+	
+	/**
 	 * Throw away 60 cards to help test the end game
 	 */
 	public void throwAwayCards() {
-		for(int i = 0; i < 60; i++){
+		for(int i = 0; i < 66; i++){
 			this.playDeck.dealCard();
 		}
 	}
@@ -74,7 +85,7 @@ public class GameRuler {
 				
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 		//Start keeping track of the deck size
-		System.out.println("Deck size: " + this.playDeck.cards.size() + ";   Matched array: " + matchedCards.size());
+		System.out.println("Deck size: " + this.playDeck.cards.size());
 		return endGameFlag;
 	}
 	
