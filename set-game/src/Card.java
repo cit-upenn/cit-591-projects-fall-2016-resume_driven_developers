@@ -60,6 +60,16 @@ public class Card {
 		this.idNumber = idNumber;
 	}
 
+	public boolean equal(Card c) {
+		if(c== null) return false;
+		System.out.println(this + " vs " + c);
+		if(this.getColor().equals(c.getColor()) 
+				&& this.getShading().equals(c.getShading()) 
+				&& this.getQuantity().equals(c.getQuantity()) 
+				&& this.getShape().equals(c.getShape())) return true;
+		else return false;
+	}
+	
 	public String getImageFile() {
 		String image = null;
 		if (Integer.parseInt(idNumber) < 10){

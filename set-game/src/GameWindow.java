@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
+import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -621,10 +621,33 @@ public class GameWindow extends JFrame {
 
 		if (hint == JOptionPane.YES_OPTION){
 
-			//ask GameRuler for the position of a card that is in a set on the board
-			//ask Card for the ClickedImage filename of that Card
-			//display the ClickedImage of that Card in the correct button position
-			//set the boolean "selected" to true for that card position
+			List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
+			if(solutions==null) {
+				return;
+			}
+
+			System.out.println("Solutions on the board: " + solutions); // should comment it
+			Card hintCard =  solutions.get(0).iterator().next();
+			System.out.println(hintCard);
+
+			//ask GameRuler for the position of a card that is in a set on the board			
+			for (int i=0; i< ruler.playBoard.getPlayedCards().length; i++){
+				Card matched = ruler.playBoard.getPlayedCards()[i];
+				if(hintCard.equal(matched)) {
+					System.out.println("Found the hinted card on the board:  " + matched);
+					selectedIndices.add(i);
+
+					//ask Card for the ClickedImage filename of that Card
+					String picFilePathOfClicked = matched.getClickedImage();
+					
+					//display the ClickedImage of that Card in the correct button position					
+					cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+
+					//set the boolean "selected" to true for that card position
+					selectedCards.add(ruler.playBoard.getPlayedCards()[i]);
+
+				}
+			}
 
 			//penalize current player
 			if (ruler.currentPlayer == 1){
@@ -759,6 +782,9 @@ public class GameWindow extends JFrame {
 		//initialize timer
 //		SimpleTimer.start();
 		seconds = 10000;		
+		for(JButton jb:cardButtons){
+			jb.setEnabled(true);
+		}
 	}
 
 	public void twoPlayerGame(String player1Name, String player2Name){
