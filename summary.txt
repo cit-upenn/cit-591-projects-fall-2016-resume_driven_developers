@@ -27,6 +27,8 @@ Eva Herzog
 ~JPG and PNG creation
 ~"Downsizing" - getting the board back down to 12 cards after it goes up to 15
 ~Commenting & some DRYing out
+~User Manual
+~inital work on Player and Card classes
 
 ;;;;;;;;;;;;;;;;;;
 Patrick Lin
