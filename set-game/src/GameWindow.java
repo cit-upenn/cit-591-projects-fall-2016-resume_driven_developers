@@ -20,8 +20,6 @@ import javax.swing.Timer;
 import java.awt.Color;
 import javax.swing.UIManager;
 
-//import GameWindow.generateAL;
-
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
@@ -77,39 +75,28 @@ public class GameWindow extends JFrame {
 	//instance variables for player stats
 	JLabel player1;
 	JLabel player2;
-	//	String ruler.playerOne.getName();
-	//	String ruler.playerTwo.getName();
-	//	Player playerOne;
-	//	Player playerTwo;
-	//	int currentPlayer;
-
-	//ATM: try to avoid creating these variables
-	//	int player1Score = 0;
-	//	int player2Score = 0;
-	//	String player1Score;
-	//	String player2Score;
 	boolean isSinglePlayerGame;
 
-	// user selected cards & their indices on the board
+	// user-selected cards & their indices on the board
 	List<Card> selectedCards = new ArrayList<Card>();
 	ArrayList<Integer> selectedIndices = new ArrayList<Integer>();
 
-	//   fields
+	//countdown timer setup
 	java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss");
 	JLabel clock= new JLabel();
-	//Have to start the time, otherwise it won't show up, so put in a value that
-	//display as 59:59, which I assume is the max	
-	public long seconds = 90000; // default as 60 seconds
+
+	
+	public long seconds = 90000; // default as 90 seconds
 	Timer SimpleTimer = new Timer(1000, new ActionListener(){
-		int gameOver = 1;
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(seconds<=0) {
-				if(gameOver == 1 && isSinglePlayerGame) {
-					gameOver = JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
+				if(isSinglePlayerGame) {
+					JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
 					for (int i = 0; i < 15; i++){
 						cardButtons[i].setEnabled(false);
 					}
+					closeWindow();
 				} else if (!isSinglePlayerGame){
 					if(gameOver == 2) return;
 					JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
@@ -124,7 +111,10 @@ public class GameWindow extends JFrame {
 	});
 
 	/**
-	 * Create the frame.
+	 * Create the frame with game control buttons, spaces for cards,
+	 * and text fields for the clock and the player's names and scores.
+	 * 
+	 * This constructor also calls an instance of the GameRuler class.
 	 */
 	public GameWindow() {
 
@@ -133,7 +123,6 @@ public class GameWindow extends JFrame {
 
 		//creates the window pane
 		getContentPane().setBackground(new Color(70, 130, 180));
-		//	    setContentPane(new JLabel(new ImageIcon("/cardimages/back.png")));
 
 		setBounds(100, 100, 1200, 860);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -147,7 +136,7 @@ public class GameWindow extends JFrame {
 
 
 		/*
-		 * assigns images for the four non-card face images used
+		 * assigns images for two images used frequently
 		 * back - back face of cards
 		 * blank - for the bottom row that isn't always in use
 		 */
@@ -197,8 +186,10 @@ public class GameWindow extends JFrame {
 			//and the last 3 to be empty
 			if (i < 12){
 				cardButtons[i].setIcon(back);
+				cardButtons[i].setDisabledIcon(back);
 			} else {
 				cardButtons[i].setIcon(blank);
+				cardButtons[i].setDisabledIcon(blank);
 			}
 
 			//this makes sure nothing but the card image shows (no border, etc)
@@ -233,7 +224,7 @@ public class GameWindow extends JFrame {
 				gbc_cardButtons[i].gridx = 3;
 			}
 
-			//this add each card button to the window pane
+			//this adds each card button to the window pane
 			getContentPane().add(cardButtons[i], gbc_cardButtons[i]);
 
 		}
@@ -341,54 +332,12 @@ public class GameWindow extends JFrame {
 
 
 			if(e.getSource().equals(onePlayerGame)) {
-
-				//asks for and displays player 1's name
-				getName(1);
-
-				//sets the correct buttons to enabled or disabled
-				if (ruler.playerOne.getName() != null){
-					player2.setText("");
-					skipTurn.setEnabled(false);
-					onePlayerGame.setEnabled(false);
-					twoPlayerGame.setEnabled(false);
-					getHint.setEnabled(true);
-					addCards.setEnabled(true);
-
-					System.out.println(ruler.playerOne.getName());
-
-
-					flipCards();
-					//Use this to test the end game, throws away a bunch of cards from the deck
-					//					ruler.throwAwayCards();
-
-					//next, play the game!
-					onePlayerGame();
-				}
+				
+				onePlayerGame();
+					
 			} else if(e.getSource().equals(twoPlayerGame)) {
-
-				//ask for and display both player's names
-				for (int i = 1; i < 3; i++){
-					getName(i);
-				}
-
-				//sets the correct buttons to enabled and disabled
-				skipTurn.setEnabled(true);
-				onePlayerGame.setEnabled(false);
-				twoPlayerGame.setEnabled(false);
-				getHint.setEnabled(true);
-				addCards.setEnabled(true);
-
-				//deal 12 cards
-				flipCards();
-
-				//Throw away cards to test the endgame
-				//					ruler.throwAwayCards();
-
-				//play a 2 player game
+				
 				twoPlayerGame();
-
-				//tell the players who will go first
-
 
 			} else if(e.getSource().equals(howToPlay)) {
 
@@ -413,6 +362,24 @@ public class GameWindow extends JFrame {
 
 		}
 	}
+	
+	/**
+	 * This method enables and disables the appropriate cards
+	 * based on 1-player vs. 2-player rules.
+	 */
+	private void enableDisable(){		
+		onePlayerGame.setEnabled(false);
+		twoPlayerGame.setEnabled(false);
+		getHint.setEnabled(true);
+		addCards.setEnabled(true);
+		
+		if (isSinglePlayerGame){
+			player2.setText("");
+			skipTurn.setEnabled(false);
+		} else {
+			skipTurn.setEnabled(true);
+		}
+	}
 
 
 	//Takes in the action listener, and return the index of the clicked button
@@ -433,7 +400,7 @@ public class GameWindow extends JFrame {
 	 * and the visual display needs to be updated appropriately.
 	 * @author ATM
 	 */
-	void refreshBoard() {
+	private void refreshBoard() {
 		//Check to see if 12 or 15 cards are on the card board.
 		int loopLength = 0;
 		if(ruler.playBoard.getPlayedCards()[13] == null) {
@@ -445,8 +412,7 @@ public class GameWindow extends JFrame {
 				}
 			}
 
-		} 
-		else{
+		} else{
 			loopLength = 15;
 		}
 
@@ -454,8 +420,7 @@ public class GameWindow extends JFrame {
 			if(!(ruler.playBoard.getPlayedCards()[i] == null)) {
 				String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
 				cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
-			} 
-			else {
+			} else {
 				/*
 				 * We run into this scenario in the end game, when there are still matches on the board but there are no more cards left
 				 * in the deck to draw.  In this case, set the matched cards to the back.
@@ -501,25 +466,35 @@ public class GameWindow extends JFrame {
 		if(!isSinglePlayerGame) player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 
 	}
+
+
 	/**
-	 * Action listener for the card buttons: ATM 
-	 * 
-	 *
+	 * Action listener for the card buttons: ATM
 	 */
 	private class buttonAL implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
-			//Cards is an instance variable of GameWindow and is an array of Card objects
-
+			
 			// Highlight the button that's been clicked
 			int clickedButtonIndex = findClickedButton(e);
-			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
-			selectedIndices.add(clickedButtonIndex);
+			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];			
 			String picFilePathOfClicked = clickedCard.getClickedImage();
-
-			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
-			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
-
+			
+			if(selectedIndices.size()>0 && clickedButtonIndex == selectedIndices.get(selectedIndices.size()-1) && selectedCards.size() < 3  ) {
+				//They clicked the button they just clicked, so deselect it.  This can't happen on the third selection, and can't happen if
+				//no buttons have already been clicked.
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(clickedCard.getImageFile())));
+				selectedCards.remove(selectedCards.size()-1);
+				selectedIndices.remove(selectedIndices.size()-1);	
+				
+			} else {
+				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+				selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+				selectedIndices.add(clickedButtonIndex);
+			}
+			
+			
+			//get rid of the "Awesome!!" message displayed in the upper right
 			if (selectedCards.size() == 1 && isSinglePlayerGame){
 				player2.setVisible(false);
 			}
@@ -535,15 +510,15 @@ public class GameWindow extends JFrame {
 							incrementScore();
 							finishGameDialog();
 						} else {
+							incrementScore();
+							refreshBoard();	
+							
 							if (isSinglePlayerGame){
 								player2.setVisible(true);
 								player2.setText("Awesome!!");
+							} else {
+								switchPlayer();
 							}
-							incrementScore();
-							//						updatePlayerScoreLabels(true, false);
-							refreshBoard();	
-
-							if(!isSinglePlayerGame) switchPlayer();
 
 							selectedCards.clear();
 							selectedIndices.clear();
@@ -553,13 +528,15 @@ public class GameWindow extends JFrame {
 							incrementScore();
 							finishGameDialog();
 						} else {
+							incrementScore();
+							refreshBoard();	
+							
 							if (isSinglePlayerGame){
 								player2.setVisible(true);
 								player2.setText("Awesome!!");
+							} else {
+								switchPlayer();
 							}
-							incrementScore();
-							//						updatePlayerScoreLabels(true, false);
-							refreshBoard();	
 
 							selectedCards.clear();
 							selectedIndices.clear();
@@ -591,14 +568,12 @@ public class GameWindow extends JFrame {
 	private void getName(int i){
 		if (i == 1){
 			setNameHelper();
-			//			ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
 			if (ruler.playerOne.getName() != null){
 				player1.setText(ruler.playerOne.getName() + ": 0");
 				player2.setText("Player 2: 0");
 			}
 		} else if (i == 2 && ruler.playerOne.getName() != null){
 			setNameHelper2();
-			//			ruler.playerTwo.setName((String)JOptionPane.showInputDialog(frame, "Enter player two's name:\n", "", JOptionPane.PLAIN_MESSAGE));
 			if (ruler.playerTwo.getName() != null){
 				player2.setText(ruler.playerTwo.getName() + ": 0");
 			}
@@ -606,13 +581,13 @@ public class GameWindow extends JFrame {
 	}
 
 	int showRuleOptionDialog() {
-		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
+		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules", "Special Features"};
 		return JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
 	}
-	
+
 	int showBasicRules1(){
 		int input = -1;
-		
+
 		ImageIcon cardExample = new ImageIcon(GameWindow.class.getResource("/cardimages/cardExample.png"));
 		Object[] choices = {"Close", "Next Page"};
 		input = JOptionPane.showOptionDialog(frame, "Each card contains four features:\n"
@@ -623,7 +598,7 @@ public class GameWindow extends JFrame {
 		}
 		return input;
 	}
-	
+
 	int showBasicRules2(){
 		int input = -1;
 		ImageIcon setExample = new ImageIcon(GameWindow.class.getResource("/cardimages/setExample.png"));
@@ -640,10 +615,10 @@ public class GameWindow extends JFrame {
 		}
 		return input;
 	}
-	
+
 	int showBasicRules3(){
 		int input = -1;
-		
+
 		ImageIcon setExample = new ImageIcon(GameWindow.class.getResource("/cardimages/summaryExamples.png"));
 		Object[] choices = {"Previous Page", "Close"};
 		input = JOptionPane.showOptionDialog(frame, "",
@@ -653,7 +628,7 @@ public class GameWindow extends JFrame {
 		}
 		return input; 
 	}
-
+	
 	private void showOnePlayerRules(){
 		JOptionPane.showMessageDialog(frame,"In a one-player game, your goal is to find as many sets as possible in 5 minutes.\n"
 				+ "Each set you find is worth 6 points.\n\n"
@@ -695,8 +670,6 @@ public class GameWindow extends JFrame {
 		}
 	}
 
-
-
 	int showConfirmAddCardDialog() {
 		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 	}
@@ -709,7 +682,6 @@ public class GameWindow extends JFrame {
 
 		//prompt if player is sure
 		int reveal = showConfirmAddCardDialog();
-		//		int reveal = JOptionPane.showConfirmDialog(frame, "Are you sure you want to reveal 3 cards?\nThis will result in a penalty.", "", JOptionPane.YES_NO_OPTION);
 
 		//add 3 cards to empty row at the bottom
 		if (reveal == JOptionPane.YES_OPTION){
@@ -727,20 +699,15 @@ public class GameWindow extends JFrame {
 				player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			}
 
-			// only able when 12 cards on the board
+			//disable button until back to 12 cards
 			addCards.setEnabled(false);
 		}
 	}
 
-	int showConfirmSkipTurnDialog() {
-		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
-	}
-	
 	private void skipTurn(){
 		SimpleTimer.stop();
 		//prompt if sure
-		int skip = showConfirmSkipTurnDialog();
-		//int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
+		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			switchPlayer();
@@ -751,7 +718,6 @@ public class GameWindow extends JFrame {
 			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		}
-		//TODO: start other player's turn
 		//reset clock
 		if (skip == JOptionPane.NO_OPTION){
 			SimpleTimer.restart();
@@ -765,6 +731,7 @@ public class GameWindow extends JFrame {
 
 	private Card getHint(){
 
+
 		if (isSinglePlayerGame){
 			player2.setVisible(false);
 		}
@@ -773,53 +740,49 @@ public class GameWindow extends JFrame {
 
 		Card matched = null;
 
-			if (showConfirmHintDialog() == JOptionPane.YES_OPTION){
+		if (showConfirmHintDialog() == JOptionPane.YES_OPTION){
 
-				// getHint.setEnabled(false);
-				List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
-//				if(solutions==null) {
-//					JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
-//					return null;
-//				}
+			getHint.setEnabled(false);
+			List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
+			if(solutions==null) {
+				JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
+				return null;
+			}
 
-				System.out.println("Solutions on the board: " + solutions);
-				Card hintCard =  solutions.get(0).iterator().next();
-				System.out.println(hintCard);
+			Card hintCard =  solutions.get(0).iterator().next();
 
-				// find the position of a card of a solution set			
-				for (int i=0; i< ruler.playBoard.getPlayedCards().length; i++){
-					matched = ruler.playBoard.getPlayedCards()[i];
-					if(hintCard.equal(matched)) {
-						System.out.println("Found the hinted card on the board:  " + matched);
-						selectedIndices.add(i);
+			// find the position of a card of a solution set			
+			for (int i=0; i< ruler.playBoard.getPlayedCards().length; i++){
+				matched = ruler.playBoard.getPlayedCards()[i];
+				if(hintCard.equal(matched)) {
+					selectedIndices.add(i);
 
-						//ask Card for the ClickedImage filename of that Card
-						String picFilePathOfClicked = matched.getClickedImage();
+					//ask Card for the ClickedImage filename of that Card
+					String picFilePathOfClicked = matched.getClickedImage();
 
-						//display the ClickedImage of that Card in the correct button position					
-						cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+					//display the ClickedImage of that Card in the correct button position					
+					cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
 
-						//set the boolean "selected" to true for that card position
-						selectedCards.add(ruler.playBoard.getPlayedCards()[i]);
+					//set the boolean "selected" to true for that card position
+					selectedCards.add(ruler.playBoard.getPlayedCards()[i]);
 
-					}
-				}
-
-				// penalize current player for 2 pts
-				if (ruler.currentPlayer == 1){
-					ruler.playerOne.takePoints(2);
-					player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
-				} else if (ruler.currentPlayer == 2){
-					ruler.playerTwo.takePoints(2);
-					player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 				}
 			}
-			SimpleTimer.restart();
-			//		getHint.setEnabled(true); // enable reuse the hint
 
-			return matched;
+			// penalize current player for 2 pts
+			if (ruler.currentPlayer == 1){
+				ruler.playerOne.takePoints(2);
+				player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
+			} else if (ruler.currentPlayer == 2){
+				ruler.playerTwo.takePoints(2);
+				player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+			}
 		}
-		
+		SimpleTimer.restart();
+
+		return matched;
+	}
+
 
 
 
@@ -835,11 +798,6 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < 15; i++){
 			cardButtons[i].setEnabled(false);
-			if (i < 12){
-				cardButtons[i].setIcon(back);
-			} else {
-				cardButtons[i].setIcon(blank);
-			}
 		}
 
 		//Create a new game ruler object
@@ -854,13 +812,11 @@ public class GameWindow extends JFrame {
 		player2.setBackground(new Color(255, 255, 240));
 		SimpleTimer.stop();
 		clock.setText("00:00");
-		//reset clock to 00:00
-		//end other game stuff
 	}
 
 	/**
-	 * This method presents a dialog box to the user when they finish a game, and asks them if they
-	 * want to play again or continue
+	 * This method presents a dialog box to the user when they finish a game, 
+	 * and asks them if they want to play again or continue
 	 */
 	private void finishGameDialog(){
 		int endGame = -1;
@@ -907,28 +863,28 @@ public class GameWindow extends JFrame {
 	private void quitGame(){
 
 		int endGame = showConfirmQuitDialog();
-		//		int endGame = JOptionPane.showConfirmDialog(frame, "Are you sure you want to end this game?", "", JOptionPane.YES_NO_OPTION);
 
 		SimpleTimer.stop();
 
-
-
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
-			int exitWindow = showConfirmExitDialog();
-			//			int exitWindow = JOptionPane.showConfirmDialog(frame, "Would you like to close the game window?", "", JOptionPane.YES_NO_OPTION);
-
-			if (exitWindow == JOptionPane.YES_OPTION){
-				frame.setVisible(false);
-				System.exit(0);
-			} 
-			else {
-				resetGame();				
-			}
-
+			closeWindow();
 		} else if (endGame == JOptionPane.NO_OPTION){
 			SimpleTimer.restart();
 		}
+	}
+	
+	private void closeWindow(){
+		int exitWindow = showConfirmExitDialog();
+
+		if (exitWindow == JOptionPane.YES_OPTION){
+			frame.setVisible(false);
+			System.exit(0);
+		} 
+		else {
+			resetGame();				
+		}
+
 	}
 
 
@@ -937,40 +893,59 @@ public class GameWindow extends JFrame {
 	 * @author Andrew
 	 */
 	private void flipCards() {
-		System.out.println("\nNew Board:");		
-		//Check to see if 12 or 15 cards are on the card board, just in case
+		//Check to see if 12 or 15 cards are on the card board
 		int loopLength = 0;
 		if(ruler.playBoard.getPlayedCards()[13] == null) {
 			loopLength = 12;
 		} else{
 			loopLength = 15;
 		}
-
+		
+		//show card images (12 or 15)
 		for (int i = 0; i < loopLength; i++){
-			if(i%3 == 0) System.out.print("\n");
 			String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
 			cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
-			System.out.print(ruler.playBoard.getPlayedCards()[i].toString() + ",  ");
 		}
-		System.out.println("");
 	}
 
 	public void onePlayerGame(){
-		ruler.currentPlayer = 1;
+		ruler.setCurrentPlayer(1);
+		
+		//set boolean for 1-player or 2-player
 		isSinglePlayerGame = true;
+		
+		//ask for and display player 1's name
+		getName(1);
 
-		//initialize timer
-		seconds = 300000;		
+		//sets the correct buttons to enabled or disabled
+		enableDisable();
+
+		//deal 12 cards & play the game
+		flipCards();
+		
+		//enable card buttons
 		for(JButton jb:cardButtons){
 			jb.setEnabled(true);
 		}
-
-		//start the clock
+		
+		//initialize timer & start the clock
+		seconds = 300000;
 		SimpleTimer.start();
 	}
 
 	public void twoPlayerGame(){
+		//set boolean for 1-player or 2-player
+		isSinglePlayerGame = false;
+		
+		//ask for and display both player's names
+		for (int i = 1; i < 3; i++){
+			getName(i);
+		}
 
+		//sets the correct buttons to enabled and disabled
+		enableDisable();
+
+		//randomly select which player goes first
 		Random rand = new Random();
 		if (rand.nextBoolean()){
 			ruler.setCurrentPlayer(1);
@@ -980,6 +955,7 @@ public class GameWindow extends JFrame {
 			player2.setBackground(new Color(255, 255, 0));
 		}
 
+		//tell users who goes first
 		if (ruler.currentPlayer == 1){
 			JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
 			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
@@ -988,29 +964,18 @@ public class GameWindow extends JFrame {
 			JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
 			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 		}
-
-		//get players' names
-
-		//randomly select which player goes first
-
+		
+		//show the 12 cards
+		flipCards();
 
 		//enable card buttons
 		for(JButton jb:cardButtons){
 			jb.setEnabled(true);
 		}
 
-
 		//initialize timer
 		seconds = 90000;
 		SimpleTimer.start();
-
-		//listen for 3 clicked cards
-
-		//pause timer & check if selected cards are a set
-
-		//if set, add points to current player & switch players
-
-		//if not set, tell player & resume timer
 	}
 
 	public void switchPlayer(){
