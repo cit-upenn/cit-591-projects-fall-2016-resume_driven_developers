@@ -69,8 +69,8 @@ public class GameRuler {
 		boolean endGameFlag = false;
 		
 		System.out.println("You found a match!!!!!!");
-		System.out.println("Deck Size Start: " + this.playDeck.cards.size());
-		if(this.playDeck.cards.size()>0) {
+		System.out.println("Deck Size Start: " + this.playDeck.getCards().size());
+		if(this.playDeck.getCards().size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < matchedCards.size(); i++) {
@@ -96,7 +96,7 @@ public class GameRuler {
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 		
 		//Start keeping track of the deck size
-		System.out.println("Deck Size End: " + this.playDeck.cards.size());
+		System.out.println("Deck Size End: " + this.playDeck.getCards().size());
 		return endGameFlag;
 	}
 	
@@ -111,11 +111,11 @@ public class GameRuler {
 		boolean endGameFlag = false;
 		
 		System.out.println("You found a match!!!!!!");
-		System.out.println("Deck Size Start: " + this.playDeck.cards.size());
+		System.out.println("Deck Size Start: " + this.playDeck.getCards().size());
 		
 		ArrayList<Card> currentTwelve = new ArrayList<Card>();
 		
-		if(this.playDeck.cards.size()>0) {
+		if(this.playDeck.getCards().size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < 15; i++) {
@@ -172,7 +172,7 @@ public class GameRuler {
 		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 		
 		//Start keeping track of the deck size
-		System.out.println("Deck Size End: " + this.playDeck.cards.size());
+		System.out.println("Deck Size End: " + this.playDeck.getCards().size());
 		return endGameFlag;
 	}
 
