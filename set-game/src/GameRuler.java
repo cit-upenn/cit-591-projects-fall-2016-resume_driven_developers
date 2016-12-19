@@ -100,7 +100,8 @@ public class GameRuler {
 		return endGameFlag;
 	}
 	
-	/**
+
+		/**
 	 * This method is called when there are 15 cards displayed on the board.
 	 * It uses an ArrayList to hold the 12 cards remaining after the set is found.
 	 * An array of Cards is created. The first 12 cards are set to the ArrayList
@@ -174,6 +175,7 @@ public class GameRuler {
 		System.out.println("Deck Size End: " + this.playDeck.cards.size());
 		return endGameFlag;
 	}
+
 	
 	/**
 	 * Create a method that checks if there's a solution on the board.  If there's not, then randomly pick three cards to replace them.  We'll
