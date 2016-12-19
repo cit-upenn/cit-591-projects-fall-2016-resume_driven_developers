@@ -228,22 +228,6 @@ public class GameRuler {
 		return false;
 	}
 	
-	/**
-	 * methods for comparing 2 cards
-	 * @param card1
-	 * @param card2
-	 * @return number of features the two cards have in common
-	 */
-	public static int countSimilarity(Card card1, Card card2) {
-		int count = 0;
-		count += isSameShape(card1, card2);
-		count += isSameColor(card1, card2);
-		count += isSameShading(card1, card2);
-		count += isSameQuantity(card1, card2);
-		
-		return count;
-	}
-	
 	public static int isSameShape(Card card1, Card card2) {
 		return card1.getShape().equals(card2.getShape())? 1:0; 
 	}
@@ -263,11 +247,11 @@ public class GameRuler {
 	
 	
 	/**
-	 * This method counts the similarities between a trio of cards
+	 * This method counts the number of cards with the same shape.
 	 * @param card1
 	 * @param card2
 	 * @param card3
-	 * @return the number of unique features among the 3 cards
+	 * @return number of cards with same shape
 	 */
 	public static int getShapeCount(Card card1, Card card2, Card card3) {
 		if(card1.getShape().equals(card2.getShape()) && card1.getShape().equals(card3.getShape())) {
@@ -284,11 +268,11 @@ public class GameRuler {
 	}
 		
 	/**
-	 * return the number of unique features among the 3 cards
+	 * This method counts the number of cards with the same color.
 	 * @param card1
 	 * @param card2
 	 * @param card3
-	 * @return
+	 * @return number of cards with same color
 	 */
 	public static int getColorCount(Card card1, Card card2, Card card3) {
 		if(card1.getColor().equals(card2.getColor()) && card1.getColor().equals(card3.getColor())) {
@@ -305,11 +289,11 @@ public class GameRuler {
 	}
 	
 	/**
-	 * return the number of unique features among the 3 cards
+	 * This method counts the number of cards with the same shading.
 	 * @param card1
 	 * @param card2
 	 * @param card3
-	 * @return
+	 * @return number of cards with same shading
 	 */
 	public static int getShadingCount(Card card1, Card card2, Card card3) {
 		if(card1.getShading().equals(card2.getShading()) && card1.getShading().equals(card3.getShading())) {
@@ -327,11 +311,11 @@ public class GameRuler {
 	
 	
 	/**
-	 * return the number of unique features among the 3 cards
+	 * This method counts the number of cards with the same quantity.
 	 * @param card1
 	 * @param card2
 	 * @param card3
-	 * @return
+	 * @return number of cards with same quantity
 	 */
 	public static int getQuantityCount(Card card1, Card card2, Card card3) {
 		if(card1.getQuantity().equals(card2.getQuantity()) && card1.getQuantity().equals(card3.getQuantity())) {
@@ -347,61 +331,6 @@ public class GameRuler {
 		}
 	}
 
-	/**
-	 * @return the playBoard
-	 */
-	public Board getPlayBoard() {
-		return playBoard;
-	}
-
-	/**
-	 * @param playBoard the playBoard to set
-	 */
-	public void setPlayBoard(Board playBoard) {
-		this.playBoard = playBoard;
-	}
-
-	/**
-	 * @return the playDeck
-	 */
-	public Deck getPlayDeck() {
-		return playDeck;
-	}
-
-	/**
-	 * @param playDeck the playDeck to set
-	 */
-	public void setPlayDeck(Deck playDeck) {
-		this.playDeck = playDeck;
-	}
-
-	/**
-	 * @return the playerOne
-	 */
-	public Player getPlayerOne() {
-		return playerOne;
-	}
-
-	/**
-	 * @param playerOne the playerOne to set
-	 */
-	public void setPlayerOne(Player playerOne) {
-		this.playerOne = playerOne;
-	}
-
-	/**
-	 * @return the playerTwo
-	 */
-	public Player getPlayerTwo() {
-		return playerTwo;
-	}
-
-	/**
-	 * @param playerTwo the playerTwo to set
-	 */
-	public void setPlayerTwo(Player playerTwo) {
-		this.playerTwo = playerTwo;
-	}
 	
 	public void setCurrentPlayer(int i){
 		currentPlayer = i;
