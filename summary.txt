@@ -11,6 +11,14 @@ We made a virtual version of the fun logic game, SET. The game involves a deck o
 Our game includes one-player and two-player options. We implemented a few differences from the original game. For example, having a virtual version allowed us to provide a "get a hint" function. Our two-player version has players take turns whereas, in the original game, players all play simultaneously and try to find sets faster than their opponents.
 
 +++++++++++++++++++++++++++
+Extra Credit
++++++++++++++++++++++++++++
+We have 89.6% coverage from our JUnit testing. See the coverage folder for the html output as well as screenshots of the html document.
+
+Please be aware that if you run the tests, you will need to click OK to go through some of the message dialog boxes that appear.
+
+
++++++++++++++++++++++++++++
 Work Breakdown
 +++++++++++++++++++++++++++
 Below each person's name is a list of tasks he/she worked on.
