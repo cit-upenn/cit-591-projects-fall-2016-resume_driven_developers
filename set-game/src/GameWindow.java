@@ -469,32 +469,36 @@ public class GameWindow extends JFrame {
 	 * This method is called when a player successfully finds a match, and increments their score appropriately.
 	 * ATM
 	 */
-	void incrementScore() {
-		if(ruler.currentPlayer == 1) {
-			if (seconds > 60000){
-				ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);	
-			} else if (seconds <= 60000 && seconds > 30000){
-				ruler.playerOne.setScore(ruler.playerOne.getScore() + 8);	
-			} else if (seconds < 30000){
-				ruler.playerOne.setScore(ruler.playerOne.getScore() + 6);	
+	private void incrementScore() {
+		if (isSinglePlayerGame){
+			ruler.playerOne.addPoints(6);
+		} else{
+			if(ruler.currentPlayer == 1) {
+				if (seconds > 60000){
+					ruler.playerOne.addPoints(10);	
+				} else if (seconds <= 60000 && seconds > 30000){
+					ruler.playerOne.addPoints(8);	
+				} else if (seconds < 30000){
+					ruler.playerOne.addPoints( 6);	
+				}
+
+			}
+			else {
+				if (seconds > 60000){
+					ruler.playerTwo.addPoints(10);
+				} else if (seconds <= 60000 && seconds > 30000){
+					ruler.playerTwo.addPoints(8);	
+				} else if (seconds < 30000){
+					ruler.playerTwo.addPoints(6);	
+				}
 			}
 
-		}
-		else {
-			if (seconds > 60000){
-				ruler.playerTwo.addPoints(10);
-			} else if (seconds <= 60000 && seconds > 30000){
-				ruler.playerTwo.addPoints(8);	
-			} else if (seconds < 30000){
-				ruler.playerTwo.addPoints(6);	
-			}
 		}
 
 		player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		if(!isSinglePlayerGame) player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
+
 	}
-
-
 	/**
 	 * Action listener for the card buttons: ATM 
 	 * 
