@@ -6,12 +6,11 @@ import java.util.Set;
 
 /**
  * a class for game rules
- * @author YPLin
- *
  */
 
 public class GameRuler {
 
+	//players
 	Player playerOne;
 	Player playerTwo;
 	int currentPlayer;
@@ -21,9 +20,10 @@ public class GameRuler {
 	Deck playDeck;
 
 	/**
-	 * constructor which initiates the Deck and the Board
+	 * constructor which initializes the Deck and the Board
 	 */
 	public GameRuler() {
+		//initialize players
 		playerOne = new Player();
 		playerTwo = new Player();
 		currentPlayer = 0;
@@ -38,32 +38,22 @@ public class GameRuler {
 	}
 	
 	/**
-	 * This method will add 3 additional cards to the board, so that the total will now be 15 cards for the
-	 * remainder of the game
+	 * This method will add 3 additional cards to the board
 	 */
 	public void addThreeCardsToBoard() {
 		for(int i = 12; i < 15; i++) {
 			this.playBoard.getPlayedCards()[i] = playDeck.dealCard();
 		}
 	}
-	
-	
-	/**
-	 * Throw away 60 cards to help test the end game
-	 */
-	public void throwAwayCards() {
-		for(int i = 0; i < 66; i++){
-			this.playDeck.dealCard();
-		}
-	}
 
 	/**
-	 * This method is called by GameWindow when a player finds a match.  It replaces the cards that are matched with 3 new cards from the deck.
-	 * In addition, it will be the method that knows when the game ends, so it returns a value of "true" if there are no more cards in
-	 * the deck and no more matches on the board
+	 * This method is called by GameWindow when a player finds a match.
+	 * It replaces the cards that are matched with 3 new cards from the deck.
+	 * In addition, it will be the method that knows when the game ends, 
+	 * so it returns a value of "true" if there are no more cards in
+	 * the deck and no more matches on the board.
 	 * @param matchedCards An array list of integers containing the indices of the matched cards
 	 * @return "true" if there are no more cards in the deck and no more matches on the board; false otherwise
-	 * @author Andrew
 	 */
 	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
 		boolean endGameFlag = false;
@@ -95,11 +85,13 @@ public class GameRuler {
 	}
 	
 
-		/**
+	/**
 	 * This method is called when there are 15 cards displayed on the board.
 	 * It uses an ArrayList to hold the 12 cards remaining after the set is found.
 	 * An array of Cards is created. The first 12 cards are set to the ArrayList
 	 * and the last three are set to null.
+	 * @param matchedCards An array list of integers containing the indices of the matched cards
+	 * @return "true" if no cards left in deck and no sets on the boards
 	 */
 	public boolean shiftedMatchedBoardCards(ArrayList<Integer> matchedCards){
 		boolean endGameFlag = false;
@@ -152,9 +144,8 @@ public class GameRuler {
 
 	
 	/**
-	 * Create a method that checks if there's a solution on the board.  If there's not, then randomly pick three cards to replace them.  We'll
-	 * need to call this every time we update the board, with maybe the exception of adding three cards.
-	 * @author Andrew
+	 * This method checks if there's a solution on the board.
+	 * If there's not, then randomly replace cards until a solution exists.
 	 */
 	public void ensureBoardHasSolution() {
 		//Keep randomly replacing one card until we get a solution
@@ -167,9 +158,9 @@ public class GameRuler {
 	
 	
 	/**
-	 * check whether there is any solution in the cards
-	 * @param cardsOnBoard
-	 * @return
+	 * This method checks whether there is any solution in the cards
+	 * @param cardsOnBoard Array of currently dealt cards
+	 * @return "true" if contains solutions, "false" if no solutions
 	 */
 	public static boolean containsSolution(Card[] cardsOnBoard) {
 		if(getSolutions(cardsOnBoard).size() == 0) return false;
@@ -178,10 +169,10 @@ public class GameRuler {
 	
 	/**
 	 * Generator of set solutions from the input cards
-	 * @param cardsOnBoard
-	 * @return
+	 * @param cardsOnBoard Array of currently dealt cards
+	 * @return List of solutions/sets in currently dealt cards
 	 */
-	public  static List<Set<Card>> getSolutions(Card[] cardsOnBoard) {
+	public static List<Set<Card>> getSolutions(Card[] cardsOnBoard) {
 		List<Set<Card>> solutions = new ArrayList<Set<Card>>();
 		int number = cardsOnBoard.length;
 
@@ -191,7 +182,12 @@ public class GameRuler {
 				for(int k=j+1; k<number; k++) {
 
 					if(cardsOnBoard[i] != null && cardsOnBoard[j] != null && cardsOnBoard[k] != null){
-						if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
+						ArrayList<Card> cardsToTest = new ArrayList<Card>();
+						cardsToTest.add(cardsOnBoard[i]);
+						cardsToTest.add(cardsOnBoard[j]);
+						cardsToTest.add(cardsOnBoard[k]);
+						
+						if(containsRule(cardsToTest)) {
 							Set<Card> sol = new HashSet<Card>();
 							sol.add(cardsOnBoard[i]);
 							sol.add(cardsOnBoard[j]);
@@ -208,12 +204,11 @@ public class GameRuler {
 	
 	
 	/**
-	 * This method is the exact same as below, except it takes in an ArrayList instead of 3 separate card objects
-	 * Added by ATM
+	 * This method determines whether or not a trio of cards are a set
 	 * @param ArrayList containing the three selected card variables
 	 * @return true if they are a set, false if they aren't
 	 */
-	public boolean containsRuleArrayInput(List<Card> selectedCardsFun) {
+	public static boolean containsRule(ArrayList<Card> selectedCardsFun) {
 		Card card1 = selectedCardsFun.get(0);
 		Card card2 = selectedCardsFun.get(1);
 		Card card3 = selectedCardsFun.get(2);
@@ -233,35 +228,11 @@ public class GameRuler {
 		return false;
 	}
 	
-	
-	/**
-	 * A method to validate whether the 3 cards contain a "rule" among them
-	 * @param card1
-	 * @param card2
-	 * @param card3
-	 * @return
-	 */
-	public static boolean containsRule(Card card1, Card card2, Card card3) {
-		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
-		
-		featureCounts[getQuantityCount(card1, card2, card3)]++;
-		featureCounts[getColorCount(card1, card2, card3)]++;
-		featureCounts[getShapeCount(card1, card2, card3)]++;
-		featureCounts[getShadingCount(card1, card2, card3)]++;
-
-		if(featureCounts[3] == 1 && featureCounts[1] == 3) return true;
-		if(featureCounts[3] == 2 && featureCounts[1] == 2) return true; // additional rule
-		if(featureCounts[3] == 3 && featureCounts[1] == 1) return true;
-		if(featureCounts[3] == 4) return true;
-
-		return false;
-	}
-	
 	/**
 	 * methods for comparing 2 cards
 	 * @param card1
 	 * @param card2
-	 * @return
+	 * @return number of features the two cards have in common
 	 */
 	public static int countSimilarity(Card card1, Card card2) {
 		int count = 0;
@@ -292,11 +263,11 @@ public class GameRuler {
 	
 	
 	/**
-	 * return the number of unique features among the 3 cards
+	 * This method counts the similarities between a trio of cards
 	 * @param card1
 	 * @param card2
 	 * @param card3
-	 * @return
+	 * @return the number of unique features among the 3 cards
 	 */
 	public static int getShapeCount(Card card1, Card card2, Card card3) {
 		if(card1.getShape().equals(card2.getShape()) && card1.getShape().equals(card3.getShape())) {
