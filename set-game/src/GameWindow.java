@@ -654,18 +654,47 @@ public class GameWindow extends JFrame {
 		return input; 
 	}
 
+	private void showOnePlayerRules(){
+		JOptionPane.showMessageDialog(frame,"In a one-player game, your goal is to find as many sets as possible in 5 minutes.\n"
+				+ "Each set you find is worth 6 points.\n\n"
+				+ "See the Special Features explanation for information on getting hints.", 
+				"1-Player Game Rules", JOptionPane.DEFAULT_OPTION);
+	}
+	
+	private void showTwoPlayerRules(){
+		JOptionPane.showMessageDialog(frame,"In a two-player game, players take turns finding a set on the board.\n"
+		+ "Your turn lasts for 90 seconds. The faster you identify a set, the more points you will earn.\n\n"
+		+ "You earn 10 points if you find a set in less than 30 seconds\n"
+		+ "You earn 8 points if you find a set in more than 30 seconds, but less than 1 minute.\n"
+		+ "You earn 6 points if you find a set in more than 1 minute.\n\n"
+		+ "See Special Features to learn about hints, adding extra cards, and skipping your turn.", 
+		"2-Player Game Rules", JOptionPane.DEFAULT_OPTION);
+	}
+	
+	private void showSpecialFeatures(){
+		JOptionPane.showMessageDialog(frame, "You may get a hint, but it will cost you 2 points!\n"
+				+ "The hint will select a card that is part of a set on the board.\n"
+				+ "Then, all you have to do is find the other 2 cards that complete the set.\n\n"
+				+ "You can also add 3 cards to the board. This comes with a 3-point penalty.\n"
+				+ "Having 15 cards on the board significantly increases the chances of a set occurring.\n\n"
+				+ "In a two-player game, you may skip your turn. This has no affect on your score.\n",
+				"Special Features", JOptionPane.DEFAULT_OPTION);
+	}
 
 	private void showRules(){
 		int j = showRuleOptionDialog();
-		
+
 		if (j == 0){
 			int k = showBasicRules1();
 		} else if (j == 1){
-			JOptionPane.showMessageDialog(frame,"1 player rules go here", "1-Player Game Rules", JOptionPane.DEFAULT_OPTION);
+			showOnePlayerRules();
 		} else if (j == 2) {
-			JOptionPane.showMessageDialog(frame,"2 player rules go here", "2-Player Game Rules", JOptionPane.DEFAULT_OPTION);
+			showTwoPlayerRules();
+		} else if (j == 3){
+			showSpecialFeatures();
 		}
 	}
+
 
 
 	int showConfirmAddCardDialog() {
