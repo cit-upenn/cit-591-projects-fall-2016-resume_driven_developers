@@ -702,11 +702,15 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	int showConfirmSkipTurnDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
+	}
+	
 	private void skipTurn(){
 		SimpleTimer.stop();
 		//prompt if sure
-		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
-
+		int skip = showConfirmSkipTurnDialog();
+		
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			switchPlayer();
 			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());

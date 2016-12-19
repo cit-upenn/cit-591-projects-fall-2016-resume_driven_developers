@@ -19,6 +19,7 @@ public class GameWindowTest {
 
 		};
 		gw.SimpleTimer.start();
+		gw = null;
 	}
 	
 	
@@ -32,6 +33,7 @@ public class GameWindowTest {
 		};
 		gw.howToPlay.setEnabled(true);
 		gw.howToPlay.doClick();
+		gw = null;
 	}	
 	
 	@Test
@@ -45,6 +47,7 @@ public class GameWindowTest {
 		};
 		gw.howToPlay.setEnabled(true);
 		gw.howToPlay.doClick();
+		gw = null;
 	}	
 	
 	@Test
@@ -56,7 +59,9 @@ public class GameWindowTest {
 		};
 		gw.howToPlay.setEnabled(true);
 		gw.howToPlay.doClick();
+		gw = null;
 	}		
+	
 	@Test
 	public void testOnePlayerAddCard() {
 		GameWindow gw = new GameWindow(){
@@ -75,6 +80,7 @@ public class GameWindowTest {
 		gw.addCards.doClick();
 		
 		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
+		gw = null;
 	}
 	
 	@Test
@@ -95,6 +101,7 @@ public class GameWindowTest {
 		gw.cardButtons[0].doClick();
 
 		assertTrue(gw.selectedIndices.contains(0) == true);	
+		gw = null;
 	}	
 
 	@Test
@@ -120,9 +127,30 @@ public class GameWindowTest {
 		
 		System.out.println(gw.selectedCards);
 		assertTrue(gw.selectedCards.size() == 3 || gw.selectedCards.size() == 0);	
+		gw = null;
 	}	
 	
+	@Test
+	public void testOnePlayerClickSameCard() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
 
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.cardButtons[0].setEnabled(true);
+		gw.cardButtons[0].doClick();
+		gw.cardButtons[0].doClick();
+
+		
+		System.out.println(gw.selectedCards);
+		assertTrue(gw.selectedCards.size() == 0);	
+		gw = null;
+	}	
+	
 	@Test
 	public void testOnePlayerClickThreeCards2() {
 		GameWindow gw = new GameWindow(){
@@ -149,7 +177,9 @@ public class GameWindowTest {
 		
 		System.out.println(gw.selectedCards);
 		assertTrue(gw.selectedCards.size() == 3 || gw.selectedCards.size() == 0);	
+		gw = null;
 	}	
+	
 	@Test
 	public void testOnePlayerRefreshBoard() {
 		GameWindow gw = new GameWindow(){
@@ -164,6 +194,7 @@ public class GameWindowTest {
 		gw.refreshBoard();
 		
 		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
+		gw = null;
 	}	
 	
 	@Test
@@ -180,6 +211,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerOne.getScore() == 6);
+		gw = null;
 	}	
 
 
@@ -220,6 +252,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerTwo.getScore() == 8);
+		gw = null;
 	}	
 
 	@Test
@@ -240,6 +273,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerTwo.getScore() == 6);
+		gw = null;
 	}
 
 
@@ -260,6 +294,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerOne.getScore() == 10);
+		gw = null;
 	}	
 
 	@Test
@@ -280,6 +315,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerOne.getScore() == 8);
+		gw = null;
 	}	
 
 	@Test
@@ -300,6 +336,7 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerOne.getScore() == 6);
+		gw = null;
 	}
 	
 	@Test
@@ -324,6 +361,7 @@ public class GameWindowTest {
 		gw.addCards.doClick();
 		
 		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
+		gw = null;
 	}
 	
 	@Test
@@ -347,6 +385,7 @@ public class GameWindowTest {
 		gw.addCards.doClick();
 		
 		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
+		gw = null;
 	}	
 	
 	@Test
@@ -370,6 +409,7 @@ public class GameWindowTest {
 		gw.skipTurn.doClick();
 		
 		assertTrue(gw.ruler.currentPlayer == 2);
+		gw = null;
 	}
 	
 	@Test
@@ -395,6 +435,7 @@ public class GameWindowTest {
 		gw.skipTurn.doClick();
 		
 		assertTrue(gw.ruler.currentPlayer == 1);
+		gw = null;
 	}
 	
 	@Test
@@ -420,6 +461,7 @@ public class GameWindowTest {
 		gw.skipTurn.doClick();
 		
 		assertTrue(gw.ruler.currentPlayer == 2);
+		gw = null;
 	}
 	
 	@Test
@@ -441,6 +483,7 @@ public class GameWindowTest {
 		gw.getHint.doClick();
 		assertTrue( gw.selectedCards.size() == 1);		
 		assertTrue( gw.ruler.playerOne.getScore() == -2);
+		gw = null;
 	}
 	
 	@Test
@@ -460,6 +503,7 @@ public class GameWindowTest {
 		gw.quitGame.setEnabled(true);
 		gw.quitGame.doClick();
 		assertNotNull(gw);
+		gw = null;
 	}
 	
 	@Test
@@ -474,7 +518,25 @@ public class GameWindowTest {
 		gw.quitGame.setEnabled(true);
 		gw.quitGame.doClick();
 		assertNotNull(gw);
+		gw = null;
 	}
 	
+	@Test
+	public void testDialog1() {
+		GameWindow gw = new GameWindow();
+		gw.showBasicRules1();
+	}
+	
+	@Test
+	public void testDialog2() {
+		GameWindow gw = new GameWindow();
+		gw.showBasicRules2();
+	}
+	
+	@Test
+	public void testDialog3() {
+		GameWindow gw = new GameWindow();
+		gw.showBasicRules3();
+	}
 	
 }
