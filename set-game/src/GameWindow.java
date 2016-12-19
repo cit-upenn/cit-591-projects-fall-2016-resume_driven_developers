@@ -92,10 +92,11 @@ public class GameWindow extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if(seconds<=0) {
 				if(isSinglePlayerGame) {
-					gameOver = JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
+					JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
 					for (int i = 0; i < 15; i++){
 						cardButtons[i].setEnabled(false);
 					}
+					closeWindow();
 				} else if (!isSinglePlayerGame){
 					JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
 					switchPlayer();
@@ -862,19 +863,23 @@ public class GameWindow extends JFrame {
 
 		//add 3 cards to empty row at the bottom
 		if (endGame == JOptionPane.YES_OPTION){
-			int exitWindow = showConfirmExitDialog();
-
-			if (exitWindow == JOptionPane.YES_OPTION){
-				frame.setVisible(false);
-				System.exit(0);
-			} 
-			else {
-				resetGame();				
-			}
-
+			closeWindow();
 		} else if (endGame == JOptionPane.NO_OPTION){
 			SimpleTimer.restart();
 		}
+	}
+	
+	private void closeWindow(){
+		int exitWindow = showConfirmExitDialog();
+
+		if (exitWindow == JOptionPane.YES_OPTION){
+			frame.setVisible(false);
+			System.exit(0);
+		} 
+		else {
+			resetGame();				
+		}
+
 	}
 
 
