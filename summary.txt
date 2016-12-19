@@ -19,13 +19,14 @@ Below each person's name is a list of tasks he/she worked on.
 Eva Herzog
 ;;;;;;;;;;;;;;;;;;
 
-~Framework of the GUI
+~Framework & design of the GUI
 ~Game control buttons (except for functionality that interacted with the Cards)
 ~Player names & scores display
-~Interaction between countdown timer and all other functionality
+~Interaction between countdown timer and all related functionality
 ~Message dialog boxes, including all the How To Play information
 ~JPG and PNG creation
 ~"Downsizing" - getting the board back down to 12 cards after it goes up to 15
+~Commenting & some DRYing out
 
 ;;;;;;;;;;;;;;;;;;
 Patrick Lin
