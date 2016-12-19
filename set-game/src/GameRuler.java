@@ -100,6 +100,59 @@ public class GameRuler {
 		return endGameFlag;
 	}
 	
+	/**
+	 * 
+	 */
+	public boolean shiftedMatchedBoardCards(ArrayList<Integer> matchedCards){
+		boolean endGameFlag = false;
+		
+		System.out.println("You found a match!!!!!!");
+		System.out.println("Deck Size Start: " + this.playDeck.cards.size());
+		
+		ArrayList<Card> currentTwelve = new ArrayList<Card>();
+		
+		if(this.playDeck.cards.size()>0) {
+			
+			// cards left in the deck to draw
+			for(int i = 0; i < 15; i++) {
+				System.out.println("i = " + i);
+				System.out.println("matchedCards contains " + i + "? " + matchedCards.contains(i));
+				if (!matchedCards.contains(i)){
+					currentTwelve.add(playBoard.getPlayedCards()[i]);
+				} else {
+					continue;
+				}
+				
+			}
+			
+			for (Card card : currentTwelve){	
+				System.out.println(card.getQuantity() + ", " + card.getColor() + ", " + card.getShape() + ", " + card.getShading() );
+			}
+				
+			playBoard.setPlayedCards((Card[]) currentTwelve.toArray());
+			
+			// if the 3 cards result in a board with no solutions, deal three more cards
+			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) replacedMatchedBoardCards(matchedCards);
+		} 
+		else {
+			// no more cards left to draw			
+			for(int i = 0; i < matchedCards.size(); i++) {
+				this.playBoard.getPlayedCards()[matchedCards.get(i)] = null;
+			}
+			
+			// no more cards && no more solutions -> end the game!
+			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) {
+				endGameFlag = true;
+				return endGameFlag;
+			}
+		}
+				
+		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
+		
+		//Start keeping track of the deck size
+		System.out.println("Deck Size End: " + this.playDeck.cards.size());
+		return endGameFlag;
+	}
 	
 	/**
 	 * Create a method that checks if there's a solution on the board.  If there's not, then randomly pick three cards to replace them.  We'll
