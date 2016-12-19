@@ -100,6 +100,7 @@ public class GameRuler {
 		return endGameFlag;
 	}
 	
+
 		/**
 	 * This method is called when there are 15 cards displayed on the board.
 	 * It uses an ArrayList to hold the 12 cards remaining after the set is found.
