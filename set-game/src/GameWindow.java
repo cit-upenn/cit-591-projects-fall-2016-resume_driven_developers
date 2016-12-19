@@ -478,13 +478,11 @@ public class GameWindow extends JFrame {
 			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];			
 			String picFilePathOfClicked = clickedCard.getClickedImage();
 			
-			if(selectedIndices.size()>0 && clickedButtonIndex == selectedIndices.get(selectedIndices.size()-1) && selectedCards.size() < 3  ) {
-				//They clicked the button they just clicked, so deselect it.  This can't happen on the third selection, and can't happen if
-				//no buttons have already been clicked.
+			if (selectedCards.contains(clickedCard) && selectedIndices.size() > 0 && selectedIndices.size() < 3){
+				int unclickIndex = selectedIndices.indexOf(clickedButtonIndex);
 				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(clickedCard.getImageFile())));
-				selectedCards.remove(selectedCards.size()-1);
-				selectedIndices.remove(selectedIndices.size()-1);	
-				
+				selectedCards.remove(clickedCard);
+				selectedIndices.remove(unclickIndex);
 			} else {
 				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
 				selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
@@ -636,7 +634,7 @@ public class GameWindow extends JFrame {
 	
 	private void showTwoPlayerRules(){
 		JOptionPane.showMessageDialog(frame,"In a two-player game, players take turns finding a set on the board.\n"
-		+ "Your turn lasts for 90 seconds. The faster you identify a set, the more points you will earn.\n\n"
+		+ "Your turn lasts for 90 seconds. The faster you identify a set, the more points you will earn."
 		+ "You earn 10 points if you find a set in less than 30 seconds\n"
 		+ "You earn 8 points if you find a set in more than 30 seconds, but less than 1 minute.\n"
 		+ "You earn 6 points if you find a set in more than 1 minute.\n\n"
