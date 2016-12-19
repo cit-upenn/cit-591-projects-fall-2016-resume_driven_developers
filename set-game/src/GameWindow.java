@@ -191,6 +191,7 @@ public class GameWindow extends JFrame {
 			cardButtons[i] = new JButton("");
 			//Create the separate action listener for the card buttons
 			cardButtons[i].addActionListener(new buttonAL());
+			cardButtons[i].setEnabled(false);
 
 			//set the first 12 cards to show the back face
 			//and the last 3 to be empty
@@ -744,6 +745,7 @@ public class GameWindow extends JFrame {
 		player2.setText("Player 2: 0");
 
 		for (int i = 0; i < 15; i++){
+			cardButtons[i].setEnabled(false);
 			if (i < 12){
 				cardButtons[i].setIcon(back);
 			} else {
@@ -891,6 +893,7 @@ public class GameWindow extends JFrame {
 			JOptionPane.showMessageDialog(frame, ruler.playerOne.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
 			player1.setText(ruler.playerOne.getName() + ": " + ruler.playerOne.getScore());
 		} else if (ruler.currentPlayer == 2){
+			player2.setVisible(true);
 			JOptionPane.showMessageDialog(frame, ruler.playerTwo.getName() + " will go first!", "", JOptionPane.PLAIN_MESSAGE);
 			player2.setText(ruler.playerTwo.getName() + ": " + ruler.playerTwo.getScore());
 		}
@@ -899,7 +902,10 @@ public class GameWindow extends JFrame {
 		
 		//randomly select which player goes first
 		
-		//deal 12 cards
+		//enable card buttons
+		for(JButton jb:cardButtons){
+			jb.setEnabled(true);
+		}
 		
 		//initialize timer
 		seconds = 90000;
