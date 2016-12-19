@@ -31,9 +31,22 @@ Eva Herzog
 Patrick Lin
 ;;;;;;;;;;;;;;;;;;
 
+
+
+
+
+
 ;;;;;;;;;;;;;;;;;;
-Andrew:
+Andrew Molchan
 ;;;;;;;;;;;;;;;;;;
+~Action listeners for card JButtons
+~Logic for 1-player and 2-player game flow (integrating information from GUI with back-end methods that determine if a “set” has been selected)
+~Methods to handle when a user selects a card
+~Logic to handle when a user “de-selects” a card
+~Logic to appropriately handle endgame scenario (i.e. when card deck reaches 0 cards)
+~Integration of methods to ensure that game board always has a selectable set
+~Methods to update GUI based on relevant changes to data model (e.g. when a card changes state from “flipped” to “unflipped”, when a player’s turn changes, etc.)
+~Testing classes
 
 +++++++++++++++++++++++++++
 Github Repo Link
