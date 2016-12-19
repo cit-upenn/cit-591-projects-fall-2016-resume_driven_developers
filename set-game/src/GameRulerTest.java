@@ -19,6 +19,8 @@ public class GameRulerTest {
 	private Card card4;
 	private Card card5;
 	private Card card6;
+	private ArrayList<Integer> testMatchList;
+	
 	
 	
 	@Before 
@@ -31,6 +33,10 @@ public class GameRulerTest {
 		card4 = new Card("id", "1", "green", "striped", "stri");
 		card5 = new Card("id", "2", "purple", "striped", "oval");
 		card6 = new Card("id", "3", "red", "striped", "diamond");
+		testMatchList = new ArrayList<Integer>();
+		testMatchList.add(1);
+		testMatchList.add(2);
+		testMatchList.add(3);
 	}
 	
 	// TEST SINGLE VARIABLE
@@ -63,96 +69,59 @@ public class GameRulerTest {
 		assertTrue(actual == expected);
 	}		
 	
-	@Test
-	public void testCountSimilarity1() {
-		int actual = GameRuler.countSimilarity(card1, card2);
-		int expected = 4;
-		assertTrue(actual == expected);
-	}	
-
-	@Test
-	public void testCountSimilarity2() {
-		Card card1 = new Card("id", "quan", "color", "shading", "shape");
-		Card card2 = new Card("id", "quan", "color", "shading", "shapeeee");
-		
-		int actual = GameRuler.countSimilarity(card1, card2);
-		int expected = 3;
-		assertTrue(actual == expected);
-	}	
-
-	@Test
-	public void testContainsRule1() {
-		Card card1 = new Card("id", "2", "red", "empty", "oval");
-		Card card2 = new Card("id", "2", "red", "striped", "oval");
-		Card card3 = new Card("id", "2", "red", "solid", "oval");
-				
-		boolean actual = GameRuler.containsRule(card1, card2, card3);
-		boolean expected = true;
-		assertTrue(actual == expected);
-	}	
-
-	@Test
-	public void testContainsRule2() {
-		Card card1 = new Card("id", "1", "green", "striped", "stri");
-		Card card2 = new Card("id", "2", "purple", "striped", "oval");
-		Card card3 = new Card("id", "3", "red", "striped", "diamond");
-		
-		boolean actual = GameRuler.containsRule(card1, card2, card3);
-		boolean expected = true;
-		assertTrue(actual == expected);
-	}	
-
-	@Test
-	public void testContainsRule3() {
-		Card card1 = new Card("id", "1", "purple", "striped", "oval");
-		Card card2 = new Card("id", "2", "green", "solid", "diamond");
-		Card card3 = new Card("id", "3", "red", "empty", "stri");
-		
-		boolean actual = GameRuler.containsRule(card1, card2, card3);
-		boolean expected = true;
-		assertTrue(actual == expected);
-	}	
-	
-	@Test
-	public void testContainsRule4() {
-		Card card1 = new Card("id", "1", "green", "striped", "oval");
-		Card card2 = new Card("id", "2", "green", "solid", "diamond");
-		Card card3 = new Card("id", "3", "red", "empty", "stri");
-		
-		boolean actual = GameRuler.containsRule(card1, card2, card3);
-		boolean expected = false;
-		assertTrue(actual == expected);
-	}
+//	@Test
+//	public void testCountSimilarity1() {
+//		int actual = GameRuler.countSimilarity(card1, card2);
+//		int expected = 4;
+//		assertTrue(actual == expected);
+//	}	
+//
+//	@Test
+//	public void testCountSimilarity2() {
+//		Card card1 = new Card("id", "quan", "color", "shading", "shape");
+//		Card card2 = new Card("id", "quan", "color", "shading", "shapeeee");
+//		
+//		int actual = GameRuler.countSimilarity(card1, card2);
+//		int expected = 3;
+//		assertTrue(actual == expected);
+//	}	
 	
 	@Test
 	public void testContainsRuleArrayInput(){
-		List<Card> selectedCardsFun = new ArrayList<Card>();
+		ArrayList<Card> selectedCardsFun = new ArrayList<Card>();
 		selectedCardsFun.add(card4);
 		selectedCardsFun.add(card5);
 		selectedCardsFun.add(card6);
 		
-		boolean actual = testRuler.containsRuleArrayInput(selectedCardsFun);
+		boolean actual = testRuler.containsRule(selectedCardsFun);
 		boolean expected = true;
 		assertTrue(actual == expected);
 	}
 	
 	@Test
 	public void testReplacedMatchedBoardCards(){
-		ArrayList<Integer> testMatchList = new ArrayList<Integer>();
+		
 		int initialDeckSize;
 		int finalDeckSize;
 		boolean resultOfMatchCards;		
-		testMatchList.add(1);
-		testMatchList.add(2);
-		testMatchList.add(3);
 		
 		//Since we're starting the game, the deck should have three less cards
 		//after the call, and the function should return false
-		initialDeckSize = testRuler.getPlayDeck().getCards().size();
+		initialDeckSize = testRuler.playDeck.getCards().size();
 		resultOfMatchCards = testRuler.replacedMatchedBoardCards(testMatchList);
-		finalDeckSize = testRuler.getPlayDeck().getCards().size();
+		finalDeckSize = testRuler.playDeck.getCards().size();
 		
 		assertEquals(initialDeckSize-3, finalDeckSize);
 		assertTrue(!resultOfMatchCards);
+	}
+	
+	@Test
+	public void testShiftedMatchedBoardCards(){
+		testRuler.shiftedMatchedBoardCards(testMatchList);
+		
+		//If we have shifted the cards, the spots on spots 12,13 and 14 should be null
+		assertEquals(testRuler.playBoard.getPlayedCards()[12], null);
+		assertEquals(testRuler.playBoard.getPlayedCards()[13], null);
+		assertEquals(testRuler.playBoard.getPlayedCards()[14], null);
 	}
 }
