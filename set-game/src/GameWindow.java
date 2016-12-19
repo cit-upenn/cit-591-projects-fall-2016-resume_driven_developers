@@ -507,53 +507,61 @@ public class GameWindow extends JFrame {
 
 		public void actionPerformed (ActionEvent e) {
 			//Cards is an instance variable of GameWindow and is an array of Card objects
-			
+
 			// Highlight the button that's been clicked
 			int clickedButtonIndex = findClickedButton(e);
-			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];			
+			Card clickedCard = ruler.playBoard.getPlayedCards()[clickedButtonIndex];
+			selectedIndices.add(clickedButtonIndex);
 			String picFilePathOfClicked = clickedCard.getClickedImage();
-			System.out.println(selectedCards.size());
-			
-			if(selectedIndices.size()>0 && clickedButtonIndex == selectedIndices.get(selectedIndices.size()-1) && selectedCards.size() < 3  ) {
-				//They clicked the button they just clicked, so deselect it.  This can't happen on the third selection, and can't happen if
-				//no buttons have already been clicked.
-				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(clickedCard.getImageFile())));
-				selectedCards.remove(selectedCards.size()-1);
-				selectedIndices.remove(selectedIndices.size()-1);	
-				
-			} else {
-				cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
-				selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
-				selectedIndices.add(clickedButtonIndex);
-			}
-			
-			
+
+			cardButtons[clickedButtonIndex].setIcon(new ImageIcon(GameWindow.class.getResource(picFilePathOfClicked)));
+			selectedCards.add(ruler.playBoard.getPlayedCards()[clickedButtonIndex]);
+
 			if (selectedCards.size() == 1 && isSinglePlayerGame){
 				player2.setVisible(false);
 			}
-			
+
 			//The button we clicked is the third button
 			if (selectedCards.size() > 2 ) {
-				
+
 				if (ruler.containsRuleArrayInput(selectedCards)) {
 					//We found a match
-					if(ruler.replacedMatchedBoardCards(selectedIndices)) {
-						//No more cards or matches, so end the game.  Make sure to increment score!
-						incrementScore();
-						finishGameDialog();
-					} else {
-						if (isSinglePlayerGame){
-							player2.setVisible(true);
-							player2.setText("Awesome!!");
+					if (ruler.playBoard.getPlayedCards()[13] == null) {
+						if(ruler.replacedMatchedBoardCards(selectedIndices)) {
+							//No more cards or matches, so end the game.  Make sure to increment score!
+							incrementScore();
+							finishGameDialog();
+						} else {
+							if (isSinglePlayerGame){
+								player2.setVisible(true);
+								player2.setText("Awesome!!");
+							}
+							incrementScore();
+							//						updatePlayerScoreLabels(true, false);
+							refreshBoard();	
+
+							if(!isSinglePlayerGame) switchPlayer();
+
+							selectedCards.clear();
+							selectedIndices.clear();
 						}
-						incrementScore();
-//						updatePlayerScoreLabels(true, false);
-						refreshBoard();	
-						
-						if(!isSinglePlayerGame) switchPlayer();
-						selectedCards.clear();
-						selectedIndices.clear();
-					}					
+					} else {
+						if (ruler.shiftedMatchedBoardCards(selectedIndices)){
+							incrementScore();
+							finishGameDialog();
+						} else {
+							if (isSinglePlayerGame){
+								player2.setVisible(true);
+								player2.setText("Awesome!!");
+							}
+							incrementScore();
+							//						updatePlayerScoreLabels(true, false);
+							refreshBoard();	
+							
+							selectedCards.clear();
+							selectedIndices.clear();
+						}
+					}
 				} else {
 					SimpleTimer.stop();
 					JOptionPane.showMessageDialog(frame,"Nope! That is not a set.", "", JOptionPane.DEFAULT_OPTION);
@@ -562,9 +570,11 @@ public class GameWindow extends JFrame {
 					selectedIndices.clear();
 					refreshBoard();
 				}
-				
+
 
 			} 
+
+
 		}
 	}
 
