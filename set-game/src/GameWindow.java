@@ -72,8 +72,6 @@ public class GameWindow extends JFrame {
 
 	//instance variables for card images
 	ImageIcon back;
-	ImageIcon empty;
-	ImageIcon emptyClicked;
 	ImageIcon blank;
 
 	//instance variables for player stats
@@ -145,13 +143,9 @@ public class GameWindow extends JFrame {
 		/*
 		 * assigns images for the four non-card face images used
 		 * back - back face of cards
-		 * empty - for when a card in the main 12 area has been removed
-		 * emptyClicked - for when a user accidentally clicks an empty card cell
 		 * blank - for the bottom row that isn't always in use
 		 */
 		back = new ImageIcon(GameWindow.class.getResource("/cardimages/back.jpg"));
-		empty = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card.png"));
-		emptyClicked = new ImageIcon(GameWindow.class.getResource("/cardimages/empty_card_clkd.png"));
 		blank = new ImageIcon(GameWindow.class.getResource("/cardimages/blank.png"));
 
 		//creates the text area for player 1's name and score
@@ -446,6 +440,13 @@ public class GameWindow extends JFrame {
 		int loopLength = 0;
 		if(ruler.playBoard.getPlayedCards()[13] == null) {
 			loopLength = 12;
+			if (!addCards.isEnabled()){
+				for (int j = 12; j < 15; j++){
+					cardButtons[j].setIcon(blank);
+					cardButtons[j].setEnabled(false);
+				}
+			}
+
 		} else{
 			loopLength = 15;
 		}
@@ -460,6 +461,7 @@ public class GameWindow extends JFrame {
 				 * in the deck to draw.  In this case, set the matched cards to the back.
 				 */
 				cardButtons[i].setIcon(blank);
+				cardButtons[i].setEnabled(false);
 			}
 		}
 	}
@@ -554,6 +556,9 @@ public class GameWindow extends JFrame {
 							incrementScore();
 							//						updatePlayerScoreLabels(true, false);
 							refreshBoard();	
+							
+							selectedCards.clear();
+							selectedIndices.clear();
 						}
 					}
 				} else {

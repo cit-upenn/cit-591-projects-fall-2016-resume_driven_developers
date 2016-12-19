@@ -101,7 +101,10 @@ public class GameRuler {
 	}
 	
 	/**
-	 * 
+	 * This method is called when there are 15 cards displayed on the board.
+	 * It uses an ArrayList to hold the 12 cards remaining after the set is found.
+	 * An array of Cards is created. The first 12 cards are set to the ArrayList
+	 * and the last three are set to null.
 	 */
 	public boolean shiftedMatchedBoardCards(ArrayList<Integer> matchedCards){
 		boolean endGameFlag = false;
@@ -115,8 +118,8 @@ public class GameRuler {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < 15; i++) {
-				System.out.println("i = " + i);
-				System.out.println("matchedCards contains " + i + "? " + matchedCards.contains(i));
+//				System.out.println("i = " + i);
+//				System.out.println("matchedCards contains " + i + "? " + matchedCards.contains(i));
 				if (!matchedCards.contains(i)){
 					currentTwelve.add(playBoard.getPlayedCards()[i]);
 				} else {
@@ -125,11 +128,29 @@ public class GameRuler {
 				
 			}
 			
-			for (Card card : currentTwelve){	
-				System.out.println(card.getQuantity() + ", " + card.getColor() + ", " + card.getShape() + ", " + card.getShading() );
+//			for (Card card : currentTwelve){	
+//				System.out.println(card.getQuantity() + ", " + card.getColor() + ", " + card.getShape() + ", " + card.getShading() );
+//			}
+			
+			Card[] newFifteen = new Card[15];
+			
+			for (int j = 0; j < 15; j++){
+				if (j < 12){
+					newFifteen[j] = currentTwelve.get(j);
+				} else {
+					newFifteen[j] = null;
+				}
 			}
 				
-			playBoard.setPlayedCards((Card[]) currentTwelve.toArray());
+			playBoard.setPlayedCards(newFifteen);
+			
+			for (int k = 0; k < 15; k++){
+				if (playBoard.getPlayedCards()[k] != null){
+					System.out.println(k + ": " + playBoard.getPlayedCards()[k].getQuantity() + ", " + playBoard.getPlayedCards()[k].getColor() + ", " + playBoard.getPlayedCards()[k].getShape() + ", " + playBoard.getPlayedCards()[k].getShading());
+				} else {
+					System.out.println(k + " : null");
+				}
+			}
 			
 			// if the 3 cards result in a board with no solutions, deal three more cards
 			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) replacedMatchedBoardCards(matchedCards);
