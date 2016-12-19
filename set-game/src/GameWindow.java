@@ -188,7 +188,9 @@ public class GameWindow extends JFrame {
 			//Create the separate action listener for the card buttons
 			cardButtons[i].addActionListener(new buttonAL());
 			cardButtons[i].setEnabled(false);
-
+			if (i < 12){
+				cardButtons[i].setDisabledIcon(back);
+			}
 			//set the first 12 cards to show the back face
 			//and the last 3 to be empty
 			if (i < 12){
@@ -603,16 +605,57 @@ public class GameWindow extends JFrame {
 		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
 		return JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
 	}
+	
+	int showBasicRules1(){
+		int input = -1;
+		
+		ImageIcon cardExample = new ImageIcon(GameWindow.class.getResource("/cardimages/cardExample.png"));
+		Object[] choices = {"Close", "Next Page"};
+		input = JOptionPane.showOptionDialog(frame, "Each card contains four features:\n"
+				+ "~shape (oval, squiggle or diamond)\n~color (red, purple or green)\n~number (one, two or three)\n~shading (solid, striped or outlined)",
+				"How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, cardExample, choices, choices[1]);
+		if (input == 1){
+			showBasicRules2();
+		}
+		return input;
+	}
+	
+	int showBasicRules2(){
+		int input = -1;
+		ImageIcon setExample = new ImageIcon(GameWindow.class.getResource("/cardimages/setExample.png"));
+		Object[] choices = {"Previous Page", "Close", "Next Page"};
+		input = JOptionPane.showOptionDialog(frame, "Each row in this picture is a set.\n\n"
+				+ "In the first row, the colors, shapes, and quanities\nare all the same, while the shadings are all different."
+				+ "\n\nIn the middle row, the cards are completely different.\nNone of the characteristics are repeated."
+				+ "\n\nIn the last row, the shading is all the same,\nbut the colors, quantities, and shapes are all different.",
+				"How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, setExample, choices, choices[2]);
+		if (input == 2){
+			showBasicRules3();
+		} else if (input == 0){
+			showBasicRules1();
+		}
+		return input;
+	}
+	
+	int showBasicRules3(){
+		int input = -1;
+		
+		ImageIcon setExample = new ImageIcon(GameWindow.class.getResource("/cardimages/summaryExamples.png"));
+		Object[] choices = {"Previous Page", "Close"};
+		input = JOptionPane.showOptionDialog(frame, "",
+				"How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, setExample, choices, choices[1]);
+		if (input == 0){
+			showBasicRules2();
+		}
+		return input; 
+	}
+
 
 	private void showRules(){
-		Object[] choices = {"The Basics", "1 Player Rules", "2 Player Rules"};
 		int j = showRuleOptionDialog();
-		//		int j = JOptionPane.showOptionDialog(frame, "What do you want to read?", "How To Play", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, choices, choices[0]);
+		
 		if (j == 0){
-			JOptionPane.showMessageDialog(frame, "A SET is three cards where each feature, when looked at individually, is either all the same OR all different.\n"
-					+ "Each card contains four features: color (red, purple or green), shape (oval, squiggle or diamond), number (one, two or three) and shading (solid, striped or outlined).",
-					"How To Play", JOptionPane.DEFAULT_OPTION);
-			//add panel with example of set and not set
+			int k = showBasicRules1();
 		} else if (j == 1){
 			JOptionPane.showMessageDialog(frame,"1 player rules go here", "1-Player Game Rules", JOptionPane.DEFAULT_OPTION);
 		} else if (j == 2) {
