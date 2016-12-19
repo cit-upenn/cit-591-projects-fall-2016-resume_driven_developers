@@ -107,7 +107,9 @@ public class GameWindow extends JFrame {
 			if(seconds<=0) {
 				if(gameOver == 1 && isSinglePlayerGame) {
 					gameOver = JOptionPane.showConfirmDialog(frame, "Time is up.\nGAME OVER.", "", JOptionPane.CLOSED_OPTION);
-					//TODO: disable all the cards
+					for (int i = 0; i < 15; i++){
+						cardButtons[i].setEnabled(false);
+					}
 				} else if (!isSinglePlayerGame){
 					JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
 					switchPlayer();
