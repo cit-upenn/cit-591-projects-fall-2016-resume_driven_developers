@@ -3,12 +3,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * a class represents a deck in the set game
- * it can generate all the possible cards and deal a card randomly
- * @author YPLin
- *
+ * This class represents a deck in the Set game.
+ * It can generate all the possible cards and deal a card randomly.
  */
 public class Deck {
+	
 	private List<Card> cards;
 	private final String[] colors = {"green", "red", "purple"};
 	private final String[] shapes = {"oval", "squiggle", "diamond"};
@@ -35,8 +34,8 @@ public class Deck {
 	}
 	
 	/**
-	 * a method deal 12 cards 
-	 * @return
+	 * This method deals 12 cards 
+	 * @return an array of 12 randomly selected Cards
 	 */
 	public Card[] deal12Cards(){
 		Card[] cards = new Card[12];
@@ -47,8 +46,9 @@ public class Deck {
 	}
 	
 	/**
-	 * a method deal and remove a card from the deck randomly
-	 * @return
+	 * This method deals a card randomly
+	 * and removes that card from the remaining deck
+	 * @return a randomly selected Card
 	 */
 	public Card dealCard() {
 		int number = cards.size();
@@ -61,7 +61,7 @@ public class Deck {
 	}
 
 	/**
-	 * @return the cards
+	 * @return the cards still in the deck
 	 */
 	public List<Card> getCards() {
 		return cards;
