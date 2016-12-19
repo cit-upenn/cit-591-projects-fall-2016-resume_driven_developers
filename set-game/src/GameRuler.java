@@ -68,9 +68,7 @@ public class GameRuler {
 	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
 		boolean endGameFlag = false;
 		
-		System.out.println("You found a match!!!!!!");
-		System.out.println("Deck Size Start: " + this.playDeck.getCards().size());
-		if(this.playDeck.getCards().size()>0) {
+		if(this.playDeck.cards.size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < matchedCards.size(); i++) {
@@ -93,10 +91,6 @@ public class GameRuler {
 			}
 		}
 				
-		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
-		
-		//Start keeping track of the deck size
-		System.out.println("Deck Size End: " + this.playDeck.getCards().size());
 		return endGameFlag;
 	}
 	
@@ -110,17 +104,12 @@ public class GameRuler {
 	public boolean shiftedMatchedBoardCards(ArrayList<Integer> matchedCards){
 		boolean endGameFlag = false;
 		
-		System.out.println("You found a match!!!!!!");
-		System.out.println("Deck Size Start: " + this.playDeck.getCards().size());
-		
 		ArrayList<Card> currentTwelve = new ArrayList<Card>();
 		
-		if(this.playDeck.getCards().size()>0) {
+		if(this.playDeck.cards.size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < 15; i++) {
-//				System.out.println("i = " + i);
-//				System.out.println("matchedCards contains " + i + "? " + matchedCards.contains(i));
 				if (!matchedCards.contains(i)){
 					currentTwelve.add(playBoard.getPlayedCards()[i]);
 				} else {
@@ -128,10 +117,6 @@ public class GameRuler {
 				}
 				
 			}
-			
-//			for (Card card : currentTwelve){	
-//				System.out.println(card.getQuantity() + ", " + card.getColor() + ", " + card.getShape() + ", " + card.getShading() );
-//			}
 			
 			Card[] newFifteen = new Card[15];
 			
@@ -144,14 +129,7 @@ public class GameRuler {
 			}
 				
 			playBoard.setPlayedCards(newFifteen);
-			
-			for (int k = 0; k < 15; k++){
-				if (playBoard.getPlayedCards()[k] != null){
-					System.out.println(k + ": " + playBoard.getPlayedCards()[k].getQuantity() + ", " + playBoard.getPlayedCards()[k].getColor() + ", " + playBoard.getPlayedCards()[k].getShape() + ", " + playBoard.getPlayedCards()[k].getShading());
-				} else {
-					System.out.println(k + " : null");
-				}
-			}
+
 			
 			// if the 3 cards result in a board with no solutions, deal three more cards
 			if (getSolutions(this.playBoard.getPlayedCards()).size() == 0) replacedMatchedBoardCards(matchedCards);
@@ -169,10 +147,6 @@ public class GameRuler {
 			}
 		}
 				
-		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
-		
-		//Start keeping track of the deck size
-		System.out.println("Deck Size End: " + this.playDeck.getCards().size());
 		return endGameFlag;
 	}
 
@@ -189,7 +163,6 @@ public class GameRuler {
 			this.playBoard.getPlayedCards()[rnd] = playDeck.dealCard();
 		}
 		
-		System.out.println("Solutions on the board: " + getSolutions(this.playBoard.getPlayedCards()));
 	}
 	
 	
@@ -216,9 +189,7 @@ public class GameRuler {
 		for(int i=0; i<number-2; i++) {
 			for(int j=i+1; j<number-1; j++) {
 				for(int k=j+1; k<number; k++) {
-					//System.out.println(i +" "+j+" "+k); // for testing the boundary
 
-					//Added this outside if statement
 					if(cardsOnBoard[i] != null && cardsOnBoard[j] != null && cardsOnBoard[k] != null){
 						if(containsRule(cardsOnBoard[i], cardsOnBoard[j], cardsOnBoard[k])) {
 							Set<Card> sol = new HashSet<Card>();
@@ -247,7 +218,6 @@ public class GameRuler {
 		Card card2 = selectedCardsFun.get(1);
 		Card card3 = selectedCardsFun.get(2);
 		
-		//System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
 		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
 		
 		featureCounts[getQuantityCount(card1, card2, card3)]++;
@@ -256,7 +226,7 @@ public class GameRuler {
 		featureCounts[getShadingCount(card1, card2, card3)]++;
 
 		if(featureCounts[3] == 1 && featureCounts[1] == 3) return true;
-		if(featureCounts[3] == 2 && featureCounts[1] == 2) return true; // additional rule
+		if(featureCounts[3] == 2 && featureCounts[1] == 2) return true;
 		if(featureCounts[3] == 3 && featureCounts[1] == 1) return true;
 		if(featureCounts[3] == 4) return true;
 
@@ -272,7 +242,6 @@ public class GameRuler {
 	 * @return
 	 */
 	public static boolean containsRule(Card card1, Card card2, Card card3) {
-		//System.out.println("Start to check: " + card1.toString() + " " +card2.toString()+" "+card3.toString());
 		int[] featureCounts = new int[4]; // featureCounts[0] will never be used though
 		
 		featureCounts[getQuantityCount(card1, card2, card3)]++;
