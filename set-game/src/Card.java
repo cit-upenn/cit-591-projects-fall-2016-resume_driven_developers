@@ -1,7 +1,5 @@
 /**
  * This class creates a card for Set game.
- * @author eherzog
- *
  */
 public class Card {
 
@@ -11,6 +9,14 @@ public class Card {
 	private String shape;
 	private String idNumber;
 
+	/**
+	 * Card constructor
+	 * @param idNumber unique ID: 1 through 81
+	 * @param quantity 1, 2, or 3
+	 * @param color red, purple, or green
+	 * @param shading solid, striped, or empty
+	 * @param shape oval, diamond, or squiggle
+	 */
 	public Card(String idNumber, String quantity, String color, String shading, String shape) {
 		this.idNumber = idNumber;
 		this.quantity = quantity;
@@ -60,6 +66,11 @@ public class Card {
 		this.idNumber = idNumber;
 	}
 
+	/**
+	 * Checks if two Cards are equal
+	 * @param c Card to compare to
+	 * @return true if cards have all the same features, false otherwise
+	 */
 	public boolean equal(Card c) {
 		if(c== null) return false;
 		//System.out.println(this + " vs " + c);
@@ -70,6 +81,10 @@ public class Card {
 		else return false;
 	}
 	
+	/**
+	 * This method generates a String that refers to the filename for a card.
+	 * @return filenaem for Card image
+	 */
 	public String getImageFile() {
 		String image = null;
 		if (Integer.parseInt(idNumber) < 10){
@@ -80,6 +95,11 @@ public class Card {
 		return image;
 	}
 
+	/**
+	 * This method generates a String that refers to the filename
+	 * for the clicked image of a card.
+	 * @return filename for clicked image of Card
+	 */
 	public String getClickedImage() {
 		String image = null;
 		if (Integer.parseInt(idNumber) < 10){
@@ -90,7 +110,4 @@ public class Card {
 		return image;
 	}
 
-	public String toString(){
-		return quantity+"/" +color +"/"+shape+"/"+shading; 
-	}
 }
