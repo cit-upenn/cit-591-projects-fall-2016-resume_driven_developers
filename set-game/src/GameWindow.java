@@ -135,9 +135,9 @@ public class GameWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.5, 0.0, 0.0, 0.0, 0.5};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		getContentPane().setVisible(true);
 
@@ -318,19 +318,6 @@ public class GameWindow extends JFrame {
 		getContentPane().add(skipTurn, gbc_btnSkipTurn);
 		skipTurn.addActionListener(new generateAL());
 		skipTurn.setEnabled(false);
-
-		//creates a location to display an image of the deck
-		//we originally wanted to show the deck decreasing through the game
-		//we may need to scrap this idea - it's harder than i expected to find image files of a stacked deck
-		JLabel lblDeck = new JLabel("");
-		lblDeck.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDeck.setIcon(back);
-		GridBagConstraints gbc_lblDeckImages = new GridBagConstraints();
-		gbc_lblDeckImages.insets = new Insets(10, 10, 5, 5);
-		gbc_lblDeckImages.gridx = 2;
-		gbc_lblDeckImages.gridy = 8;
-		getContentPane().add(lblDeck, gbc_lblDeckImages);
-
 
 	}
 
