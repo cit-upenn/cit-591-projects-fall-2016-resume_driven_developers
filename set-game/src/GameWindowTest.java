@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import org.junit.Test;
 
+
 /**
  * test cases for GUI Class
  * @author YPLin
@@ -76,6 +77,51 @@ public class GameWindowTest {
 		
 		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
 	}
+	
+	@Test
+	public void testOnePlayerClickACard() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+
+			int showConfirmAddCardDialog() {
+				return 0;
+			}
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.cardButtons[0].setEnabled(true);
+		gw.cardButtons[0].doClick();
+
+		assertTrue(gw.selectedIndices.contains(0) == true);	
+	}	
+
+	@Test
+	public void testOnePlayerClickThreeCards() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+
+			int showConfirmAddCardDialog() {
+				return 0;
+			}
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.cardButtons[0].setEnabled(true);
+		gw.cardButtons[0].doClick();
+		gw.cardButtons[1].setEnabled(true);
+		gw.cardButtons[1].doClick();
+		gw.cardButtons[2].setEnabled(true);
+		gw.cardButtons[2].doClick();
+		
+		System.out.println(gw.selectedCards);
+		assertTrue(gw.selectedCards.size() == 3 || gw.selectedCards.size() == 0);	
+	}	
 	
 	@Test
 	public void testOnePlayerRefreshBoard() {
@@ -342,7 +388,7 @@ public class GameWindowTest {
 	}
 	
 	@Test
-	public void testQuitGame() {
+	public void testRestartQuitGame() {
 		GameWindow gw = new GameWindow(){
 
 			
@@ -357,6 +403,7 @@ public class GameWindowTest {
 		};
 		gw.quitGame.setEnabled(true);
 		gw.quitGame.doClick();
+		assertNotNull(gw);
 	}
 	
 	@Test
@@ -370,6 +417,7 @@ public class GameWindowTest {
 		};
 		gw.quitGame.setEnabled(true);
 		gw.quitGame.doClick();
+		assertNotNull(gw);
 	}
 	
 	

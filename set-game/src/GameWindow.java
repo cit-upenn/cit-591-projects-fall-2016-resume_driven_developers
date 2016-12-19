@@ -111,7 +111,9 @@ public class GameWindow extends JFrame {
 						cardButtons[i].setEnabled(false);
 					}
 				} else if (!isSinglePlayerGame){
+					if(gameOver == 2) return;
 					JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
+					gameOver++;
 					switchPlayer();
 				}
 				return;
@@ -572,13 +574,11 @@ public class GameWindow extends JFrame {
 					refreshBoard();
 				}
 
-
 			} 
-
-
 		}
 	}
 
+	
 	// for JUnit
 	void setNameHelper() {
 		ruler.playerOne.setName((String)JOptionPane.showInputDialog(frame, "Enter player one's name:\n", "", JOptionPane.PLAIN_MESSAGE));
