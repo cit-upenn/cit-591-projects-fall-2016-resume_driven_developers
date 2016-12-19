@@ -68,7 +68,7 @@ public class GameRuler {
 	public boolean replacedMatchedBoardCards(ArrayList<Integer> matchedCards) {
 		boolean endGameFlag = false;
 		
-		if(this.playDeck.cards.size()>0) {
+		if(this.playDeck.getCards().size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < matchedCards.size(); i++) {
@@ -106,7 +106,7 @@ public class GameRuler {
 		
 		ArrayList<Card> currentTwelve = new ArrayList<Card>();
 		
-		if(this.playDeck.cards.size()>0) {
+		if(this.playDeck.getCards().size()>0) {
 			
 			// cards left in the deck to draw
 			for(int i = 0; i < 15; i++) {

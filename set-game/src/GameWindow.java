@@ -98,9 +98,7 @@ public class GameWindow extends JFrame {
 					}
 					closeWindow();
 				} else if (!isSinglePlayerGame){
-					if(gameOver == 2) return;
 					JOptionPane.showConfirmDialog(frame, "Time is up!\nYour turn is over.", "", JOptionPane.CLOSED_OPTION);
-					gameOver++;
 					switchPlayer();
 				}
 				return;
@@ -400,7 +398,7 @@ public class GameWindow extends JFrame {
 	 * and the visual display needs to be updated appropriately.
 	 * @author ATM
 	 */
-	private void refreshBoard() {
+	void refreshBoard() {
 		//Check to see if 12 or 15 cards are on the card board.
 		int loopLength = 0;
 		if(ruler.playBoard.getPlayedCards()[13] == null) {
@@ -436,7 +434,7 @@ public class GameWindow extends JFrame {
 	 * This method is called when a player successfully finds a match, and increments their score appropriately.
 	 * ATM
 	 */
-	private void incrementScore() {
+	protected void incrementScore() {
 		if (isSinglePlayerGame){
 			ruler.playerOne.addPoints(6);
 		} else{

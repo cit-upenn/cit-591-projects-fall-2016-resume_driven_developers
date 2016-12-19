@@ -21,17 +21,6 @@ public class GameWindowTest {
 		gw.SimpleTimer.start();
 	}
 	
-	@Test
-	public void testShowRules1() {
-		GameWindow gw = new GameWindow(){
-			
-			int showRuleOptionDialog() {
-				return 0;
-			}
-		};
-		gw.howToPlay.setEnabled(true);
-		gw.howToPlay.doClick();
-	}
 	
 	@Test
 	public void testShowRules2() {
@@ -58,6 +47,16 @@ public class GameWindowTest {
 		gw.howToPlay.doClick();
 	}	
 	
+	@Test
+	public void testShowRules4() {
+		GameWindow gw = new GameWindow(){
+			int showRuleOptionDialog() {
+				return 3;
+			}
+		};
+		gw.howToPlay.setEnabled(true);
+		gw.howToPlay.doClick();
+	}		
 	@Test
 	public void testOnePlayerAddCard() {
 		GameWindow gw = new GameWindow(){
@@ -123,6 +122,34 @@ public class GameWindowTest {
 		assertTrue(gw.selectedCards.size() == 3 || gw.selectedCards.size() == 0);	
 	}	
 	
+
+	@Test
+	public void testOnePlayerClickThreeCards2() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+
+			int showConfirmAddCardDialog() {
+				return 0;
+			}
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		gw.ruler.playBoard.getPlayedCards()[0] = new Card(""+1, "1", "red", "empty", "diamond");
+		gw.ruler.playBoard.getPlayedCards()[1] = new Card(""+2, "2", "red", "empty", "diamond");
+		gw.ruler.playBoard.getPlayedCards()[2] = new Card(""+3, "3", "red", "empty", "diamond");
+		
+		gw.cardButtons[0].setEnabled(true);
+		gw.cardButtons[0].doClick();
+		gw.cardButtons[1].setEnabled(true);
+		gw.cardButtons[1].doClick();
+		gw.cardButtons[2].setEnabled(true);
+		gw.cardButtons[2].doClick();
+		
+		System.out.println(gw.selectedCards);
+		assertTrue(gw.selectedCards.size() == 3 || gw.selectedCards.size() == 0);	
+	}	
 	@Test
 	public void testOnePlayerRefreshBoard() {
 		GameWindow gw = new GameWindow(){
@@ -152,40 +179,9 @@ public class GameWindowTest {
 		
 		gw.incrementScore();
 		
-		assertTrue(gw.ruler.playerOne.getScore() == 10);
-	}	
-
-	@Test
-	public void testOnePlayerAddPoints2() {
-		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}			
-		};
-		gw.onePlayerGame.setEnabled(true);
-		gw.onePlayerGame.doClick();
-		
-		gw.seconds = 40000;
-		gw.incrementScore();
-		
-		assertTrue(gw.ruler.playerOne.getScore() == 8);
-	}	
-
-	@Test
-	public void testOnePlayerAddPoints3() {
-		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}			
-		};
-		gw.onePlayerGame.setEnabled(true);
-		gw.onePlayerGame.doClick();
-		
-		gw.seconds = 20000;
-		gw.incrementScore();
-		
 		assertTrue(gw.ruler.playerOne.getScore() == 6);
-	}
+	}	
+
 
 	@Test
 	public void testTwoPlayerAddPoints1() {
@@ -244,6 +240,66 @@ public class GameWindowTest {
 		gw.incrementScore();
 		
 		assertTrue(gw.ruler.playerTwo.getScore() == 6);
+	}
+
+
+	@Test
+	public void testTwoPlayerAddPoints() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 1;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 10);
+	}	
+
+	@Test
+	public void testTwoPlayerAddPoints5() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 1;
+		gw.seconds = 40000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 8);
+	}	
+
+	@Test
+	public void testTwoPlayerAddPoints6() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 1;
+		gw.seconds = 20000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 6);
 	}
 	
 	@Test
