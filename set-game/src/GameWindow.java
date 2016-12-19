@@ -429,7 +429,7 @@ public class GameWindow extends JFrame {
 	 * and the visual display needs to be updated appropriately.
 	 * @author ATM
 	 */
-	private void refreshBoard() {
+	void refreshBoard() {
 		//Check to see if 12 or 15 cards are on the card board.
 		int loopLength = 0;
 		if(ruler.playBoard.getPlayedCards()[13] == null) {
@@ -441,7 +441,8 @@ public class GameWindow extends JFrame {
 				}
 			}
 
-		} else{
+		} 
+		else{
 			loopLength = 15;
 		}
 
@@ -449,7 +450,8 @@ public class GameWindow extends JFrame {
 			if(!(ruler.playBoard.getPlayedCards()[i] == null)) {
 				String filename = ruler.playBoard.getPlayedCards()[i].getImageFile();
 				cardButtons[i].setIcon(new ImageIcon(GameWindow.class.getResource(filename)));
-			} else {
+			} 
+			else {
 				/*
 				 * We run into this scenario in the end game, when there are still matches on the board but there are no more cards left
 				 * in the deck to draw.  In this case, set the matched cards to the back.
@@ -465,7 +467,7 @@ public class GameWindow extends JFrame {
 	 * This method is called when a player successfully finds a match, and increments their score appropriately.
 	 * ATM
 	 */
-	private void incrementScore() {
+	void incrementScore() {
 		if(ruler.currentPlayer == 1) {
 			if (seconds > 60000){
 				ruler.playerOne.setScore(ruler.playerOne.getScore() + 10);	
@@ -654,10 +656,15 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	int showConfirmSkipTurnDialog() {
+		return JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
+	}
+	
 	private void skipTurn(){
 		SimpleTimer.stop();
 		//prompt if sure
-		int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
+		int skip = showConfirmSkipTurnDialog();
+		//int skip = JOptionPane.showConfirmDialog(frame, "Are you sure you want to skip your turn?\nYour current score will not change.", "", JOptionPane.YES_NO_OPTION);
 
 		if (skip == JOptionPane.YES_OPTION && ruler.currentPlayer == 1){
 			switchPlayer();
@@ -682,7 +689,6 @@ public class GameWindow extends JFrame {
 
 	private Card getHint(){
 
-
 		if (isSinglePlayerGame){
 			player2.setVisible(false);
 		}
@@ -695,10 +701,10 @@ public class GameWindow extends JFrame {
 
 				// getHint.setEnabled(false);
 				List<Set<Card>> solutions = ruler.getSolutions(ruler.playBoard.getPlayedCards());
-				if(solutions==null) {
-					JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
-					return null;
-				}
+//				if(solutions==null) {
+//					JOptionPane.showConfirmDialog(frame, "Sorry, no solution!", "", JOptionPane.YES_NO_OPTION);
+//					return null;
+//				}
 
 				System.out.println("Solutions on the board: " + solutions);
 				Card hintCard =  solutions.get(0).iterator().next();

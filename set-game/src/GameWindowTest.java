@@ -15,13 +15,7 @@ public class GameWindowTest {
 	@Test
 	public void testTimer() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
+
 		};
 		gw.SimpleTimer.start();
 	}
@@ -29,21 +23,6 @@ public class GameWindowTest {
 	@Test
 	public void testShowRules1() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
-			
-			int showConfirmQuitDialog() {
-				return 1;
-			}
-			
-			int showConfirmExitDialog() {
-				return 0;
-			}
 			
 			int showRuleOptionDialog() {
 				return 0;
@@ -56,22 +35,7 @@ public class GameWindowTest {
 	@Test
 	public void testShowRules2() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
-			
-			int showConfirmQuitDialog() {
-				return 1;
-			}
-			
-			int showConfirmExitDialog() {
-				return 0;
-			}
-			
+
 			int showRuleOptionDialog() {
 				return 1;
 			}
@@ -83,22 +47,8 @@ public class GameWindowTest {
 	@Test
 	public void testShowRules3() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
-			
-			int showConfirmQuitDialog() {
-				return 1;
-			}
-			
-			int showConfirmExitDialog() {
-				return 0;
-			}
-			
+
+
 			int showRuleOptionDialog() {
 				return 2;
 			}
@@ -113,9 +63,7 @@ public class GameWindowTest {
 			void setNameHelper(){
 				ruler.playerOne.setName("tester");
 			}			
-			int showConfirmHintDialog() {
-				return 0;
-			}
+
 			int showConfirmAddCardDialog() {
 				return 0;
 			}
@@ -130,6 +78,129 @@ public class GameWindowTest {
 	}
 	
 	@Test
+	public void testOnePlayerRefreshBoard() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.addCards.setEnabled(false);
+		gw.refreshBoard();
+		
+		assertTrue(gw.ruler.playBoard.getPlayedCards().length == 15);
+	}	
+	
+	@Test
+	public void testOnePlayerAddPoints1() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 10);
+	}	
+
+	@Test
+	public void testOnePlayerAddPoints2() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.seconds = 40000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 8);
+	}	
+
+	@Test
+	public void testOnePlayerAddPoints3() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+		};
+		gw.onePlayerGame.setEnabled(true);
+		gw.onePlayerGame.doClick();
+		
+		gw.seconds = 20000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerOne.getScore() == 6);
+	}
+
+	@Test
+	public void testTwoPlayerAddPoints1() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 2;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerTwo.getScore() == 10);
+	}	
+
+	@Test
+	public void testTwoPlayerAddPoints2() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 2;
+		gw.seconds = 40000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerTwo.getScore() == 8);
+	}	
+
+	@Test
+	public void testTwoPlayerAddPoints3() {
+		GameWindow gw = new GameWindow(){
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}			
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 2;
+		gw.seconds = 20000;
+		gw.incrementScore();
+		
+		assertTrue(gw.ruler.playerTwo.getScore() == 6);
+	}
+	
+	@Test
 	public void testTwoPlayerAddCard1() {
 		GameWindow gw = new GameWindow(){
 			void setNameHelper(){
@@ -138,9 +209,7 @@ public class GameWindowTest {
 			void setNameHelper2(){
 				ruler.playerTwo.setName("tester2");
 			}			
-			int showConfirmHintDialog() {
-				return 0;
-			}
+
 			int showConfirmAddCardDialog() {
 				return 0;
 			}
@@ -164,9 +233,6 @@ public class GameWindowTest {
 			void setNameHelper2(){
 				ruler.playerTwo.setName("tester2");
 			}			
-			int showConfirmHintDialog() {
-				return 0;
-			}
 			int showConfirmAddCardDialog() {
 				return 0;
 			}
@@ -190,10 +256,7 @@ public class GameWindowTest {
 			void setNameHelper2(){
 				ruler.playerTwo.setName("tester2");
 			}			
-			int showConfirmHintDialog() {
-				return 0;
-			}
-			int showConfirmAddCardDialog() {
+			int showConfirmSkipTurnDialog() {
 				return 0;
 			}
 		};
@@ -210,12 +273,17 @@ public class GameWindowTest {
 	@Test
 	public void testTwoPlayerSwitch2() {
 		GameWindow gw = new GameWindow(){
+			
 			void setNameHelper(){
 				ruler.playerOne.setName("tester");
 			}
 			void setNameHelper2(){
 				ruler.playerTwo.setName("tester2");
-			}			
+			}
+			
+			int showConfirmSkipTurnDialog() {
+				return 0;
+			}
 		};
 		gw.twoPlayerGame.setEnabled(true);
 		gw.twoPlayerGame.doClick();
@@ -225,6 +293,31 @@ public class GameWindowTest {
 		gw.skipTurn.doClick();
 		
 		assertTrue(gw.ruler.currentPlayer == 1);
+	}
+	
+	@Test
+	public void testTwoPlayerCancelSwitch() {
+		GameWindow gw = new GameWindow(){
+			
+			void setNameHelper(){
+				ruler.playerOne.setName("tester");
+			}
+			void setNameHelper2(){
+				ruler.playerTwo.setName("tester2");
+			}
+			
+			int showConfirmSkipTurnDialog() {
+				return 1;
+			}
+		};
+		gw.twoPlayerGame.setEnabled(true);
+		gw.twoPlayerGame.doClick();
+		
+		gw.ruler.currentPlayer = 2;
+		gw.skipTurn.setEnabled(true);
+		gw.skipTurn.doClick();
+		
+		assertTrue(gw.ruler.currentPlayer == 2);
 	}
 	
 	@Test
@@ -251,13 +344,7 @@ public class GameWindowTest {
 	@Test
 	public void testQuitGame() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
+
 			
 			int showConfirmQuitDialog() {
 				return 0;
@@ -273,26 +360,17 @@ public class GameWindowTest {
 	}
 	
 	@Test
-	public void testQuitGame2() {
+	public void testCancelQuitGame() {
 		GameWindow gw = new GameWindow(){
-			void setNameHelper(){
-				ruler.playerOne.setName("tester");
-			}
-			
-			int showConfirmHintDialog() {
-				return 0;
-			}
-			
+	
 			int showConfirmQuitDialog() {
 				return 1;
 			}
-			
-			int showConfirmExitDialog() {
-				return 0;
-			}
-			
+
 		};
 		gw.quitGame.setEnabled(true);
 		gw.quitGame.doClick();
 	}
+	
+	
 }
