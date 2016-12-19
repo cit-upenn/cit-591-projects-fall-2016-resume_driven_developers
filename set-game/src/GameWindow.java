@@ -2,7 +2,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
@@ -18,14 +17,16 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import java.awt.Color;
-import javax.swing.UIManager;
 
 import java.awt.Font;
 import javax.swing.ImageIcon;
-import java.awt.Dimension;
-import javax.swing.JPanel;
 
 public class GameWindow extends JFrame {
+
+	/**
+	 * Default serial version
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private static GameWindow frame;
 
@@ -78,7 +79,7 @@ public class GameWindow extends JFrame {
 	boolean isSinglePlayerGame;
 
 	// user-selected cards & their indices on the board
-	List<Card> selectedCards = new ArrayList<Card>();
+	ArrayList<Card> selectedCards = new ArrayList<Card>();
 	ArrayList<Integer> selectedIndices = new ArrayList<Integer>();
 
 	//countdown timer setup
@@ -512,7 +513,7 @@ public class GameWindow extends JFrame {
 			//The button we clicked is the third button
 			if (selectedCards.size() > 2 ) {
 
-				if (ruler.containsRuleArrayInput(selectedCards)) {
+				if (ruler.containsRule(selectedCards)) {
 					//We found a match
 					if (ruler.playBoard.getPlayedCards()[13] == null) {
 						//if only 12 cards, replaced those that made the submitted set
@@ -879,23 +880,23 @@ public class GameWindow extends JFrame {
 	private void finishGameDialog(){
 		int endGame = -1;
 		if(isSinglePlayerGame) {
-			String endGameMessageString = "You finished the game!  Your final score is: " + ruler.getPlayerOne().getScore() +
+			String endGameMessageString = "You finished the game!  Your final score is: " + ruler.playerOne.getScore() +
 					".\n  Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 			endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 		} else {
-			if(ruler.getPlayerOne().getScore()>ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerOne().getName() + " wins\nby a score of " +
-						ruler.getPlayerOne().getScore() + " to " + ruler.getPlayerTwo().getScore() + ".\n"
+			if(ruler.playerOne.getScore()>ruler.playerTwo.getScore()) {
+				String endGameMessageString = "The game is over! " + ruler.playerOne.getName() + " wins\nby a score of " +
+						ruler.playerOne.getScore() + " to " + ruler.playerTwo.getScore() + ".\n"
 						+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
-			} else if (ruler.getPlayerOne().getScore() < ruler.getPlayerTwo().getScore()) {
-				String endGameMessageString = "The game is over! " + ruler.getPlayerTwo().getName() + " wins\nby a score of " +
-						ruler.getPlayerTwo().getScore() + " to " + ruler.getPlayerOne().getScore() + ".\n"
+			} else if (ruler.playerOne.getScore() < ruler.playerTwo.getScore()) {
+				String endGameMessageString = "The game is over! " + ruler.playerTwo.getName() + " wins\nby a score of " +
+						ruler.playerTwo.getScore() + " to " + ruler.playerOne.getScore() + ".\n"
 						+ "Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 			} else {
-				String endGameMessageString = "Nice Game! The result is a tie: " + ruler.getPlayerOne().getScore() + " to " +
-						ruler.getPlayerTwo().getScore() + ".\n" + 
+				String endGameMessageString = "Nice Game! The result is a tie: " + ruler.playerOne.getScore() + " to " +
+						ruler.playerTwo.getScore() + ".\n" + 
 						"Would you like to play again?\nClick 'Yes' to start a new game or 'No' to quit.";
 				endGame = JOptionPane.showConfirmDialog(frame, endGameMessageString, "", JOptionPane.YES_NO_OPTION);
 			}
