@@ -33,11 +33,11 @@ Eva Herzog
 ;;;;;;;;;;;;;;;;;;
 Patrick Lin
 ;;;;;;;;;;;;;;;;;;
-
-
-
-
-
+~General Game Logic in GameRuler
+~Framework of the Timer
+~Hint Function
+~Part of Card control
+~Part of GameRuler/GameWindow Testing
 
 ;;;;;;;;;;;;;;;;;;
 Andrew Molchan
