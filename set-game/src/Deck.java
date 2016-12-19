@@ -9,11 +9,11 @@ import java.util.Random;
  *
  */
 public class Deck {
-	List<Card> cards;
-	final String[] colors = {"green", "red", "purple"};
-	final String[] shapes = {"oval", "squiggle", "diamond"};
-	final String[] shadings = {"solid", "striped", "empty"};
-	final String[] quantities = {"1", "2", "3"};
+	private List<Card> cards;
+	private final String[] colors = {"green", "red", "purple"};
+	private final String[] shapes = {"oval", "squiggle", "diamond"};
+	private final String[] shadings = {"solid", "striped", "empty"};
+	private final String[] quantities = {"1", "2", "3"};
 	
 	/**
 	 * constructor to initiate all the possible cards in the deck
@@ -60,6 +60,13 @@ public class Deck {
 		Card c = new Card(removed.getIdNumber(), removed.getQuantity(), removed.getColor(), removed.getShading(), removed.getShape());
 		cards.remove(idx);
 		return c;
+	}
+
+	/**
+	 * @return the cards
+	 */
+	public List<Card> getCards() {
+		return cards;
 	}
 	
 }
