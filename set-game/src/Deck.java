@@ -28,7 +28,6 @@ public class Deck {
 						Card card = new Card(""+count, quan, color, shading, shape);
 						cards.add(card);
 						count++;
-						System.out.print(card);
 					}
 				}
 			}
@@ -44,7 +43,6 @@ public class Deck {
 		for(int i=0; i<12; i++) {
 			cards[i] = dealCard();
 		}
-		System.out.println("12 cards are dealed");
 		return cards;
 	}
 	
